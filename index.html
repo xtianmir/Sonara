@@ -6,10 +6,9 @@
   <title>Sonara — local-first music player for Windows</title>
   <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no telemetry — just your library." />
   <!-- TODO before publishing:
-       1. Replace OWNER/REPO below (one place, the GH constant in the script).
-       2. Drop a real screenshot at assets/hero.png (16:10 or 16:9, dark bg).
-       3. When the Gumroad product exists: un-hide the Buy button (#buy-pro).
-       4. Name/logo are prototype — find-replace "Sonara" on final naming. -->
+       1. Replace Player_Screenshot.png when the final UI is ready.
+       2. When the Gumroad product exists: un-hide the Buy button (#buy-pro).
+       3. Name/logo are prototype — find-replace "Sonara" on final naming. -->
   <style>
     :root {
       --bg: #0f0f0f;
@@ -20,8 +19,8 @@
       --text: #f2f4f3;
       --text-secondary: #b8bdbb;
       --text-muted: #7c8481;
-      --accent: #1db954;
-      --accent-bright: #1ed760;
+      --accent: #22D3A1;
+      --accent-bright: #22D3A1;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -91,11 +90,6 @@
       background: var(--bg-surface);
     }
     .shot img { display: block; width: 100%; height: auto; }
-    .shot-placeholder {
-      aspect-ratio: 16 / 9.4; display: grid; place-items: center;
-      color: var(--text-muted); font-size: 14px;
-    }
-
     /* ── Sections ── */
     section { padding: 72px 0 0; }
     h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; text-align: center; }
@@ -178,8 +172,7 @@
       <p class="cta-note">Free forever. Pro features unlock with a one-time license — <a href="#pro">see what's included</a>.</p>
 
       <div class="shot">
-        <!-- Replace with: <img src="assets/hero.png" alt="Sonara playing a local library" /> -->
-        <div class="shot-placeholder">screenshot coming right up</div>
+        <img src="Player_Screenshot.png" alt="Sonara playing a local music library" />
       </div>
     </header>
 
