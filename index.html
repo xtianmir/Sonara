@@ -46,6 +46,7 @@
       padding: 18px 0;
     }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: 0; color: var(--text); }
+    .brand:hover { color: var(--text); text-decoration: none; }
     .brand-mark {
       display: inline-flex; align-items: flex-end; gap: 2px; height: 18px;
     }
@@ -157,10 +158,10 @@
 <body>
   <div class="wrap">
     <nav>
-      <span class="brand">
+      <a class="brand" href="./" aria-label="Sonara home">
         <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
         Sonara
-      </span>
+      </a>
       <span class="links">
         <a href="#features">Features</a>
         <a href="#pro">Free &amp; Pro</a>
