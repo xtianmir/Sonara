@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- TODO before publishing:
        1. Replace Player_Screenshot.png when the final UI is ready.
-       2. When the Gumroad product exists: un-hide the Buy button (#buy-pro).
+       2. When the payment product exists: un-hide the Buy button (#buy-pro).
        3. Name/logo are prototype - find-replace "Sonara" on final naming. -->
   <style>
     :root {
@@ -135,21 +135,7 @@
     }
 
     /* Support */
-    .support-block {
-      max-width: 720px; margin: 0 auto; padding: 30px 0 6px;
-      border-top: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
-      text-align: center;
-    }
-    .support-block p {
-      max-width: 590px; margin: 0 auto; color: var(--text-secondary);
-      font-size: 15px;
-    }
-    .support-block .btn { margin-top: 22px; }
-    .support-note {
-      margin-top: 14px !important; color: var(--text-muted) !important;
-      font-size: 13px !important;
-    }
+    .support-block { max-width: 720px; margin: 0 auto; text-align: center; }
 
     /* ── FAQ ── */
     .faq { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
@@ -258,18 +244,16 @@
           </ul>
           <!-- Un-hide when the payment product is live: -->
           <a class="btn btn-primary" id="buy-pro" href="#" rel="noopener" style="display: none;">Get Pro</a>
-          <a class="btn btn-ghost" id="buy-soon" href="#faq">Pro launches with v1.0. Beta testers get keys</a>
+          <a class="btn btn-ghost" id="buy-soon" href="#faq">Pro checkout coming soon</a>
         </div>
       </div>
     </section>
 
     <section id="support">
       <h2>Support Development</h2>
-      <p class="section-sub">Sonara is an independent local-first player. Support keeps the beta moving without accounts, ads, or telemetry.</p>
+      <p class="section-sub">Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs.</p>
       <div class="support-block">
-        <p>If Sonara becomes part of your daily listening, a one-time Pro license will be the calm way to support future development.</p>
-        <a class="btn btn-primary" id="support-action" href="#pro">Support Sonara</a>
-        <p class="support-note">For now, Pro is not open for purchase. Beta testers get keys when licensing is ready.</p>
+        <a class="btn btn-primary" id="support-action" href="#support">Support Sonara</a>
       </div>
     </section>
 
@@ -313,7 +297,7 @@
   <script>
     // ── Single place to point the site at the repo ──────────────────────
     var GH = 'xtianmir/Sonara';
-    var SUPPORT_URL = '#pro';
+    var SUPPORT_URL = '#support';
 
     var releasesPage = 'https://github.com/' + GH + '/releases/latest';
     var repoPage = 'https://github.com/' + GH;
