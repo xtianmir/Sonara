@@ -135,7 +135,18 @@
     }
 
     /* Support */
-    .support-block { max-width: 720px; margin: 0 auto; text-align: center; }
+    .support-block {
+      max-width: 720px; margin: 0 auto; padding: 28px 0;
+      border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .support-copy { max-width: 500px; }
+    .support-copy h2 { text-align: left; }
+    .support-copy p { margin-top: 8px; color: var(--text-secondary); font-size: 15px; }
+    @media (max-width: 680px) {
+      .support-block { align-items: flex-start; flex-direction: column; }
+      .support-copy h2 { text-align: left; }
+    }
 
     /* ── FAQ ── */
     .faq { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
@@ -244,17 +255,17 @@
             <li><span class="tick">✓</span>Copy multiple song names or files</li>
             <li><span class="tick">✓</span>Drop files, folders and playlists exactly between songs</li>
           </ul>
-          <!-- Un-hide when the payment product is live: -->
-          <a class="btn btn-primary" id="buy-pro" href="#" rel="noopener" style="display: none;">Get Pro</a>
-          <a class="btn btn-ghost" id="buy-soon" href="#faq">Pro checkout coming soon</a>
+          <a class="btn btn-primary" id="buy-pro" href="#pro" rel="noopener">Checkout</a>
         </div>
       </div>
     </section>
 
     <section id="support">
-      <h2>Support Development</h2>
-      <p class="section-sub">Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs.</p>
       <div class="support-block">
+        <div class="support-copy">
+          <h2>Support Development</h2>
+          <p>Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs.</p>
+        </div>
         <a class="btn btn-primary" id="support-action" href="#support">Support Sonara</a>
       </div>
     </section>
@@ -299,6 +310,7 @@
   <script>
     // ── Single place to point the site at the repo ──────────────────────
     var GH = 'xtianmir/Sonara';
+    var PRO_URL = '#pro';
     var SUPPORT_URL = '#support';
 
     var releasesPage = 'https://github.com/' + GH + '/releases/latest';
@@ -309,6 +321,7 @@
     });
     document.getElementById('nav-github').href = repoPage;
     document.getElementById('foot-github').href = repoPage;
+    document.getElementById('buy-pro').href = PRO_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
 
