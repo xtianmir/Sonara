@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- TODO before publishing:
        1. Replace Player_Screenshot.png when the final UI is ready.
-       2. When the payment product exists: un-hide the Buy button (#buy-pro).
+       2. When the payment product exists: un-hide the Buy button (#buy-premium).
        3. Name/logo are prototype - find-replace "Sonara" on final naming. -->
   <style>
     :root {
@@ -119,7 +119,7 @@
       background: var(--bg-surface); border: 1px solid var(--border-soft);
       border-radius: 16px; padding: 26px;
     }
-    .tier--pro { border-color: color-mix(in srgb, var(--accent) 45%, transparent); position: relative; }
+    .tier--premium { border-color: color-mix(in srgb, var(--accent) 45%, transparent); position: relative; }
     .tier h3 { font-size: 18px; font-weight: 700; }
     .tier .price { font-size: 30px; font-weight: 700; margin: 6px 0 2px; }
     .tier .price small { font-size: 13px; font-weight: 600; color: var(--text-muted); }
@@ -128,7 +128,7 @@
     .tier li { display: flex; gap: 9px; align-items: baseline; }
     .tick { color: var(--accent-bright); font-weight: 800; flex-shrink: 0; }
     .tier .btn { width: 100%; justify-content: center; margin-top: 20px; }
-    .pro-badge {
+    .premium-badge {
       position: absolute; top: -10px; right: 18px; background: var(--accent); color: #04160b;
       font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: uppercase;
       padding: 3px 10px; border-radius: 999px;
@@ -178,7 +178,7 @@
       </a>
       <span class="links">
         <a href="#features">Features</a>
-        <a href="#pro">Free &amp; Pro</a>
+        <a href="#premium">Free &amp; Premium</a>
         <a href="#support">Support</a>
         <a href="#faq">FAQ</a>
         <a id="nav-github" href="#" rel="noopener">GitHub</a>
@@ -196,7 +196,7 @@
         <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener">Download for Windows</a>
         <a id="dl-all" class="btn btn-ghost" href="#" rel="noopener">All downloads (ARM64 · portable)</a>
       </div>
-      <p class="cta-note">Free forever. Pro features unlock with a one-time license. <a href="#pro">See what's included</a>.</p>
+      <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#premium">See what's included</a>.</p>
 
       <div class="shot">
         <img src="Player_Screenshot.png" alt="Sonara playing a local music library" />
@@ -216,8 +216,8 @@
       </div>
     </section>
 
-    <section id="pro">
-      <h2>Free &amp; Pro</h2>
+    <section id="premium">
+      <h2>Free &amp; Premium</h2>
       <p class="section-sub">Start with a complete local player. Upgrade when you want deeper control over how you listen and organize.</p>
       <div class="tiers">
         <div class="tier">
@@ -235,9 +235,9 @@
           </ul>
           <a class="btn btn-ghost" id="dl-free" href="#" rel="noopener">Download free</a>
         </div>
-        <div class="tier tier--pro">
-          <span class="pro-badge">Pro</span>
-          <h3>Sonara Pro</h3>
+        <div class="tier tier--premium">
+          <span class="premium-badge">Premium</span>
+          <h3>Sonara Premium</h3>
           <div class="price">$9.99 <small>one-time</small></div>
           <div class="plan-note">One license · up to 3 of your computers · works offline</div>
           <ul>
@@ -250,7 +250,7 @@
             <li><span class="tick">✓</span>Multi-copy for song names and files</li>
             <li><span class="tick">✓</span>Precise drag-and-drop placement from File Explorer</li>
           </ul>
-          <a class="btn btn-primary" id="buy-pro" href="#pro" rel="noopener">Checkout</a>
+          <a class="btn btn-primary" id="buy-premium" href="#premium" rel="noopener">Checkout</a>
         </div>
       </div>
     </section>
@@ -275,7 +275,7 @@
         </details>
         <details>
           <summary>Does it need the internet?</summary>
-          <p>No. Sonara is local-first: playback, your library, lyrics and even Pro license activation work fully offline. The only optional network features are the update check and Discord presence.</p>
+          <p>No. Sonara is local-first: playback, your library, lyrics and even Premium license activation work fully offline. The only optional network features are the update check and Discord presence.</p>
         </details>
         <details>
           <summary>Which Windows versions and devices?</summary>
@@ -290,7 +290,7 @@
           <p>The uninstaller asks. By default your library, likes and settings are kept, so reinstalling later picks everything back up. You can choose to wipe everything instead.</p>
         </details>
         <details>
-          <summary>How does the Pro license work?</summary>
+          <summary>How does the Premium license work?</summary>
           <p>One key, one-time payment, up to 3 of your own computers. Activation works offline and the license never expires. If you ever hit a problem, deactivate on one machine and activate on another.</p>
         </details>
       </div>
@@ -305,7 +305,7 @@
   <script>
     // ── Single place to point the site at the repo ──────────────────────
     var GH = 'xtianmir/Sonara';
-    var PRO_URL = '#pro';
+    var PREMIUM_URL = '#premium';
     var SUPPORT_URL = '#support';
 
     var releasesPage = 'https://github.com/' + GH + '/releases/latest';
@@ -316,7 +316,7 @@
     });
     document.getElementById('nav-github').href = repoPage;
     document.getElementById('foot-github').href = repoPage;
-    document.getElementById('buy-pro').href = PRO_URL;
+    document.getElementById('buy-premium').href = PREMIUM_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
 
