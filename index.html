@@ -10,7 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- TODO before publishing:
        1. Replace Player_Screenshot.png when the final UI is ready.
-       2. When the payment product exists: un-hide the Buy button (#buy-premium).
+       2. At launch: fill PREMIUM_URL and SUPPORT_URL from SITE-SETUP.md
+          (both Polar checkout links exist; kept out of the public repo
+          until the release is approved).
        3. Name/logo are prototype - find-replace "Sonara" on final naming. -->
   <style>
     :root {
@@ -226,7 +228,7 @@
           <div class="plan-note">No account · no time limits</div>
           <ul>
             <li><span class="tick">✓</span>Local music library with fast search and sorting</li>
-            <li><span class="tick">✓</span>Smooth listening with EQ, crossfade and gapless playback</li>
+            <li><span class="tick">✓</span>Smooth listening with crossfade and gapless playback</li>
             <li><span class="tick">✓</span>Mini player, 3D visualizer and synced lyrics</li>
             <li><span class="tick">✓</span>Performance modes for games, creative work and battery life</li>
             <li><span class="tick">✓</span>Native x64 and ARM64 builds for Windows 10/11</li>
@@ -243,6 +245,7 @@
           <ul>
             <li><span class="tick">✓</span>Everything in Free, plus:</li>
             <li><span class="tick">✓</span>Full 10-band EQ with saved custom presets</li>
+            <li><span class="tick">✓</span>Spatial audio and stereo width effects</li>
             <li><span class="tick">✓</span>Unlimited Play Next queue</li>
             <li><span class="tick">✓</span>Never Repeat and Listening Order</li>
             <li><span class="tick">✓</span>Sleep timer for music at night</li>
@@ -259,7 +262,7 @@
       <div class="support-block">
         <div class="support-copy">
           <h2>Support Development</h2>
-          <p>Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs.</p>
+          <p>Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs. Pay what you want - every bit helps and none of it is required.</p>
         </div>
         <a class="btn btn-primary" id="support-action" href="#support">Support Sonara</a>
       </div>
@@ -275,7 +278,7 @@
         </details>
         <details>
           <summary>Does it need the internet?</summary>
-          <p>No. Sonara is local-first: playback, your library, lyrics and even Premium license activation work fully offline. The only optional network features are the update check and Discord presence.</p>
+          <p>No. Sonara is local-first: playback, your library and lyrics work fully offline. Activating a purchased Premium license takes one brief online check; after that Premium works fully offline too. The only optional network features are the update check and Discord presence.</p>
         </details>
         <details>
           <summary>Which Windows versions and devices?</summary>
@@ -291,7 +294,11 @@
         </details>
         <details>
           <summary>How does the Premium license work?</summary>
-          <p>One key, one-time payment, up to 3 of your own computers. Activation works offline and the license never expires. If you ever hit a problem, deactivate on one machine and activate on another.</p>
+          <p>One key, one-time payment, up to 3 of your own computers. Your key arrives by email right after checkout; paste it in Settings → License and you're done - after activation it works offline and never expires. Moving to a new computer is easy: deactivate in the app, or manage all your computers from the purchase portal linked in your email.</p>
+        </details>
+        <details>
+          <summary>Is Premium a subscription?</summary>
+          <p>No. It's a one-time purchase and the license is yours forever. If the price rises as bigger features arrive, licenses already bought simply keep working - buying early only means paying less.</p>
         </details>
       </div>
     </section>
