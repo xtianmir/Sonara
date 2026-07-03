@@ -119,7 +119,9 @@
       background: var(--bg-surface); border: 1px solid var(--border-soft);
       border-radius: 16px; padding: 26px;
     }
-    .tier--premium { border-color: color-mix(in srgb, var(--accent) 45%, transparent); position: relative; }
+    /* scroll-margin keeps the floating badge (top: -10px) and a little air
+       above the card when the player's #premium link lands here. */
+    .tier--premium { border-color: color-mix(in srgb, var(--accent) 45%, transparent); position: relative; scroll-margin-top: 26px; }
     .tier h3 { font-size: 18px; font-weight: 700; }
     .tier .price { font-size: 30px; font-weight: 700; margin: 6px 0 2px; }
     .tier .price small { font-size: 13px; font-weight: 600; color: var(--text-muted); }
@@ -178,7 +180,7 @@
       </a>
       <span class="links">
         <a href="#features">Features</a>
-        <a href="#premium">Free &amp; Premium</a>
+        <a href="#pricing">Free &amp; Premium</a>
         <a href="#support">Support</a>
         <a href="#faq">FAQ</a>
         <a id="nav-github" href="#" rel="noopener">GitHub</a>
@@ -196,10 +198,10 @@
         <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener">Download for Windows</a>
         <a id="dl-all" class="btn btn-ghost" href="#" rel="noopener">All downloads (ARM64 · portable)</a>
       </div>
-      <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#premium">See what's included</a>.</p>
+      <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#pricing">See what's included</a>.</p>
 
       <div class="shot">
-        <img src="Player_Screenshot.png" alt="Sonara playing a local music library" />
+        <img src="Player_Screenshot.png" width="1477" height="972" alt="Sonara playing a local music library" />
       </div>
     </header>
 
@@ -216,7 +218,7 @@
       </div>
     </section>
 
-    <section id="premium">
+    <section id="pricing">
       <h2>Free &amp; Premium</h2>
       <p class="section-sub">Start with a complete local player. Upgrade when you want deeper control over how you listen and organize.</p>
       <div class="tiers">
@@ -235,7 +237,11 @@
           </ul>
           <a class="btn btn-ghost" id="dl-free" href="#" rel="noopener">Download free</a>
         </div>
-        <div class="tier tier--premium">
+        <!-- #premium lives on the CARD, not the section: the player's
+             "Get Premium" links open ...#premium and should land on the
+             Premium plan itself (on narrow windows the Free card would
+             otherwise fill the first screen). The nav uses #pricing. -->
+        <div class="tier tier--premium" id="premium">
           <span class="premium-badge">Premium</span>
           <h3>Sonara Premium</h3>
           <div class="price">$9.99 <small>one-time</small></div>
@@ -325,6 +331,30 @@
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // ── Exact anchor landing ─────────────────────────────────────────────
+    // The player's "Get Premium" link opens the page directly on #premium.
+    // The browser jumps there before the hero screenshot, the web fonts and
+    // the release-button label finish loading; each of them then pushes the
+    // sections down, so narrow windows end up above the pricing table.
+    // Re-align once loading settles, unless the visitor already moved away.
+    var initialHash = location.hash;
+    var visitorMoved = false;
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (evt) {
+      addEventListener(evt, function () { visitorMoved = true; }, { passive: true, once: true });
+    });
+    function realignAnchor() {
+      if (visitorMoved || !initialHash || location.hash !== initialHash) return;
+      var target = document.getElementById(initialHash.slice(1));
+      if (!target) return;
+      document.documentElement.style.scrollBehavior = 'auto';
+      target.scrollIntoView();
+      document.documentElement.style.scrollBehavior = '';
+    }
+    addEventListener('load', function () { requestAnimationFrame(realignAnchor); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { requestAnimationFrame(realignAnchor); });
+    }
+
     // Resolve direct download links from the latest release so the primary
     // button downloads immediately (falls back to the releases page if the
     // API is unreachable or the repo isn't public yet).
@@ -337,9 +367,15 @@
           if (x64) {
             var btn = document.getElementById('dl-x64');
             btn.href = x64.browser_download_url;
-            btn.textContent = 'Download for Windows · ' + (rel.tag_name || '');
             var free = document.getElementById('dl-free');
             if (free) free.href = x64.browser_download_url;
+          }
+          // The version lives in the pill above the title, NOT on the button
+          // (keep buttons simple - user decision 2026-07-03). Tag v0.86.1-beta
+          // renders as "Public beta v0.86.1".
+          if (rel.tag_name) {
+            var pill = document.querySelector('.beta-pill');
+            if (pill) pill.textContent = 'Public beta ' + rel.tag_name.replace(/-beta$/, '') + ' · Windows 10/11 · x64 & ARM64';
           }
         })
         .catch(function () {});
