@@ -88,6 +88,40 @@
     .cta-note { margin-top: 14px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
     .cta-note a { color: var(--text-muted); text-decoration: underline; }
 
+    /* ── Hero download grid ──
+       Direct downloads for the OTHER three artifacts (the primary button is
+       the x64 installer): ARM64 installer + both portable zips. Non-technical
+       visitors never have to browse GitHub; the muted link below the grid
+       keeps the releases page one click away for everyone else. */
+    .dl-grid {
+      max-width: 680px; margin: 18px auto 0;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: left;
+    }
+    @media (max-width: 680px) { .dl-grid { grid-template-columns: 1fr; max-width: 420px; } }
+    .dl-tile {
+      background: var(--bg-surface); border: 1px solid var(--border-soft);
+      border-radius: 12px; padding: 14px 16px;
+    }
+    .dl-tile strong { font-size: 13.5px; font-weight: 600; }
+    .dl-chip {
+      display: inline-block; margin-left: 8px; padding: 1px 9px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-muted);
+      font-family: var(--font-mono); font-size: 11px; vertical-align: 1px; white-space: nowrap;
+    }
+    .dl-tile-desc { font-size: 12.5px; color: var(--text-secondary); margin: 4px 0 10px; }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 10px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      color: var(--text); font-size: 13px; font-weight: 600;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .dl-btn:hover { text-decoration: none; border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: #24282a; }
+    .dl-btn svg { width: 15px; height: 15px; stroke: var(--accent); fill: none; }
+    .dl-all { margin-top: 12px; font-size: 12.5px; }
+    .dl-all a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+    .dl-all a:hover { color: var(--text); }
+
     /* ── Screenshot ── */
     .shot {
       margin: 56px auto 0; border-radius: 14px; overflow: hidden;
@@ -196,8 +230,25 @@
       </p>
       <div class="cta-row">
         <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener">Download for Windows</a>
-        <a id="dl-all" class="btn btn-ghost" href="#" rel="noopener">All downloads (ARM64 · portable)</a>
       </div>
+      <div class="dl-grid">
+        <div class="dl-tile">
+          <strong>Installer</strong><span class="dl-chip">ARM64</span>
+          <p class="dl-tile-desc">Snapdragon / ARM laptops.</p>
+          <a id="dl-arm64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
+        </div>
+        <div class="dl-tile">
+          <strong>Portable</strong><span class="dl-chip">x64 · zip</span>
+          <p class="dl-tile-desc">Unzip and play, no install.</p>
+          <a id="dl-portable-x64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
+        </div>
+        <div class="dl-tile">
+          <strong>Portable</strong><span class="dl-chip">ARM64 · zip</span>
+          <p class="dl-tile-desc">Portable for ARM laptops.</p>
+          <a id="dl-portable-arm64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
+        </div>
+      </div>
+      <p class="dl-all"><a id="dl-all" href="#" rel="noopener">All versions and release notes on GitHub</a></p>
       <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#pricing">See what's included</a>.</p>
 
       <div class="shot">
@@ -321,7 +372,7 @@
 
     var releasesPage = 'https://github.com/' + GH + '/releases/latest';
     var repoPage = 'https://github.com/' + GH;
-    ['dl-x64', 'dl-all', 'dl-free', 'foot-releases'].forEach(function (id) {
+    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.href = releasesPage;
     });
@@ -363,19 +414,37 @@
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (rel) {
           if (!rel || !rel.assets) return;
-          var x64 = rel.assets.find(function (a) { return /Setup.*x64\.exe$/i.test(a.name); });
+          function assetUrl(re) {
+            var a = rel.assets.find(function (x) { return re.test(x.name); });
+            return a ? a.browser_download_url : null;
+          }
+          var x64 = assetUrl(/Setup.*x64\.exe$/i);
           if (x64) {
             var btn = document.getElementById('dl-x64');
-            btn.href = x64.browser_download_url;
+            btn.href = x64;
             var free = document.getElementById('dl-free');
-            if (free) free.href = x64.browser_download_url;
+            if (free) free.href = x64;
           }
+          // Hero download grid: direct links for the other three artifacts.
+          // Anything not found keeps its releases-page fallback href.
+          // (Artifact names per package.json build config:
+          //  Sonara-Setup-<v>-<arch>.exe / Sonara-<v>-win-<arch>-portable.zip)
+          [['dl-arm64', /Setup.*arm64\.exe$/i],
+           ['dl-portable-x64', /win-x64-portable\.zip$/i],
+           ['dl-portable-arm64', /win-arm64-portable\.zip$/i]].forEach(function (pair) {
+            var url = assetUrl(pair[1]);
+            var el = document.getElementById(pair[0]);
+            if (el && url) el.href = url;
+          });
           // The version lives in the pill above the title, NOT on the button
           // (keep buttons simple - user decision 2026-07-03). Tag v0.86.1-beta
           // renders as "Public beta v0.86.1".
           if (rel.tag_name) {
             var pill = document.querySelector('.beta-pill');
             if (pill) pill.textContent = 'Public beta ' + rel.tag_name.replace(/-beta$/, '') + ' · Windows 10/11 · x64 & ARM64';
+            // The longer pill text can rewrap on narrow windows and shift
+            // layout - re-align the anchor once it settles.
+            requestAnimationFrame(realignAnchor);
           }
         })
         .catch(function () {});
