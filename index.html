@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- TODO before the broad public release:
-       1. Replace Player_Screenshot.png when the final UI is ready.
+       1. Replace showcase screenshots when the final UI is ready.
        2. Name/logo are prototype - find-replace "Sonara" on final naming.
        (Checkout links went live 2026-07-03 with the tester release.) -->
   <style>
@@ -122,14 +122,225 @@
     .dl-all a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
     .dl-all a:hover { color: var(--text); }
 
-    /* ── Screenshot ── */
-    .shot {
-      margin: 56px auto 0; border-radius: 14px; overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
-      background: var(--bg-surface);
+    /* Product showcase */
+    .product-showcase {
+      width: 100%;
+      margin: 56px auto 0;
+      display: grid;
+      gap: 32px;
+      text-align: center;
     }
-    .shot img { display: block; width: 100%; height: auto; }
+    .product-showcase img { display: block; width: 100%; }
+    .clean-spotlight {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1477 / 972;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg-surface);
+      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+      isolation: isolate;
+    }
+    .clean-spotlight img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.015);
+      transition: opacity 900ms ease, transform 1600ms ease;
+    }
+    .clean-spotlight img.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .showcase-lower {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 42px;
+      align-items: start;
+      padding: 2px 0 18px;
+    }
+    .mode-line {
+      min-width: 0;
+      padding-top: 0;
+    }
+    .mode-line h2,
+    .languages h2 {
+      text-align: center;
+    }
+    .mode-line h2 {
+      font-size: clamp(22px, 2.4vw, 30px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+    .mode-line p {
+      margin: 9px auto 0;
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 300px;
+    }
+    .mode-line-media {
+      display: grid;
+      place-items: center;
+      margin-top: 18px;
+      height: clamp(240px, 28vw, 340px);
+      overflow: visible;
+      background: transparent;
+    }
+    .mode-line-media img {
+      height: 100%;
+      object-fit: contain;
+    }
+    .mode-line-media--compact {
+      height: clamp(78px, 8vw, 118px);
+      justify-items: center;
+    }
+    .mode-line-media--compact img {
+      width: min(100%, 390px);
+      height: auto;
+      object-position: center;
+      border-radius: 14px;
+      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+    }
+    .feature-minis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: center;
+      justify-items: center;
+      margin-top: 24px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 680px;
+    }
+    .feature-mini {
+      min-width: 0;
+      width: 100%;
+      display: grid;
+      justify-items: center;
+    }
+    .feature-mini img {
+      width: min(100%, 680px);
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 24px 64px -34px rgba(0, 0, 0, 0.86);
+    }
+    .feature-mini--sleep {
+      max-width: 180px;
+      justify-self: center;
+      margin-bottom: 0;
+    }
+    .mode-line--shrunk {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+    }
+    .mode-line-media--shrunk {
+      height: auto;
+      min-height: clamp(430px, 55vw, 620px);
+      align-self: stretch;
+    }
+    .mode-line-media--shrunk img {
+      width: min(92%, 330px);
+      height: auto;
+      max-height: 96%;
+      object-position: center;
+    }
+    .languages {
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .languages-head {
+      display: grid;
+      gap: 22px;
+      align-items: start;
+    }
+    .languages h2 {
+      font-size: clamp(24px, 3.2vw, 36px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .language-stack {
+      position: relative;
+      width: min(100%, 760px);
+      height: clamp(300px, 34vw, 430px);
+      overflow: visible;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .language-stack img {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: calc(100% - 96px);
+      height: calc(100% - 76px);
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 30px 70px -38px rgba(0, 0, 0, 0.95);
+      z-index: 1;
+      opacity: 0;
+      transform: translate(calc(-50% + 72px), 54px) scale(0.94);
+      transform-origin: 50% 50%;
+      transition:
+        opacity 1100ms ease,
+        transform 1300ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .language-stack img.is-active {
+      z-index: 5;
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+    .language-stack img.is-next {
+      z-index: 4;
+      opacity: 0.48;
+      transform: translate(calc(-50% + 34px), 26px) scale(0.975);
+    }
+    .language-stack img.is-after {
+      z-index: 3;
+      opacity: 0.3;
+      transform: translate(calc(-50% + 68px), 52px) scale(0.95);
+    }
+    .language-stack img.is-back {
+      z-index: 2;
+      opacity: 0.18;
+      transform: translate(calc(-50% + 102px), 78px) scale(0.925);
+    }
+    .language-stack img.is-leaving {
+      z-index: 6;
+      opacity: 0;
+      transform: translate(calc(-50% - 16px), -10px) scale(1.01);
+    }
+    .language-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 26px;
+    }
+    .language-list button {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 11px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+    .language-list button:hover {
+      color: var(--text);
+      border-color: rgba(34, 211, 161, 0.42);
+    }
+    .language-list button.is-active {
+      color: var(--text);
+      border-color: rgba(34, 211, 161, 0.62);
+      background: rgba(34, 211, 161, 0.08);
+    }
     /* ── Sections ── */
     section { padding: 72px 0 0; }
     h2 { font-size: 28px; font-weight: 700; letter-spacing: 0; text-align: center; }
@@ -197,11 +408,60 @@
       margin-top: 90px; padding: 28px 0 40px; border-top: 1px solid var(--border-soft);
       color: var(--text-muted); font-size: 13px; text-align: center;
     }
+    @media (max-width: 900px) {
+      .showcase-lower {
+        grid-template-columns: 1fr;
+      }
+      .mode-line-media {
+        height: 260px;
+      }
+      .mode-line-media--compact {
+        height: 120px;
+      }
+      .mode-line-media--shrunk {
+        min-height: 520px;
+      }
+      .mode-line-media--shrunk img { width: min(54%, 300px); }
+      .language-stack {
+        height: 420px;
+        overflow: visible;
+      }
+      .language-stack img {
+        width: calc(100% - 72px);
+        height: calc(100% - 62px);
+      }
+    }
     @media (max-width: 680px) {
       h1 { font-size: 42px; }
       .sub { font-size: 16px; }
       nav { align-items: flex-start; gap: 16px; flex-direction: column; }
       nav .links { gap: 16px; flex-wrap: wrap; }
+    }
+    @media (max-width: 560px) {
+      .mode-line-media { height: 260px; }
+      .mode-line-media--compact { height: 120px; }
+      .feature-minis { grid-template-columns: 1fr; max-width: 360px; }
+      .feature-mini--sleep { max-width: 180px; margin-bottom: 0; }
+      .mode-line-media--shrunk { min-height: 430px; }
+      .mode-line-media--shrunk img { width: min(64%, 260px); }
+      .language-stack { height: 300px; }
+      .language-stack img {
+        width: calc(100% - 42px);
+        height: calc(100% - 44px);
+      }
+      .language-stack img.is-next { transform: translate(calc(-50% + 16px), 14px) scale(0.965); }
+      .language-stack img.is-after { transform: translate(calc(-50% + 32px), 28px) scale(0.93); }
+      .language-stack img.is-back { transform: translate(calc(-50% + 48px), 42px) scale(0.895); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .clean-spotlight img {
+        transition: none;
+        transform: none;
+      }
+      .language-stack img {
+        transition: none;
+      }
+      .language-stack img.is-active { transform: translate(-50%, 0) scale(1); }
     }
   </style>
 </head>
@@ -251,8 +511,71 @@
       <p class="dl-all"><a id="dl-all" href="#" rel="noopener">All versions and release notes on GitHub</a></p>
       <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#pricing">See what's included</a>.</p>
 
-      <div class="shot">
-        <img src="Player_Screenshot.png" width="1477" height="972" alt="Sonara playing a local music library" />
+      <div class="product-showcase" aria-label="Sonara screenshots">
+        <div class="clean-spotlight" data-clean-spotlight>
+          <img class="is-active" src="Img Player Screenshot.png" width="1450" height="963" alt="Sonara library view" />
+          <img src="Img Player default visualisation.png" width="3440" height="1440" alt="Sonara visualizer view" />
+          <img src="Img Lyrics fullscreen.png" width="1487" height="965" alt="Sonara fullscreen lyrics" />
+          <img src="Img Mini Lyrics.png" width="1487" height="965" alt="Sonara mini lyrics view" />
+          <img src="Img Jump To track.png" width="1450" height="963" alt="Sonara jump to track" />
+        </div>
+
+        <div class="showcase-lower">
+          <article class="mode-line mode-line--tools">
+            <h2>Tune the sound, time the night</h2>
+            <p>Shape playback with the equalizer and let Sonara stop on its own when the session winds down.</p>
+            <div class="feature-minis" aria-label="More Sonara modes">
+              <figure class="feature-mini">
+                <img src="Img Equalizer.png" width="789" height="458" alt="Sonara equalizer settings" />
+              </figure>
+              <figure class="feature-mini feature-mini--sleep">
+                <img src="Img Sleep Time.png" width="319" height="163" alt="Sonara sleep timer" />
+              </figure>
+            </div>
+          </article>
+
+          <article class="mode-line mode-line--small">
+            <h2>Small when your work needs the screen</h2>
+            <p>Keep playback close while games, creative tools or the desktop stay in front.</p>
+            <figure class="mode-line-media mode-line-media--compact">
+              <img src="Img Compact Player.png" width="627" height="57" alt="Sonara compact player" />
+            </figure>
+          </article>
+
+          <article class="mode-line mode-line--shrunk">
+            <h2>Super shrunk</h2>
+            <p>A minimal shape for moments when the music should stay present, not visible.</p>
+            <figure class="mode-line-media mode-line-media--shrunk">
+              <img src="Img Super Shrunk Player.png" width="475" height="963" alt="Sonara super shrunk player" />
+            </figure>
+          </article>
+
+          <section class="languages">
+            <div class="languages-head">
+              <div>
+                <h2>Available in 7 languages</h2>
+              </div>
+              <div class="language-stack" data-language-deck aria-hidden="true">
+                <img class="is-active" src="Lang English.png" width="1520" height="1019" alt="" />
+                <img class="is-next" src="Lang Bulgarian.png" width="1420" height="938" alt="" />
+                <img class="is-after" src="Lang Deutsch.png" width="1420" height="938" alt="" />
+                <img class="is-back" src="Lang Español.png" width="1420" height="938" alt="" />
+                <img src="Lang Français.png" width="1420" height="938" alt="" />
+                <img src="Lang Русский.png" width="1420" height="938" alt="" />
+                <img src="Lang 中文.png" width="1420" height="938" alt="" />
+              </div>
+            </div>
+            <div class="language-list" aria-label="Supported languages">
+              <button type="button" class="is-active" data-language-chip="0" aria-label="Show English screenshot">English</button>
+              <button type="button" data-language-chip="1" aria-label="Show Bulgarian screenshot">Bulgarian</button>
+              <button type="button" data-language-chip="2" aria-label="Show Deutsch screenshot">Deutsch</button>
+              <button type="button" data-language-chip="3" aria-label="Show Español screenshot">Español</button>
+              <button type="button" data-language-chip="4" aria-label="Show Français screenshot">Français</button>
+              <button type="button" data-language-chip="5" aria-label="Show Russian screenshot">Русский</button>
+              <button type="button" data-language-chip="6" aria-label="Show Chinese screenshot">中文</button>
+            </div>
+          </section>
+        </div>
       </div>
     </header>
 
@@ -381,6 +704,74 @@
     document.getElementById('buy-premium').href = PREMIUM_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.querySelectorAll('[data-clean-spotlight]').forEach(function (root) {
+      var slides = Array.from(root.querySelectorAll('img'));
+      var active = 0;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion || slides.length < 2) return;
+
+      setInterval(function () {
+        slides[active].classList.remove('is-active');
+        active = (active + 1) % slides.length;
+        slides[active].classList.add('is-active');
+      }, 5200);
+    });
+
+    document.querySelectorAll('[data-language-deck]').forEach(function (root) {
+      var cards = Array.from(root.querySelectorAll('img'));
+      var section = root.closest('.languages');
+      var chips = section ? Array.from(section.querySelectorAll('[data-language-chip]')) : [];
+      var active = 0;
+      var leaveTimer = null;
+      var rotateTimer = null;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function paint(previous) {
+        cards.forEach(function (card) {
+          card.classList.remove('is-active', 'is-next', 'is-after', 'is-back', 'is-leaving');
+        });
+        chips.forEach(function (chip, index) {
+          chip.classList.toggle('is-active', index === active);
+        });
+        if (previous != null && previous !== active) {
+          cards[previous].classList.add('is-leaving');
+          clearTimeout(leaveTimer);
+          leaveTimer = setTimeout(function () {
+            cards[previous].classList.remove('is-leaving');
+          }, 1350);
+        }
+        cards[active].classList.add('is-active');
+        cards[(active + 1) % cards.length].classList.add('is-next');
+        cards[(active + 2) % cards.length].classList.add('is-after');
+        cards[(active + 3) % cards.length].classList.add('is-back');
+      }
+
+      function goTo(next) {
+        if (next === active || next < 0 || next >= cards.length) return;
+        var previous = active;
+        active = next;
+        paint(previous);
+      }
+
+      function startRotation() {
+        if (reduceMotion || cards.length < 2) return;
+        clearInterval(rotateTimer);
+        rotateTimer = setInterval(function () {
+          goTo((active + 1) % cards.length);
+        }, 4400);
+      }
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          goTo(Number(chip.dataset.languageChip));
+          startRotation();
+        });
+      });
+
+      paint(null);
+      startRotation();
+    });
 
     // ── Exact anchor landing ─────────────────────────────────────────────
     // The player's "Get Premium" link opens the page directly on #premium.
