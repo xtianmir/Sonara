@@ -229,6 +229,10 @@
       border-radius: 12px;
       box-shadow: 0 24px 64px -34px rgba(0, 0, 0, 0.86);
     }
+    .feature-mini--eq {
+      max-width: 520px;
+      justify-self: center;
+    }
     .feature-mini--sleep {
       max-width: 180px;
       justify-self: center;
@@ -441,6 +445,7 @@
       .mode-line-media { height: 260px; }
       .mode-line-media--compact { height: 120px; }
       .feature-minis { grid-template-columns: 1fr; max-width: 360px; }
+      .feature-mini--eq { max-width: 360px; }
       .feature-mini--sleep { max-width: 180px; margin-bottom: 0; }
       .mode-line-media--shrunk { min-height: 430px; }
       .mode-line-media--shrunk img { width: min(64%, 260px); }
@@ -522,12 +527,19 @@
 
         <div class="showcase-lower">
           <article class="mode-line mode-line--tools">
-            <h2>Tune the sound, time the night</h2>
-            <p>Shape playback with the equalizer and let Sonara stop on its own when the session winds down.</p>
-            <div class="feature-minis" aria-label="More Sonara modes">
-              <figure class="feature-mini">
+            <h2>Tune the sound</h2>
+            <p>Shape playback with the equalizer and keep the sound exactly where you want it.</p>
+            <div class="feature-minis" aria-label="Sonara equalizer">
+              <figure class="feature-mini feature-mini--eq">
                 <img src="Img Equalizer.png" width="789" height="458" alt="Sonara equalizer settings" />
               </figure>
+            </div>
+          </article>
+
+          <article class="mode-line mode-line--sleep">
+            <h2>Sleep timer</h2>
+            <p>Let Sonara stop on its own when the night winds down.</p>
+            <div class="feature-minis" aria-label="Sonara sleep timer">
               <figure class="feature-mini feature-mini--sleep">
                 <img src="Img Sleep Time.png" width="319" height="163" alt="Sonara sleep timer" />
               </figure>
