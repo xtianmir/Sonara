@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonara - local-first music player for Windows</title>
-  <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no telemetry. Just your library." />
+  <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -521,6 +521,7 @@
         <a href="#pricing">Free &amp; Premium</a>
         <a href="#support">Support</a>
         <a href="#faq">FAQ</a>
+        <a id="nav-ideas" href="#" rel="noopener">Ideas</a>
         <a id="nav-github" href="#" rel="noopener">GitHub</a>
       </span>
     </nav>
@@ -530,7 +531,7 @@
       <h1>Your music.<br /><span class="accent">Your machine.</span></h1>
       <p class="sub">
         A fast, beautiful, local-first music player for Windows.
-        No cloud, no account, no telemetry. Just your library, played the way you want.
+        No cloud, no account, no ads. Just your library, played the way you want.
       </p>
       <div class="cta-row">
         <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener">Download for Windows</a>
@@ -639,7 +640,7 @@
         <div class="card"><h3><span class="dot"></span>Synced lyrics</h3><p>Time-synced lyrics from your files, inline or fullscreen, without covering your controls.</p></div>
         <div class="card"><h3><span class="dot"></span>Mini player</h3><p>A slim always-on-top ribbon with a live equalizer readout, scrolling title and edge snapping.</p></div>
         <div class="card"><h3><span class="dot"></span>Touch-friendly</h3><p>Big targets, swipe selection and drag reordering that feel right on a Surface or any touch screen.</p></div>
-        <div class="card"><h3><span class="dot"></span>Private by design</h3><p>No account. No telemetry. Your library and listening history never leave your computer.</p></div>
+        <div class="card"><h3><span class="dot"></span>Private by design</h3><p>No account, no ads. Your library and listening history never leave your computer - the only thing Sonara sends is anonymous usage stats, and one switch turns them off.</p></div>
       </div>
     </section>
 
@@ -733,7 +734,7 @@
     </section>
 
     <footer>
-      <p>Sonara - a local-first music player for Windows. · <a id="foot-releases" href="#">Releases</a> · <a id="foot-github" href="#">GitHub</a></p>
+      <p>Sonara - a local-first music player for Windows. · <a id="foot-releases" href="#">Releases</a> · <a id="foot-ideas" href="#">Ideas &amp; feedback</a> · <a id="foot-github" href="#">GitHub</a></p>
       <p style="margin-top: 6px;">© <span id="year"></span> Tihomir Nyagolov</p>
     </footer>
   </div>
@@ -951,6 +952,11 @@
     });
     document.getElementById('nav-github').href = repoPage;
     document.getElementById('foot-github').href = repoPage;
+    var discussionsPage = repoPage + '/discussions';
+    ['nav-ideas', 'foot-ideas'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.href = discussionsPage;
+    });
     document.getElementById('buy-premium').href = PREMIUM_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -1091,5 +1097,8 @@
         .catch(function () {});
     }
   </script>
+  <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->
+  <script data-goatcounter="https://sonara-player.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
