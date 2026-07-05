@@ -38,7 +38,43 @@
     }
     a { color: var(--accent-bright); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+    .site-background {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% -18%, rgba(34, 211, 161, 0.12), transparent 34%),
+        linear-gradient(180deg, #121413 0%, #0f0f0f 42%, #0a0b0b 100%);
+      isolation: isolate;
+    }
+    .site-background::before,
+    .site-background::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .site-background::before {
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+      background-size: 84px 84px;
+      mask-image: linear-gradient(180deg, black 0%, rgba(0, 0, 0, 0.55) 46%, transparent 88%);
+    }
+    .site-background::after {
+      background: linear-gradient(180deg, rgba(15, 15, 15, 0) 0%, rgba(15, 15, 15, 0.16) 48%, rgba(15, 15, 15, 0.78) 100%);
+    }
+    .site-background canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 24px; }
 
     /* ── Nav ── */
     nav {
@@ -471,6 +507,9 @@
   </style>
 </head>
 <body>
+  <div class="site-background" aria-hidden="true">
+    <canvas id="site-background-canvas"></canvas>
+  </div>
   <div class="wrap">
     <nav>
       <a class="brand" href="./" aria-label="Sonara home">
@@ -700,6 +739,205 @@
   </div>
 
   <script>
+    (function () {
+      var canvas = document.getElementById('site-background-canvas');
+      if (!canvas || !canvas.getContext) return;
+
+      var ctx = canvas.getContext('2d', { alpha: true });
+      var width = 0;
+      var height = 0;
+      var dpr = 1;
+      var scrollTarget = 0;
+      var scrollCurrent = 0;
+      var pointerX = 0.5;
+      var pointerY = 0.42;
+      var pointerTargetX = 0.5;
+      var pointerTargetY = 0.42;
+      var rafId = 0;
+
+      var settings = {
+        alpha: 0.92,
+        edge: 0.16,
+        amp: 0.82,
+        saturation: 0.88,
+        lift: 0.52
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function mixColor(a, b, t) {
+        return [
+          Math.round(lerp(a[0], b[0], t)),
+          Math.round(lerp(a[1], b[1], t)),
+          Math.round(lerp(a[2], b[2], t))
+        ];
+      }
+
+      function rgba(color, alpha) {
+        return 'rgba(' + color[0] + ', ' + color[1] + ', ' + color[2] + ', ' + alpha + ')';
+      }
+
+      function resizeBackground() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.max(1, Math.round(width * dpr));
+        canvas.height = Math.max(1, Math.round(height * dpr));
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        updateScrollTarget();
+      }
+
+      function updateScrollTarget() {
+        var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        scrollTarget = clamp(window.scrollY / max, 0, 1);
+        requestDraw();
+      }
+
+      function requestDraw() {
+        if (!rafId) rafId = requestAnimationFrame(drawBackground);
+      }
+
+      function wavePoint(col, row, cols, rows) {
+        var u = col / cols;
+        var v = row / rows;
+        var scroll = scrollCurrent;
+        var horizon = height * lerp(0.34, 0.17, Math.sin(scroll * Math.PI) * settings.lift);
+        var bandHeight = height * lerp(0.58, 0.84, scroll);
+        var xBase = u * width;
+        var yBase = horizon + v * bandHeight;
+        var perspective = Math.pow(v, 1.42);
+        var amp = (22 + 82 * perspective) * settings.amp;
+        var scrollPhase = scroll * Math.PI * 3.8;
+        var pointerPull = (pointerX - 0.5) * 62 * perspective;
+        var waveA = Math.sin(u * Math.PI * 2.4 + scrollPhase);
+        var waveB = Math.sin(u * Math.PI * 6.2 - scrollPhase * 0.7 + v * 2.8);
+        var waveC = Math.cos((u + v) * Math.PI * 3.2 + scrollPhase * 1.2);
+        var rowOffset = (waveA * 0.58 + waveB * 0.26 + waveC * 0.16) * amp;
+        var xSkew = (v - 0.5) * width * lerp(-0.025, 0.045, scroll) + pointerPull;
+        var micro = Math.sin((col * 12.989 + row * 78.233) * 43758.5453) * 8;
+
+        return {
+          x: xBase + xSkew + micro * perspective,
+          y: yBase + rowOffset + (pointerY - 0.42) * 58 * perspective,
+          u: u,
+          v: v
+        };
+      }
+
+      function drawTriangle(a, b, c, color, alpha, edgeAlpha) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.lineTo(c.x, c.y);
+        ctx.closePath();
+        ctx.fillStyle = rgba(color, alpha);
+        ctx.fill();
+
+        if (edgeAlpha > 0) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, ' + edgeAlpha + ')';
+          ctx.lineWidth = 0.65;
+          ctx.stroke();
+        }
+      }
+
+      function drawBackground() {
+        rafId = 0;
+        scrollCurrent += (scrollTarget - scrollCurrent) * 0.1;
+        pointerX += (pointerTargetX - pointerX) * 0.08;
+        pointerY += (pointerTargetY - pointerY) * 0.08;
+
+        ctx.clearRect(0, 0, width, height);
+
+        var glow = ctx.createRadialGradient(width * 0.5, -height * 0.15, 0, width * 0.5, 0, height * 0.78);
+        glow.addColorStop(0, 'rgba(34, 211, 161, ' + (0.08 + scrollCurrent * 0.08) + ')');
+        glow.addColorStop(0.48, 'rgba(34, 211, 161, 0.02)');
+        glow.addColorStop(1, 'rgba(34, 211, 161, 0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, width, height);
+
+        var cols = width < 720 ? 8 : 13;
+        var rows = width < 720 ? 8 : 10;
+        var points = [];
+        var row;
+        var col;
+
+        for (row = 0; row <= rows; row += 1) {
+          var line = [];
+          for (col = -1; col <= cols + 1; col += 1) {
+            line.push(wavePoint(col, row, cols, rows));
+          }
+          points.push(line);
+        }
+
+        var green = [34, 211, 161];
+        var blue = [71, 120, 255];
+        var violet = [143, 102, 255];
+        var dark = [18, 24, 23];
+
+        ctx.globalCompositeOperation = 'screen';
+
+        for (row = 0; row < rows; row += 1) {
+          for (col = 0; col < cols + 2; col += 1) {
+            var p1 = points[row][col];
+            var p2 = points[row][col + 1];
+            var p3 = points[row + 1][col];
+            var p4 = points[row + 1][col + 1];
+            var centerV = (p1.v + p4.v) * 0.5;
+            var centerU = (p1.u + p4.u) * 0.5;
+            var waveTone = Math.sin(centerU * Math.PI * 2 + scrollCurrent * Math.PI * 2.2 + row * 0.55) * 0.5 + 0.5;
+            var sectionTone = Math.sin(scrollCurrent * Math.PI * 2.6) * 0.5 + 0.5;
+            var color = mixColor(green, blue, clamp(sectionTone * 0.62 + centerV * 0.2, 0, 1));
+            color = mixColor(color, violet, clamp((waveTone - 0.62) * 0.7, 0, 0.42));
+            color = mixColor(dark, color, clamp(settings.saturation * (0.38 + centerV * 0.7), 0, 1));
+
+            var alpha = settings.alpha * (0.045 + centerV * 0.13 + waveTone * 0.035);
+            var edgeAlpha = settings.edge * (0.08 + centerV * 0.2);
+
+            if ((row + col) % 2 === 0) {
+              drawTriangle(p1, p2, p3, color, alpha, edgeAlpha);
+              drawTriangle(p2, p4, p3, color, alpha * 0.82, edgeAlpha * 0.7);
+            } else {
+              drawTriangle(p1, p2, p4, color, alpha * 0.82, edgeAlpha * 0.7);
+              drawTriangle(p1, p4, p3, color, alpha, edgeAlpha);
+            }
+          }
+        }
+
+        ctx.globalCompositeOperation = 'source-over';
+
+        var shade = ctx.createLinearGradient(0, 0, 0, height);
+        shade.addColorStop(0, 'rgba(15, 15, 15, 0.04)');
+        shade.addColorStop(0.5, 'rgba(15, 15, 15, 0)');
+        shade.addColorStop(1, 'rgba(15, 15, 15, 0.72)');
+        ctx.fillStyle = shade;
+        ctx.fillRect(0, 0, width, height);
+
+        if (Math.abs(scrollTarget - scrollCurrent) > 0.001 ||
+            Math.abs(pointerTargetX - pointerX) > 0.001 ||
+            Math.abs(pointerTargetY - pointerY) > 0.001) {
+          requestDraw();
+        }
+      }
+
+      addEventListener('resize', resizeBackground);
+      addEventListener('scroll', updateScrollTarget, { passive: true });
+      addEventListener('pointermove', function (event) {
+        pointerTargetX = clamp(event.clientX / Math.max(1, width), 0, 1);
+        pointerTargetY = clamp(event.clientY / Math.max(1, height), 0, 1);
+        requestDraw();
+      }, { passive: true });
+
+      resizeBackground();
+    })();
+
     // ── Single place to point the site at the repo ──────────────────────
     var GH = 'xtianmir/Sonara';
     var PREMIUM_URL = 'https://buy.polar.sh/polar_cl_lkgmJowx2np3ZeKbyIBISpUMdNiSJIH39BFbb0Riuy6';
