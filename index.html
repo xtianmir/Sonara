@@ -736,6 +736,7 @@
     <footer>
       <p>Sonara - a local-first music player for Windows. · <a id="foot-releases" href="#">Releases</a> · <a id="foot-ideas" href="#">Ideas &amp; feedback</a> · <a id="foot-github" href="#">GitHub</a></p>
       <p style="margin-top: 6px;">© <span id="year"></span> Tihomir Nyagolov</p>
+      <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted); max-width: 640px; line-height: 1.5;">Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Settings. Your music library and listening history stay on your computer. Full Terms and a Privacy Policy will follow before the 1.0 release.</p>
     </footer>
   </div>
 
@@ -952,10 +953,10 @@
     });
     document.getElementById('nav-github').href = repoPage;
     document.getElementById('foot-github').href = repoPage;
-    var discussionsPage = repoPage + '/discussions';
+    var ideasPage = repoPage + '/discussions/categories/ideas';
     ['nav-ideas', 'foot-ideas'].forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) el.href = discussionsPage;
+      if (el) el.href = ideasPage;
     });
     document.getElementById('buy-premium').href = PREMIUM_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
