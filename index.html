@@ -488,6 +488,9 @@
     .fgrid h4 { color: var(--accent); font-size: 13.5px; font-weight: 800; margin-bottom: 13px; }
     .fgrid a { display: block; color: var(--text); font-size: 13.5px; margin-bottom: 9px; }
     .legal { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(133, 145, 235, 0.14); text-align: center; }
+    .legal .legal-links { margin-top: 8px; font-size: 13px; }
+    .legal .legal-links a { color: var(--text-muted); font-weight: 700; margin: 0 10px; }
+    .legal .legal-links a:hover { color: var(--accent); }
     .legal .fine { margin: 12px auto 0; font-size: 12px; color: var(--text-faint); max-width: 640px; line-height: 1.5; }
     /* overflow:hidden: the huge Archivo Black glyphs spill ~36px of empty
        descent space below the 0.9 line box, which used to extend the page
@@ -1013,6 +1016,9 @@
       </div>
       <div class="legal">
         <p>© <span id="year"></span> Tihomir Nyagolov</p>
+        <!-- Legal pages (added 2026-07-07). Labels stay English for now; i18n
+             keys pending wording approval - see .work/Legal/LEGAL-PLAN.md. -->
+        <p class="legal-links"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></p>
         <p class="fine">Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.</p>
       </div>
     </div>

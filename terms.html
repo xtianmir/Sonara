@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service - Sonara</title>
+  <meta name="description" content="Terms of Service for Sonara, the local-first music player for Windows." />
+  <!-- Legal pages (approved design 2026-07-07: mint-tint summary box + display-font headings).
+       Effective 2026-07-08. Keep wording in sync with .work/Legal/terms-en.md
+       (source of truth); process in .work/Legal/LEGAL-PLAN.md. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08091a;
+      --bg-card: #141737;
+      --glass: rgba(24, 27, 60, 0.45);
+      --glass-strong: rgba(20, 23, 55, 0.72);
+      --glass-border: rgba(133, 145, 235, 0.16);
+      --border: #2b2f5c;
+      --text: #c3c6e2;
+      --text-strong: #ffffff;
+      --text-secondary: #aab0dd;
+      --text-muted: #8489b8;
+      --text-faint: #666c9e;
+      --accent: #22D3A1;
+      --accent-violet: #8f66ff;
+      --on-accent: #04160b;
+      --glow-1: rgba(34, 211, 161, 0.17);
+      --glow-2: rgba(143, 102, 255, 0.15);
+      --font-sans: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+      --font-display: "Archivo Black", "Arial Black", sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scrollbar-color: #2b2f5c #0a0b20; }
+    ::-webkit-scrollbar { width: 12px; }
+    ::-webkit-scrollbar-track { background: #0a0b20; }
+    ::-webkit-scrollbar-thumb { background: #2b2f5c; border-radius: 999px; border: 3px solid #0a0b20; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .d { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--text-strong); line-height: 1.1; }
+    .site-background { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(circle at 50% -20%, var(--glow-1), transparent 40%),
+        radial-gradient(circle at 22% 24%, var(--glow-1), transparent 52%),
+        radial-gradient(circle at 80% 12%, var(--glow-2), transparent 46%),
+        radial-gradient(circle at 24% 86%, var(--glow-2), transparent 46%),
+        linear-gradient(180deg, #0b0d26 0%, #08091a 46%, #060714 100%); }
+    .wrap { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 0 24px 70px; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 26px 0 0; }
+    nav .wordmark { font-size: 22px; letter-spacing: 0.5px; }
+    nav .wordmark:hover { text-decoration: none; color: var(--accent); }
+    nav .back { font-size: 14px; font-weight: 700; color: var(--text-secondary); border: 1px solid var(--glass-border); background: var(--glass); padding: 8px 16px; border-radius: 999px; }
+    nav .back:hover { color: var(--text-strong); text-decoration: none; border-color: var(--accent); }
+    header.page { margin: 60px 0 32px; }
+    h1 { font-size: clamp(30px, 5vw, 44px); margin-bottom: 12px; }
+    .meta { font-size: 14px; color: var(--text-muted); }
+    .meta b { color: var(--text-secondary); font-weight: 700; }
+    .plain { border-radius: 18px; padding: 26px 28px; margin: 0 0 46px;
+      background: linear-gradient(160deg, rgba(34, 211, 161, 0.10), rgba(143, 102, 255, 0.07)), var(--glass);
+      border: 1px solid rgba(34, 211, 161, 0.28); }
+    .plain .label { font-family: var(--font-display); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; color: var(--accent); margin-bottom: 14px; }
+    .plain ul { list-style: none; }
+    .plain li { padding-left: 26px; position: relative; margin: 9px 0; color: var(--text-secondary); font-size: 15.5px; }
+    .plain li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
+    .plain .note { margin-top: 14px; font-size: 13px; color: var(--text-faint); }
+    section.doc { margin: 0 0 38px; }
+    section.doc h2 { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--text-strong); font-size: 17px; letter-spacing: 0.6px; margin-bottom: 12px; padding-top: 6px; }
+    section.doc h2 .num { color: var(--accent); margin-right: 10px; }
+    section.doc p { margin: 0 0 12px; font-size: 15.5px; }
+    section.doc ul { margin: 0 0 12px 22px; font-size: 15.5px; }
+    section.doc li { margin: 6px 0; }
+    section.doc strong { color: var(--text-strong); font-weight: 700; }
+    .email-js { color: var(--accent); font-weight: 700; cursor: pointer; }
+    .email-js:hover { text-decoration: underline; }
+    .contact { display: inline-flex; align-items: center; gap: 10px; background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 999px; padding: 10px 20px; font-size: 15px; margin-top: 4px; }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--glass-border); padding: 26px 24px 40px; text-align: center; font-size: 13px; color: var(--text-faint); }
+    footer .links { margin-bottom: 10px; }
+    footer .links a { color: var(--text-muted); margin: 0 12px; font-weight: 700; }
+    footer .links a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="site-background" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <nav>
+      <a class="wordmark d" href="./">Sonara</a>
+      <a class="back" href="./">&larr; Back to home</a>
+    </nav>
+
+    <header class="page">
+      <h1 class="d">Terms of Service</h1>
+      <p class="meta">Effective date: <b>July 8, 2026</b> &middot; ArtSolver Ltd.</p>
+    </header>
+
+    <div class="plain">
+      <div class="label">&#9835; In plain words</div>
+      <ul>
+        <li>Sonara is a Windows music player for your own, local music files. The free version is free.</li>
+        <li>Premium is a one-time $9.99 purchase for up to 3 of your computers. There is a 7-day free trial and a 14-day money-back guarantee.</li>
+        <li>Payments are processed by Polar, our merchant of record. They handle checkout, taxes and invoices; we never see your card details.</li>
+        <li>Keep your license key to yourself, and only play music you have the right to play.</li>
+        <li>The app is provided "as is". Your statutory consumer rights remain untouched.</li>
+      </ul>
+      <p class="note">This summary is here to help you; the sections below are the actual terms.</p>
+    </div>
+
+    <section class="doc">
+      <h2><span class="num">1.</span>Who we are</h2>
+      <p>Sonara is created by <strong>Tihomir Nyagolov</strong> and is published and sold by his company <strong>ArtSolver Ltd.</strong> (&#1040;&#1088;&#1090;&#1057;&#1086;&#1083;&#1074;&#1098;&#1088; &#1045;&#1054;&#1054;&#1044;), registered in Bulgaria under company number (UIC) 204535372. Contact: <span class="email-js" role="link" tabindex="0"></span>.</p>
+      <p>These terms cover the Sonara desktop application and this website. By installing or using Sonara you agree to them.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">2.</span>Your license to use Sonara</h2>
+      <ul>
+        <li>The free version of Sonara may be used free of charge.</li>
+        <li>We grant you a personal, non-exclusive, non-transferable license to install and use Sonara. The software itself remains our property: we license it to you, we do not sell it.</li>
+        <li>Sonara plays audio files stored on your computer. You are responsible for having the necessary rights to the files you play. Sonara does not provide, host or stream any music content.</li>
+      </ul>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">3.</span>Premium and license keys</h2>
+      <ul>
+        <li>Premium is a <strong>one-time purchase, not a subscription</strong>. It permanently unlocks the Premium features on up to <strong>3 computers</strong>.</li>
+        <li>After purchase you receive a license key by email. Activation needs a brief internet connection; after that, Premium works fully offline.</li>
+        <li>You can free up a slot at any time by deactivating a computer (in the app or through the Polar customer portal), for example when you replace a PC.</li>
+        <li>Your license key is for you. Do not publish, share, resell or otherwise distribute it. We may block keys that are leaked, resold, refunded or obtained fraudulently. If you believe a key was blocked by mistake, contact support and we will sort it out.</li>
+        <li>Features included in Premium at the time of your purchase stay included. We may add new features over time.</li>
+      </ul>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">4.</span>Free trial</h2>
+      <p>Sonara offers an optional <strong>7-day Premium trial</strong>, one per computer. It requires no payment details and starts only when you choose to start it. When it ends, the app simply returns to the free version. Nothing is ever charged.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">5.</span>Purchases, prices and taxes</h2>
+      <p>Purchases are processed by <a href="https://polar.sh" rel="noopener">Polar</a>, acting as <strong>merchant of record</strong>. This means Polar is the party selling to you: it operates the checkout, charges your payment method, applies and remits VAT or sales tax where applicable, and issues your invoice. Polar's own terms and privacy policy apply to the checkout process.</p>
+      <p>The price shown at checkout is the final price, including tax where applicable.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">6.</span>Refunds: 14-day money-back guarantee</h2>
+      <p>If you are not happy with your Premium purchase, tell us within <strong>14 days of the purchase</strong> and you will receive a full refund, no questions asked. Just email <span class="email-js" role="link" tabindex="0"></span>, ideally from the address you used at checkout so we can find your order; we then issue the refund through Polar and the money returns to your original payment method.</p>
+      <p>This voluntary guarantee gives you at least the protection of the EU 14-day right of withdrawal and does not limit any statutory rights you may have.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">7.</span>Updates and changes to the app</h2>
+      <ul>
+        <li>Sonara can check for updates and tells you when one is available; nothing is installed without your action.</li>
+        <li>Sonara is under active development: features may be added, changed or removed over time. We will not take away Premium features you paid for without providing a reasonable equivalent.</li>
+      </ul>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">8.</span>Fair use of the software</h2>
+      <p>You must not:</p>
+      <ul>
+        <li>circumvent or attempt to circumvent license checks or Premium restrictions;</li>
+        <li>decompile, reverse engineer or modify the app, except to the extent the law expressly permits it;</li>
+        <li>redistribute Sonara in modified form, or bundle it with malware or unwanted software;</li>
+        <li>use Sonara for anything unlawful.</li>
+      </ul>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">9.</span>Warranty and liability</h2>
+      <p>Sonara is provided <strong>"as is"</strong>, without warranty of any kind; we do not promise it will be error-free or uninterrupted. To the extent permitted by law, our total liability for claims related to Sonara is limited to the amount you paid for it. Nothing in these terms excludes liability that cannot be excluded by law (such as liability for intent or gross negligence), and nothing in them limits your statutory consumer rights.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">10.</span>Termination</h2>
+      <p>You may stop using Sonara at any time. We may terminate your license if you materially breach these terms (for example, license-key abuse under section 3). Sections 9 and 11 survive termination.</p>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">11.</span>Changes to these terms; governing law</h2>
+      <ul>
+        <li>We may update these terms as the app evolves. The current version, with its effective date, is always published on this page; significant changes will be pointed out on the website or in the app.</li>
+        <li>These terms are governed by the law of <strong>Bulgaria</strong>. If you are a consumer in the EU, you also keep the protection of the mandatory consumer-law rules of your country of residence, and you may bring disputes before your local courts.</li>
+      </ul>
+      <p class="contact">Questions? <span class="email-js" role="link" tabindex="0"></span></p>
+    </section>
+  </div>
+
+  <footer>
+    <div class="links">
+      <a href="./">Home</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+    &copy; <span id="year"></span> ArtSolver Ltd. &middot; Sonara is created by Tihomir Nyagolov
+  </footer>
+
+  <script>
+    // Anti-scraper email: the address never appears as plain text in the HTML
+    // source - it is assembled at render time (LEGAL-PLAN.md standing rule).
+    (function () {
+      var u = 'sonara', d = 'artsolver.com';
+      function go() { location.href = 'mailto:' + u + '@' + d; }
+      document.querySelectorAll('.email-js').forEach(function (el) {
+        el.textContent = u + '@' + d;
+        el.addEventListener('click', go);
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+      });
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
+  <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->
+  <script data-goatcounter="https://sonara-player.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
