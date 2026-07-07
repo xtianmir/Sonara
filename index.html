@@ -7,7 +7,7 @@
   <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library." />
   <!-- Discord-inspired redesign (approved 2026-07-07): Sonara Mint accent,
        Archivo Black display font, interactive blurred parallax background,
-       glass panels, marquee ribbons, i18n via the inline I18N dictionary
+       glass panels, i18n via the inline I18N dictionary
        (en/bg/de/es/fr/ru/zh - same locales as the player). -->
   <!-- TODO before the broad public release:
        1. Replace showcase screenshots when the final UI is ready.
@@ -186,7 +186,7 @@
     .menu a:hover { background: rgba(34, 211, 161, 0.14); text-decoration: none; }
 
     /* ── Hero: copy left, rotating showcase right, actions centered below ── */
-    header { position: relative; z-index: 1; padding: 48px 0 0; }
+    header { position: relative; z-index: 1; padding: 48px 0 26px; }
     .hero-grid {
       display: grid; grid-template-columns: 0.92fr 1.08fr;
       gap: 52px; align-items: center;
@@ -239,23 +239,6 @@
     .dl-all-link { color: var(--text-faint); font-size: 12.5px; text-decoration: underline; text-underline-offset: 2px; }
     .dl-all-link:hover { color: var(--text-strong); }
     .cta-note { margin: 0; color: var(--text-faint); font-size: 13px; }
-
-    /* ── Marquee ribbons (Discord-style passing statements) ── */
-    .ribbon-wrap { position: relative; z-index: 1; overflow: hidden; padding: 56px 0 26px; }
-    .ribbon { transform: rotate(-1.5deg); width: 104%; margin-left: -2%; overflow: hidden; }
-    .ribbon.up { transform: rotate(1.5deg); }
-    .rtrack {
-      display: inline-flex; align-items: center; white-space: nowrap;
-      will-change: transform;
-      animation: ribbon-slide 42s linear infinite;
-    }
-    .ribbon.up .rtrack { animation-direction: reverse; }
-    .rt { display: inline-flex; align-items: center; gap: 34px; padding-right: 34px; }
-    .rt .rw { font-family: var(--font-display); text-transform: uppercase; color: var(--text-strong); font-size: clamp(24px, 3vw, 40px); line-height: 1; }
-    .rt .rw.alt { color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55); }
-    .rt .rspark { width: 0.55em; height: 0.55em; font-size: clamp(24px, 3vw, 40px); fill: var(--accent); stroke: none; }
-    @keyframes ribbon-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    @media (prefers-reduced-motion: reduce) { .rtrack { animation: none; } }
 
     /* ── Glass panels around the feature rows (Discord-style bubbles) ── */
     .sec { position: relative; z-index: 1; padding: 34px 0; }
@@ -433,7 +416,7 @@
       position: relative; z-index: 1;
       background: linear-gradient(180deg, #0b0d26 0%, #101538 42%, #0e352c 100%);
       border-top: 1px solid var(--border-soft);
-      padding: 64px 0 0;
+      padding: 64px 0 52px;
       color: var(--text-muted); font-size: 13px;
     }
     .fgrid { display: grid; grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 32px; }
@@ -492,17 +475,6 @@
     .legal .legal-links a { color: var(--text-muted); font-weight: 700; margin: 0 10px; }
     .legal .legal-links a:hover { color: var(--accent); }
     .legal .fine { margin: 12px auto 0; font-size: 12px; color: var(--text-faint); max-width: 640px; line-height: 1.5; }
-    /* overflow:hidden: the huge Archivo Black glyphs spill ~36px of empty
-       descent space below the 0.9 line box, which used to extend the page
-       past the footer and reveal the fixed background as a bottom band.
-       "SONARA" has no descenders, so the clip is invisible. */
-    .footer-wordmark {
-      font-size: clamp(88px, 16.5vw, 250px);
-      text-align: center; color: #d9f6ec; opacity: 0.95;
-      line-height: 0.9; padding: 44px 0 20px;
-      letter-spacing: -0.02em; user-select: none;
-      overflow: hidden;
-    }
     /* Safety strip for browsers that ignore overscroll-behavior (rubber-band
        overscroll would otherwise flash the fixed background below the page).
        Painted as box-shadow: pure ink, adds zero scrollable height (an
@@ -668,33 +640,6 @@
     </header>
   </div>
 
-  <div class="ribbon-wrap" aria-hidden="true">
-    <div class="ribbon">
-      <div class="rtrack">
-        <span class="rt">
-          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
-        </span>
-        <span class="rt">
-          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
-        </span>
-      </div>
-    </div>
-  </div>
-
   <div class="sec">
     <div class="wrap">
       <div class="panel panel--mint">
@@ -798,34 +743,7 @@
     </div>
   </section>
 
-  <div class="ribbon-wrap" aria-hidden="true">
-    <div class="ribbon up">
-      <div class="rtrack">
-        <span class="rt">
-          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
-        </span>
-        <span class="rt">
-          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
-          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <section id="pricing" class="sec" style="padding-top: 30px;">
+  <section id="pricing" class="sec">
     <div class="wrap">
       <div class="sec-head"><h2 class="d">Free &amp; Premium</h2></div>
       <p class="section-sub">Start with a complete local player. Upgrade when you want deeper control over how you listen and organize.</p>
@@ -1022,7 +940,6 @@
         <p class="fine">Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.</p>
       </div>
     </div>
-    <div class="footer-wordmark d" aria-hidden="true">Sonara</div>
   </footer>
 
   <script>
@@ -1320,8 +1237,6 @@
       'dl.parm.t': 'Portable zip for ARM laptops.',
       'dl.all': 'All versions and release notes on GitHub',
       'cta.note': 'Free forever. Premium features unlock with a one-time license.',
-      'r1.a': 'No cloud', 'r1.b': 'No account', 'r1.c': 'No ads', 'r1.d': 'Just your library',
-      'r2.a': 'Pay once', 'r2.b': 'Keep it forever', 'r2.c': 'No subscription', 'r2.d': 'Works offline',
       'f.eq.h': 'Tune the sound',
       'f.eq.p': 'Shape playback with the equalizer and keep the sound exactly where you want it.',
       'f.sl.h': 'Sleep timer',
@@ -1430,8 +1345,6 @@
       'dl.parm.t': 'Portable zip за ARM лаптопи.',
       'dl.all': 'Всички версии и бележки по изданията в GitHub',
       'cta.note': 'Безплатен завинаги. Premium функциите се отключват с еднократен лиценз.',
-      'r1.a': 'Без облак', 'r1.b': 'Без акаунт', 'r1.c': 'Без реклами', 'r1.d': 'Само твоята библиотека',
-      'r2.a': 'Плащаш веднъж', 'r2.b': 'Твой завинаги', 'r2.c': 'Без абонамент', 'r2.d': 'Работи офлайн',
       'f.eq.h': 'Настрой звука',
       'f.eq.p': 'Оформи звученето с еквалайзера и дръж звука точно там, където го искаш.',
       'f.sl.h': 'Таймер за заспиване',
@@ -1540,8 +1453,6 @@
       'dl.parm.t': 'Portable-Zip für ARM-Laptops.',
       'dl.all': 'Alle Versionen und Release Notes auf GitHub',
       'cta.note': 'Für immer kostenlos. Premium-Funktionen schaltet eine einmalige Lizenz frei.',
-      'r1.a': 'Keine Cloud', 'r1.b': 'Kein Konto', 'r1.c': 'Keine Werbung', 'r1.d': 'Nur deine Bibliothek',
-      'r2.a': 'Einmal zahlen', 'r2.b': 'Für immer deins', 'r2.c': 'Kein Abo', 'r2.d': 'Funktioniert offline',
       'f.eq.h': 'Stimm den Klang ab',
       'f.eq.p': 'Forme die Wiedergabe mit dem Equalizer und halte den Klang genau dort, wo du ihn willst.',
       'f.sl.h': 'Sleep-Timer',
@@ -1650,8 +1561,6 @@
       'dl.parm.t': 'Zip portable para portátiles ARM.',
       'dl.all': 'Todas las versiones y notas en GitHub',
       'cta.note': 'Gratis para siempre. Las funciones Premium se desbloquean con una licencia de pago único.',
-      'r1.a': 'Sin nube', 'r1.b': 'Sin cuenta', 'r1.c': 'Sin anuncios', 'r1.d': 'Solo tu biblioteca',
-      'r2.a': 'Paga una vez', 'r2.b': 'Tuyo para siempre', 'r2.c': 'Sin suscripción', 'r2.d': 'Funciona sin conexión',
       'f.eq.h': 'Ajusta el sonido',
       'f.eq.p': 'Da forma a la reproducción con el ecualizador y mantén el sonido exactamente donde lo quieres.',
       'f.sl.h': 'Temporizador',
@@ -1760,8 +1669,6 @@
       'dl.parm.t': 'Zip portable pour portables ARM.',
       'dl.all': 'Toutes les versions et notes sur GitHub',
       'cta.note': 'Gratuit pour toujours. Les fonctions Premium se débloquent avec une licence à paiement unique.',
-      'r1.a': 'Pas de cloud', 'r1.b': 'Pas de compte', 'r1.c': 'Pas de pub', 'r1.d': 'Juste votre bibliothèque',
-      'r2.a': 'Payez une fois', 'r2.b': 'À vous pour toujours', 'r2.c': "Pas d'abonnement", 'r2.d': 'Fonctionne hors ligne',
       'f.eq.h': 'Réglez le son',
       'f.eq.p': "Façonnez la lecture avec l'égaliseur et gardez le son exactement là où vous le voulez.",
       'f.sl.h': 'Minuteur de veille',
@@ -1870,8 +1777,6 @@
       'dl.parm.t': 'Portable-zip для ARM-ноутбуков.',
       'dl.all': 'Все версии и заметки о релизах на GitHub',
       'cta.note': 'Бесплатно навсегда. Premium-функции открываются разовой лицензией.',
-      'r1.a': 'Без облака', 'r1.b': 'Без аккаунта', 'r1.c': 'Без рекламы', 'r1.d': 'Только ваша библиотека',
-      'r2.a': 'Платите один раз', 'r2.b': 'Ваше навсегда', 'r2.c': 'Без подписки', 'r2.d': 'Работает офлайн',
       'f.eq.h': 'Настройте звук',
       'f.eq.p': 'Формируйте звучание эквалайзером и держите звук именно там, где хотите.',
       'f.sl.h': 'Таймер сна',
@@ -1980,8 +1885,6 @@
       'dl.parm.t': '适用于 ARM 笔记本的便携 zip。',
       'dl.all': 'GitHub 上的全部版本与更新说明',
       'cta.note': '永久免费。Premium 功能通过一次性许可证解锁。',
-      'r1.a': '无云端', 'r1.b': '无账户', 'r1.c': '无广告', 'r1.d': '只有你的音乐库',
-      'r2.a': '一次付费', 'r2.b': '永久拥有', 'r2.c': '无订阅', 'r2.d': '离线可用',
       'f.eq.h': '调校声音',
       'f.eq.p': '用均衡器塑造播放效果，让声音始终停在你想要的位置。',
       'f.sl.h': '睡眠定时器',
@@ -2116,10 +2019,6 @@
         setAll('#dl-portable-arm64', 'dl.parm'); setTitleAttr('dl-portable-arm64', 'dl.parm.t');
         setAll('#dl-all', 'dl.all');
         setAll('.cta-note', 'cta.note');
-        document.querySelectorAll('.ribbon-wrap').forEach(function (wrap, wi) {
-          var keys = wi === 0 ? ['r1.a', 'r1.b', 'r1.c', 'r1.d'] : ['r2.a', 'r2.b', 'r2.c', 'r2.d'];
-          wrap.querySelectorAll('.rw').forEach(function (w, i) { w.innerHTML = t(keys[i % 4]); });
-        });
         var rows = document.querySelectorAll('.panel .frow');
         [['f.eq.h', 'f.eq.p'], ['f.sl.h', 'f.sl.p'], ['f.cp.h', 'f.cp.p'], ['f.sh.h', 'f.sh.p']].forEach(function (pair, i) {
           if (!rows[i]) return;
