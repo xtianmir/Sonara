@@ -5,636 +5,787 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonara - local-first music player for Windows</title>
   <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Discord-inspired redesign (approved 2026-07-07): Sonara Mint accent,
+       Archivo Black display font, interactive blurred parallax background,
+       glass panels, marquee ribbons, i18n via the inline I18N dictionary
+       (en/bg/de/es/fr/ru/zh - same locales as the player). -->
   <!-- TODO before the broad public release:
        1. Replace showcase screenshots when the final UI is ready.
        2. Name/logo are prototype - find-replace "Sonara" on final naming.
        (Checkout links went live 2026-07-03 with the tester release.) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0f0f0f;
-      --bg-surface: #151718;
-      --bg-elevated: #1d2021;
-      --border: #2a2e30;
-      --border-soft: #222526;
-      --text: #f2f4f3;
-      --text-secondary: #b8bdbb;
-      --text-muted: #7c8481;
+      --bg: #08091a;
+      --bg-card: #141737;
+      --bg-elevated: #1d2044;
+      --glass: rgba(24, 27, 60, 0.45);
+      --glass-strong: rgba(20, 23, 55, 0.72);
+      --glass-border: rgba(133, 145, 235, 0.16);
+      --border: #2b2f5c;
+      --border-soft: #23264c;
+      --chip-border: #383d6e;
+      --text: #c3c6e2;
+      --text-strong: #ffffff;
+      --text-secondary: #aab0dd;
+      --text-muted: #8489b8;
+      --text-faint: #666c9e;
       --accent: #22D3A1;
-      --accent-bright: #22D3A1;
-      --font-sans: "Geist", "Segoe UI", system-ui, sans-serif;
-      --font-mono: "Geist Mono", "SFMono-Regular", Consolas, monospace;
+      --accent-violet: #8f66ff;
+      --on-accent: #04160b;
+      --glow-1: rgba(34, 211, 161, 0.17);
+      --glow-2: rgba(143, 102, 255, 0.15);
+      --font-sans: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+      --font-display: "Archivo Black", "Arial Black", sans-serif;
+      --fx-b1: 2px;
+      --fx-b2: 4.5px;
+      --fx-b3: 8px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overscroll-behavior-y: none; }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      overscroll-behavior-y: none;
     }
-    a { color: var(--accent-bright); text-decoration: none; }
+    a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .site-background {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% -18%, rgba(34, 211, 161, 0.12), transparent 34%),
-        linear-gradient(180deg, #121413 0%, #0f0f0f 42%, #0a0b0b 100%);
-      isolation: isolate;
-    }
-    .site-background::before,
-    .site-background::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    .site-background::before {
-      opacity: 0.22;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-      background-size: 84px 84px;
-      mask-image: linear-gradient(180deg, black 0%, rgba(0, 0, 0, 0.55) 46%, transparent 88%);
-    }
-    .site-background::after {
-      background: linear-gradient(180deg, rgba(15, 15, 15, 0) 0%, rgba(15, 15, 15, 0.16) 48%, rgba(15, 15, 15, 0.78) 100%);
-    }
-    .site-background canvas {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 24px; }
+    img { display: block; max-width: 100%; height: auto; }
 
-    /* ── Nav ── */
-    nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 0;
+    /* ── Themed scrollbars (page + language menu) ── */
+    html { scrollbar-color: #2b2f5c #0a0b20; }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: #0a0b20; }
+    ::-webkit-scrollbar-thumb { background: #2b2f5c; border-radius: 999px; border: 3px solid #0a0b20; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3f78; }
+    .lang-menu { scrollbar-width: thin; scrollbar-color: rgba(195, 198, 226, 0.35) transparent; }
+    .lang-menu::-webkit-scrollbar { width: 8px; }
+    .lang-menu::-webkit-scrollbar-track { background: transparent; }
+    .lang-menu::-webkit-scrollbar-thumb { background: rgba(195, 198, 226, 0.32); border: 2px solid transparent; background-clip: padding-box; border-radius: 999px; }
+    .lang-menu::-webkit-scrollbar-thumb:hover { background: rgba(195, 198, 226, 0.5); background-clip: padding-box; }
+    .d {
+      font-family: var(--font-display);
+      font-weight: 400;
+      text-transform: uppercase;
+      color: var(--text-strong);
+      line-height: 1.06;
     }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: 0; color: var(--text); }
-    .brand:hover { color: var(--text); text-decoration: none; }
-    .brand-mark {
-      display: inline-flex; align-items: flex-end; gap: 2px; height: 18px;
+
+    /* ── Interactive blurred background ──
+       Spans the whole page (sections/panels are translucent). GPU-only:
+       static CSS blur per depth layer, movement via transform driven by
+       pointer + a very light scroll drift, with rAF lerp. */
+    .site-background {
+      position: fixed; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+      contain: strict;
+      background:
+        radial-gradient(circle at 50% -20%, var(--glow-1), transparent 40%),
+        linear-gradient(180deg, #0b0d26 0%, #08091a 46%, #060714 100%);
     }
+    .bg-neb { position: absolute; inset: 0; }
+    .bg-neb-a {
+      background:
+        radial-gradient(circle at 22% 24%, var(--glow-1), transparent 52%),
+        radial-gradient(circle at 80% 12%, var(--glow-2), transparent 46%);
+    }
+    .bg-neb-b {
+      background:
+        radial-gradient(circle at 24% 86%, var(--glow-2), transparent 46%),
+        radial-gradient(circle at 78% 90%, var(--glow-1), transparent 50%);
+    }
+    /* Small bleed only: with the old -160px inset the percentage positions
+       pushed edge icons half off-screen (left:2% landed at -116px). The
+       parallax travel is tiny now, so 60px of bleed is plenty. */
+    .fx-layer { position: absolute; inset: -60px; will-change: transform; }
+    .fx-l1 { filter: blur(var(--fx-b1)); }
+    .fx-l2 { filter: blur(var(--fx-b2)); }
+    .fx-l3 { filter: blur(var(--fx-b3)); }
+    .fx-ic { position: absolute; color: rgba(34, 211, 161, 0.6); }
+    .fx-ic.vi { color: rgba(143, 102, 255, 0.55); }
+    .fx-ic.dm { color: rgba(195, 198, 226, 0.36); }
+    .fx-ic svg {
+      display: block; width: 100%; height: 100%;
+      fill: none; stroke: currentColor; stroke-width: 1.5;
+      stroke-linecap: round; stroke-linejoin: round;
+      animation: fx-float 9s ease-in-out infinite alternate;
+    }
+    .fx-ic svg.fill { fill: currentColor; stroke: none; }
+    @keyframes fx-float {
+      from { transform: translateY(-9px) rotate(-4deg); }
+      to { transform: translateY(9px) rotate(5deg); }
+    }
+    /* Stars: mostly calm; a few glint briefly now and then. */
+    .fx-star {
+      position: absolute; background: #fff; opacity: 0.38;
+      clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    }
+    .fx-star.tw { animation: fx-glint var(--gd, 7s) ease-in-out infinite; }
+    @keyframes fx-glint {
+      0%, 78%, 100% { opacity: 0.38; transform: scale(1); }
+      86% { opacity: 0.95; transform: scale(1.35); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fx-ic svg, .fx-star.tw { animation: none; }
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── Pills ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      border-radius: 999px; padding: 15px 30px;
+      font-weight: 800; font-size: 15.5px; cursor: pointer;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { text-decoration: none; transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.6); }
+    .btn-primary { background: var(--accent); color: var(--on-accent); }
+    .btn-ghost { background: var(--bg-elevated); color: var(--text-strong); }
+    .btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── Nav (links always visible, Discord-style dropdowns) ── */
+    nav { position: relative; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 22px 0; flex-wrap: wrap; }
+    .brand { display: flex; align-items: flex-end; gap: 9px; color: var(--text-strong); }
+    .brand:hover { color: var(--text-strong); text-decoration: none; }
+    .brand-mark { display: inline-flex; align-items: flex-end; gap: 2px; height: 17px; }
     .brand-mark span { width: 3px; border-radius: 2px; background: var(--accent); }
     .brand-mark span:nth-child(1) { height: 8px; }
     .brand-mark span:nth-child(2) { height: 16px; }
     .brand-mark span:nth-child(3) { height: 11px; }
-    .brand-mark span:nth-child(4) { height: 18px; }
+    .brand-mark span:nth-child(4) { height: 17px; }
     .brand-mark span:nth-child(5) { height: 7px; }
-    nav .links { display: flex; gap: 22px; font-size: 14px; font-weight: 500; }
-    nav .links a { color: var(--text-secondary); }
-    nav .links a:hover { color: var(--text); text-decoration: none; }
+    .brand .brand-name { font-family: var(--font-display); text-transform: uppercase; font-size: 16px; }
+    nav .links { display: flex; gap: 4px; font-size: 14px; font-weight: 800; align-items: center; flex-wrap: wrap; }
+    nav .links > a, .nav-item > a { color: var(--text-strong); opacity: 0.92; padding: 8px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+    nav .links > a:hover, .nav-item > a:hover { opacity: 1; text-decoration: none; background: rgba(133, 145, 235, 0.12); }
+    .chev { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.15s ease; }
+    .nav-item { position: relative; }
+    .nav-item:hover > a .chev, .nav-item:focus-within > a .chev { transform: rotate(180deg); }
+    .menu {
+      position: absolute; top: calc(100% + 8px); left: 50%;
+      transform: translate(-50%, 6px);
+      min-width: 216px; padding: 12px;
+      background: var(--glass-strong);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border); border-radius: 18px;
+      display: flex; flex-direction: column; gap: 2px;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+      z-index: 50;
+    }
+    .menu::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+    .nav-item:hover .menu, .nav-item:focus-within .menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .menu-label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); font-weight: 800; padding: 4px 12px 5px; }
+    .menu a { display: block; padding: 8px 12px; border-radius: 10px; color: var(--text-strong); font-weight: 700; font-size: 13.5px; }
+    .menu a:hover { background: rgba(34, 211, 161, 0.14); text-decoration: none; }
+    .nav-dl { background: #fff; color: #12142e !important; border-radius: 999px; padding: 9px 19px !important; font-size: 13.5px; margin-left: 6px; }
+    .nav-dl:hover { background: #fff !important; transform: translateY(-1px); }
 
-    /* ── Hero ── */
-    header { text-align: center; padding: 72px 0 40px; }
+    /* ── Hero: copy left, rotating showcase right, actions centered below ── */
+    header { position: relative; z-index: 1; padding: 48px 0 0; }
+    .hero-grid {
+      display: grid; grid-template-columns: 0.92fr 1.08fr;
+      gap: 52px; align-items: center;
+    }
+    .hero-copy { text-align: left; }
     .beta-pill {
-      display: inline-block; padding: 4px 12px; border-radius: 999px;
-      border: 1px solid var(--border); color: var(--text-muted);
-      font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: uppercase;
+      display: inline-block; padding: 6px 16px; border-radius: 999px;
+      border: 1px solid var(--chip-border); color: #9ba0cc;
+      background: var(--glass);
+      font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
       margin-bottom: 22px;
     }
-    h1 { font-size: 56px; font-weight: 700; letter-spacing: 0; line-height: 1.08; }
-    h1 .accent { color: var(--accent-bright); }
+    h1 { font-size: clamp(38px, 4.5vw, 62px); }
+    h1 .accent { color: var(--accent); }
     .sub {
-      max-width: 560px; margin: 18px auto 0; color: var(--text-secondary);
-      font-size: 18px; font-weight: 400;
+      max-width: 460px; margin: 20px 0 0; color: var(--text-secondary);
+      font-size: clamp(16px, 1.5vw, 18px); font-weight: 400;
     }
-    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 26px; border-radius: 12px; font-weight: 700; font-size: 15px;
-      transition: transform 0.12s ease, filter 0.15s ease, background 0.15s ease;
-    }
-    .btn:hover { text-decoration: none; transform: translateY(-1px); }
-    .btn-primary { background: var(--accent); color: #04160b; }
-    .btn-primary:hover { filter: brightness(1.08); }
-    .btn-ghost { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: #24282a; }
-    .cta-note { margin-top: 14px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
-    .cta-note a { color: var(--text-muted); text-decoration: underline; }
-
-    /* ── Hero download grid ──
-       Direct downloads for the OTHER three artifacts (the primary button is
-       the x64 installer): ARM64 installer + both portable zips. Non-technical
-       visitors never have to browse GitHub; the muted link below the grid
-       keeps the releases page one click away for everyone else. */
-    .dl-grid {
-      max-width: 680px; margin: 18px auto 0;
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: left;
-    }
-    @media (max-width: 680px) { .dl-grid { grid-template-columns: 1fr; max-width: 420px; } }
-    .dl-tile {
-      background: var(--bg-surface); border: 1px solid var(--border-soft);
-      border-radius: 12px; padding: 14px 16px;
-    }
-    .dl-tile strong { font-size: 13.5px; font-weight: 600; }
-    .dl-chip {
-      display: inline-block; margin-left: 8px; padding: 1px 9px; border-radius: 999px;
-      border: 1px solid var(--border); color: var(--text-muted);
-      font-family: var(--font-mono); font-size: 11px; vertical-align: 1px; white-space: nowrap;
-    }
-    .dl-tile-desc { font-size: 12.5px; color: var(--text-secondary); margin: 4px 0 10px; }
-    .dl-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 8px 16px; border-radius: 10px;
-      background: var(--bg-elevated); border: 1px solid var(--border);
-      color: var(--text); font-size: 13px; font-weight: 600;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-    .dl-btn:hover { text-decoration: none; border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: #24282a; }
-    .dl-btn svg { width: 15px; height: 15px; stroke: var(--accent); fill: none; }
-    .dl-all { margin-top: 12px; font-size: 12.5px; }
-    .dl-all a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
-    .dl-all a:hover { color: var(--text); }
-
-    /* Product showcase */
-    .product-showcase {
-      width: 100%;
-      margin: 56px auto 0;
-      display: grid;
-      gap: 32px;
-      text-align: center;
-    }
-    .product-showcase img { display: block; width: 100%; }
+    .product-showcase { position: relative; }
     .clean-spotlight {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1477 / 972;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--bg-surface);
-      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+      position: relative; width: 100%; aspect-ratio: 1477 / 972;
+      overflow: hidden; border: 1px solid var(--border);
+      border-radius: 18px; background: var(--bg-card);
+      box-shadow: 0 30px 100px -34px rgba(0, 0, 0, 0.85), 0 0 90px -30px var(--glow-1);
       isolation: isolate;
     }
     .clean-spotlight img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transform: scale(1.015);
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; opacity: 0; transform: scale(1.015);
       transition: opacity 900ms ease, transform 1600ms ease;
     }
-    .clean-spotlight img.spotlight-cover-art {
-      object-position: 68% center;
+    .clean-spotlight img.spotlight-cover-art { object-position: 68% center; }
+    .clean-spotlight img.is-active { opacity: 1; transform: scale(1); }
+
+    .hero-actions { text-align: center; margin-top: 46px; }
+    .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .dl-more {
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+      gap: 9px; margin-top: 18px; font-size: 12.5px;
     }
-    .clean-spotlight img.is-active {
-      opacity: 1;
-      transform: scale(1);
+    .dl-mini {
+      display: inline-block; padding: 6px 14px; border-radius: 999px;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--text); font-size: 12.5px; font-weight: 800;
+      transition: transform 0.12s ease, filter 0.15s ease;
     }
-    .showcase-lower {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 42px;
-      align-items: start;
-      padding: 2px 0 18px;
+    .dl-mini:hover { text-decoration: none; transform: translateY(-1px); filter: brightness(1.3); color: var(--text-strong); }
+    .dl-notes { margin-top: 13px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .dl-all-link { color: var(--text-faint); font-size: 12.5px; text-decoration: underline; text-underline-offset: 2px; }
+    .dl-all-link:hover { color: var(--text-strong); }
+    .cta-note { margin: 0; color: var(--text-faint); font-size: 13px; }
+
+    /* ── Marquee ribbons (Discord-style passing statements) ── */
+    .ribbon-wrap { position: relative; z-index: 1; overflow: hidden; padding: 56px 0 26px; }
+    .ribbon { transform: rotate(-1.5deg); width: 104%; margin-left: -2%; overflow: hidden; }
+    .ribbon.up { transform: rotate(1.5deg); }
+    .rtrack {
+      display: inline-flex; align-items: center; white-space: nowrap;
+      will-change: transform;
+      animation: ribbon-slide 42s linear infinite;
     }
-    .mode-line {
-      min-width: 0;
-      padding-top: 0;
+    .ribbon.up .rtrack { animation-direction: reverse; }
+    .rt { display: inline-flex; align-items: center; gap: 34px; padding-right: 34px; }
+    .rt .rw { font-family: var(--font-display); text-transform: uppercase; color: var(--text-strong); font-size: clamp(24px, 3vw, 40px); line-height: 1; }
+    .rt .rw.alt { color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55); }
+    .rt .rspark { width: 0.55em; height: 0.55em; font-size: clamp(24px, 3vw, 40px); fill: var(--accent); stroke: none; }
+    @keyframes ribbon-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .rtrack { animation: none; } }
+
+    /* ── Glass panels around the feature rows (Discord-style bubbles) ── */
+    .sec { position: relative; z-index: 1; padding: 34px 0; }
+    .panel {
+      position: relative; overflow: hidden;
+      border-radius: 34px; padding: 54px 58px;
+      background: var(--glass);
+      backdrop-filter: blur(18px) saturate(1.15); -webkit-backdrop-filter: blur(18px) saturate(1.15);
+      border: 1px solid var(--glass-border);
     }
-    .mode-line h2,
-    .languages h2 {
-      text-align: center;
+    .panel::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at var(--px, 82%) var(--py, 12%), var(--ptint, rgba(34, 211, 161, 0.16)), transparent 56%);
     }
-    .mode-line h2 {
-      font-size: clamp(22px, 2.4vw, 30px);
-      line-height: 1.12;
-      letter-spacing: 0;
+    .panel--mint { --ptint: rgba(34, 211, 161, 0.16); --px: 82%; --py: 12%; }
+    .panel--violet { --ptint: rgba(143, 102, 255, 0.2); --px: 12%; --py: 88%; }
+    .panel--rose { --ptint: rgba(233, 96, 175, 0.16); --px: 86%; --py: 84%; }
+    .frow { position: relative; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 52px; align-items: center; }
+    .frow.rev .fmedia { order: 2; }
+    .frow h2 { font-size: clamp(24px, 2.8vw, 36px); margin-bottom: 14px; text-align: left; }
+    .frow p { font-size: clamp(15px, 1.4vw, 17px); color: var(--text-secondary); max-width: 440px; }
+    .fmedia { position: relative; }
+    /* Outline instead of border: the border used to join the border-box
+       aspect-ratio math and slightly squash the images. */
+    .fmedia img {
+      border-radius: 16px; outline: 1px solid var(--border); outline-offset: -1px;
+      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
     }
-    .mode-line p {
-      margin: 9px auto 0;
-      color: var(--text-muted);
-      font-size: 14px;
-      max-width: 300px;
-    }
-    .mode-line-media {
-      display: grid;
-      place-items: center;
-      margin-top: 18px;
-      height: clamp(240px, 28vw, 340px);
-      overflow: visible;
-      background: transparent;
-    }
-    .mode-line-media img {
-      height: 100%;
-      object-fit: contain;
-    }
-    .mode-line-media--compact {
-      height: clamp(78px, 8vw, 118px);
-      justify-items: center;
-    }
-    .mode-line-media--compact img {
-      width: min(100%, 390px);
-      height: auto;
-      object-position: center;
-      border-radius: 14px;
-      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
-    }
-    .feature-minis {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      align-items: center;
-      justify-items: center;
-      margin-top: 24px;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 680px;
-    }
-    .feature-mini {
-      min-width: 0;
-      width: 100%;
-      display: grid;
-      justify-items: center;
-    }
-    .feature-mini img {
-      width: min(100%, 680px);
-      height: auto;
-      object-fit: contain;
-      border-radius: 12px;
-      box-shadow: 0 24px 64px -34px rgba(0, 0, 0, 0.86);
-    }
-    .feature-mini--eq {
-      max-width: 520px;
-      justify-self: center;
-    }
-    .feature-mini--sleep {
-      max-width: 180px;
-      justify-self: center;
-      margin-bottom: 0;
-    }
-    .mode-line--shrunk {
-      display: grid;
-      grid-template-rows: auto auto 1fr;
-    }
-    .mode-line-media--shrunk {
-      height: auto;
-      min-height: clamp(430px, 55vw, 620px);
-      align-self: stretch;
-    }
-    .mode-line-media--shrunk img {
-      width: min(92%, 330px);
-      height: auto;
-      max-height: 96%;
-      object-position: center;
-    }
-    .languages {
-      margin-top: 0;
-      padding-top: 0;
-    }
-    .languages-head {
-      display: grid;
-      gap: 22px;
-      align-items: start;
-    }
-    .languages h2 {
-      font-size: clamp(24px, 3.2vw, 36px);
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
+    .fmedia--eq img { width: 100%; }
+    .fmedia--sleep { display: grid; justify-items: center; align-items: start; }
+    .fmedia--sleep img { width: min(100%, 340px); border-radius: 18px; }
+    .fmedia--compact { display: grid; justify-items: center; align-items: start; }
+    .fmedia--compact img { width: 100%; border-radius: 12px; }
+    .fmedia--shrunk { display: grid; justify-items: center; align-items: start; }
+    .fmedia--shrunk img { width: auto; max-height: 440px; border-radius: 18px; }
+
+    /* ── Languages (existing deck animation, new skin) ── */
+    .languages { position: relative; z-index: 1; padding: 64px 0; text-align: center; overflow: hidden; }
+    .languages h2 { font-size: clamp(28px, 3.4vw, 46px); margin-bottom: 34px; }
     .language-stack {
-      position: relative;
-      width: min(100%, 760px);
-      height: clamp(300px, 34vw, 430px);
-      overflow: visible;
-      margin-left: auto;
-      margin-right: auto;
+      position: relative; width: min(100%, 820px);
+      height: clamp(300px, 36vw, 460px); overflow: visible;
+      margin: 0 auto;
     }
     .language-stack img {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: calc(100% - 96px);
-      height: calc(100% - 76px);
-      object-fit: cover;
-      border-radius: 14px;
+      position: absolute; left: 50%; top: 0;
+      width: calc(100% - 96px); height: calc(100% - 76px);
+      object-fit: cover; border-radius: 18px; border: 1px solid var(--border);
       box-shadow: 0 30px 70px -38px rgba(0, 0, 0, 0.95);
-      z-index: 1;
-      opacity: 0;
+      z-index: 1; opacity: 0;
       transform: translate(calc(-50% + 72px), 54px) scale(0.94);
       transform-origin: 50% 50%;
-      transition:
-        opacity 1100ms ease,
-        transform 1300ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 1100ms ease, transform 1300ms cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform;
     }
-    .language-stack img.is-active {
-      z-index: 5;
-      opacity: 1;
-      transform: translate(-50%, 0) scale(1);
-    }
-    .language-stack img.is-next {
-      z-index: 4;
-      opacity: 0.48;
-      transform: translate(calc(-50% + 34px), 26px) scale(0.975);
-    }
-    .language-stack img.is-after {
-      z-index: 3;
-      opacity: 0.3;
-      transform: translate(calc(-50% + 68px), 52px) scale(0.95);
-    }
-    .language-stack img.is-back {
-      z-index: 2;
-      opacity: 0.18;
-      transform: translate(calc(-50% + 102px), 78px) scale(0.925);
-    }
-    .language-stack img.is-leaving {
-      z-index: 6;
-      opacity: 0;
-      transform: translate(calc(-50% - 16px), -10px) scale(1.01);
-    }
-    .language-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 26px;
-    }
+    .language-stack img.is-active { z-index: 5; opacity: 1; transform: translate(-50%, 0) scale(1); }
+    .language-stack img.is-next { z-index: 4; opacity: 0.48; transform: translate(calc(-50% + 34px), 26px) scale(0.975); }
+    .language-stack img.is-after { z-index: 3; opacity: 0.3; transform: translate(calc(-50% + 68px), 52px) scale(0.95); }
+    .language-stack img.is-back { z-index: 2; opacity: 0.18; transform: translate(calc(-50% + 102px), 78px) scale(0.925); }
+    .language-stack img.is-leaving { z-index: 6; opacity: 0; transform: translate(calc(-50% - 16px), -10px) scale(1.01); }
+    .language-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px; }
     .language-list button {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 11px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      white-space: nowrap;
-      cursor: pointer;
+      background: var(--glass); border: 1px solid var(--chip-border); border-radius: 999px;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      padding: 8px 17px; color: var(--text); font-family: var(--font-sans);
+      font-size: 13.5px; font-weight: 700; white-space: nowrap; cursor: pointer;
       transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
     }
-    .language-list button:hover {
-      color: var(--text);
-      border-color: rgba(34, 211, 161, 0.42);
-    }
-    .language-list button.is-active {
-      color: var(--text);
-      border-color: rgba(34, 211, 161, 0.62);
-      background: rgba(34, 211, 161, 0.08);
-    }
-    /* ── Sections ── */
-    section { padding: 72px 0 0; }
-    h2 { font-size: 28px; font-weight: 700; letter-spacing: 0; text-align: center; }
-    .section-sub { text-align: center; color: var(--text-muted); margin: 8px auto 40px; max-width: 520px; font-size: 15px; font-weight: 400; }
+    .language-list button:hover { color: var(--text-strong); border-color: var(--accent); }
+    .language-list button.is-active { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
 
-    /* ── Features ── */
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    /* ── Sections (features / pricing / faq) ── */
+    section { position: relative; z-index: 1; }
+    .sec-head h2 { font-size: clamp(28px, 3.4vw, 46px); text-align: center; }
+    .section-sub { text-align: center; color: var(--text-muted); margin: 12px auto 44px; max-width: 560px; font-size: 15.5px; }
+
+    /* ── Feature cards (translucent + blurred) ── */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
     .card {
-      background: var(--bg-surface); border: 1px solid var(--border-soft);
-      border-radius: 14px; padding: 22px;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-radius: 18px; padding: 24px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
-    .card h3 { font-size: 15.5px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-    .card p { color: var(--text-secondary); font-size: 13.5px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .card:hover { transform: translateY(-3px); border-color: var(--border); }
+    .card h3 { font-size: 15.5px; font-weight: 800; color: var(--text-strong); margin-bottom: 7px; display: flex; align-items: center; gap: 9px; }
+    .card p { color: var(--text-muted); font-size: 13.5px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
-    /* ── Pricing table ── */
-    .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 720px; margin: 0 auto; }
+    /* ── Pricing ── */
+    .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 860px; margin: 0 auto; text-align: left; }
     @media (max-width: 680px) { .tiers { grid-template-columns: 1fr; } }
     .tier {
-      background: var(--bg-surface); border: 1px solid var(--border-soft);
-      border-radius: 16px; padding: 26px;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px; padding: 32px;
     }
-    /* scroll-margin keeps the floating badge (top: -10px) and a little air
-       above the card when the player's #premium link lands here. */
-    .tier--premium { border-color: color-mix(in srgb, var(--accent) 45%, transparent); position: relative; scroll-margin-top: 26px; }
-    .tier h3 { font-size: 18px; font-weight: 700; }
-    .tier .price { font-size: 30px; font-weight: 700; margin: 6px 0 2px; }
-    .tier .price small { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-    .tier .plan-note { color: var(--text-muted); font-size: 12.5px; margin-bottom: 16px; }
-    .tier ul { list-style: none; display: flex; flex-direction: column; gap: 9px; font-size: 13.5px; color: var(--text-secondary); }
-    .tier li { display: flex; gap: 9px; align-items: baseline; }
-    .tick { color: var(--accent-bright); font-weight: 800; flex-shrink: 0; }
-    .tier .btn { width: 100%; justify-content: center; margin-top: 20px; }
+    .tier--premium { border: 2px solid var(--accent); position: relative; scroll-margin-top: 26px; }
+    .tier h3 { font-family: var(--font-display); text-transform: uppercase; font-size: 17px; color: var(--text-strong); }
+    .tier .price { font-size: 32px; font-weight: 800; color: var(--text-strong); margin: 8px 0 2px; }
+    .tier .price small { font-size: 13.5px; font-weight: 700; color: var(--text-muted); }
+    .tier .plan-note { color: var(--text-muted); font-size: 12.5px; margin-bottom: 18px; }
+    .tier ul { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+    .tier li { display: flex; gap: 10px; align-items: baseline; }
+    .tick { color: var(--accent); font-weight: 800; flex-shrink: 0; }
+    .tier .btn { width: 100%; justify-content: center; margin-top: 24px; font-size: 15px; padding: 13px 0; }
     .premium-badge {
-      position: absolute; top: -10px; right: 18px; background: var(--accent); color: #04160b;
-      font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 999px;
+      position: absolute; top: -13px; right: 22px; background: var(--accent); color: var(--on-accent);
+      font-size: 11.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 13px; border-radius: 999px;
     }
 
-    /* Support */
+    /* ── Support ── */
     .support-block {
-      max-width: 720px; margin: 0 auto; padding: 28px 0;
-      border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);
-      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      max-width: 860px; margin: 0 auto;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px; padding: 34px 38px;
+      display: flex; align-items: center; justify-content: space-between; gap: 28px;
+      position: relative; overflow: hidden;
     }
-    .support-copy { max-width: 500px; }
-    .support-copy h2 { text-align: left; }
-    .support-copy p { margin-top: 8px; color: var(--text-secondary); font-size: 15px; }
-    @media (max-width: 680px) {
-      .support-block { align-items: flex-start; flex-direction: column; }
-      .support-copy h2 { text-align: left; }
+    .support-block::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 88% 20%, rgba(34, 211, 161, 0.14), transparent 55%);
+    }
+    .support-copy { max-width: 540px; position: relative; }
+    .support-copy h2 { font-size: clamp(22px, 2.4vw, 30px); text-align: left; }
+    .support-copy p { margin-top: 10px; color: var(--text-secondary); font-size: 15px; }
+    .support-block .btn { position: relative; }
+    @media (max-width: 680px) { .support-block { align-items: flex-start; flex-direction: column; } }
+
+    /* ── FAQ (smooth accordion: grid-rows height animation + icon spin) ── */
+    .faq { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-radius: 16px; overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+    .faq-item.open { border-color: rgba(34, 211, 161, 0.42); }
+    .faq-q {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 18px 22px; background: transparent; border: 0; cursor: pointer;
+      color: var(--text-strong); font-family: var(--font-sans);
+      font-weight: 800; font-size: 15px; text-align: left; line-height: 1.45;
+    }
+    .faq-plus {
+      width: 18px; height: 18px; flex-shrink: 0;
+      fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .faq-item.open .faq-plus { transform: rotate(135deg); }
+    .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    .faq-item.open .faq-a { grid-template-rows: 1fr; }
+    .faq-a-inner { min-height: 0; overflow: hidden; }
+    .faq-a-inner p {
+      color: var(--text-secondary); font-size: 14px; padding: 0 22px 18px; margin: 0;
+      opacity: 0; transform: translateY(-6px);
+      transition: opacity 0.3s ease 0.08s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+    }
+    .faq-item.open .faq-a-inner p { opacity: 1; transform: none; }
+
+    /* Fallback when backdrop-filter is unsupported */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .panel, .card, .tier, .faq-item, .support-block, .menu, .lang-menu, .dl-mini, .language-list button { background: #141737; }
     }
 
-    /* ── FAQ ── */
-    .faq { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
-    details {
-      background: var(--bg-surface); border: 1px solid var(--border-soft);
-      border-radius: 12px; padding: 16px 20px;
-    }
-    summary { cursor: pointer; font-weight: 600; font-size: 14.5px; }
-    details p { color: var(--text-secondary); font-size: 13.5px; margin-top: 10px; }
+    /* ── End CTA ── */
+    .endcta { position: relative; z-index: 1; text-align: center; padding: 96px 0 100px; overflow: hidden; }
+    .endcta h2 { font-size: clamp(30px, 4vw, 54px); max-width: 840px; margin: 0 auto 34px; }
 
+    /* ── Footer (gradient, language, social, giant wordmark) ── */
     footer {
-      margin-top: 90px; padding: 28px 0 40px; border-top: 1px solid var(--border-soft);
-      color: var(--text-muted); font-size: 13px; text-align: center;
+      position: relative; z-index: 1;
+      background: linear-gradient(180deg, #0b0d26 0%, #101538 42%, #0e352c 100%);
+      border-top: 1px solid var(--border-soft);
+      padding: 64px 0 0;
+      color: var(--text-muted); font-size: 13px;
     }
+    .fgrid { display: grid; grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 32px; }
+    @media (max-width: 760px) { .fgrid { grid-template-columns: 1fr 1fr; } }
+    .brand-mark--big { height: 30px; gap: 4px; }
+    .brand-mark--big span { width: 5px; border-radius: 3px; }
+    .brand-mark--big span:nth-child(1) { height: 14px; }
+    .brand-mark--big span:nth-child(2) { height: 28px; }
+    .brand-mark--big span:nth-child(3) { height: 19px; }
+    .brand-mark--big span:nth-child(4) { height: 30px; }
+    .brand-mark--big span:nth-child(5) { height: 12px; }
+    .flabel { margin: 26px 0 10px; color: var(--text-muted); font-weight: 800; font-size: 13px; }
+    .lang-select { position: relative; max-width: 250px; }
+    .lang-btn {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      background: rgba(29, 32, 68, 0.55); border: 1px solid var(--border); border-radius: 14px;
+      padding: 12px 16px; color: var(--text-strong);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .lang-btn:hover { border-color: var(--chip-border); }
+    .lang-btn .chev { width: 15px; height: 15px; }
+    .lang-select.open .lang-btn .chev { transform: rotate(180deg); }
+    .lang-menu {
+      position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+      background: var(--glass-strong);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border); border-radius: 14px;
+      padding: 8px; display: none; z-index: 30;
+      max-height: 250px; overflow: auto;
+    }
+    .lang-select.open .lang-menu { display: block; }
+    .lang-menu button {
+      width: 100%; text-align: left; background: transparent; border: 0;
+      color: var(--text-strong); font-family: var(--font-sans); font-weight: 700; font-size: 13.5px;
+      padding: 9px 12px; border-radius: 10px; cursor: pointer;
+    }
+    .lang-menu button:hover { background: rgba(34, 211, 161, 0.14); }
+    .lang-menu button.is-active { background: var(--accent); color: var(--on-accent); }
+    .social { display: flex; gap: 10px; flex-wrap: wrap; }
+    /* Higher specificity than ".fgrid a" (which sets display:block + margins
+       for the link columns) so the icon tiles keep their flex centering. */
+    .fgrid .social a {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0; padding: 0;
+      color: var(--text-strong); background: rgba(29, 32, 68, 0.55); border: 1px solid var(--border);
+      transition: transform 0.12s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .fgrid .social a:hover { transform: translateY(-2px); color: var(--accent); border-color: var(--chip-border); text-decoration: none; }
+    .social svg { width: 19px; height: 19px; display: block; }
+    .fgrid h4 { color: var(--accent); font-size: 13.5px; font-weight: 800; margin-bottom: 13px; }
+    .fgrid a { display: block; color: var(--text); font-size: 13.5px; margin-bottom: 9px; }
+    .legal { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(133, 145, 235, 0.14); text-align: center; }
+    .legal .fine { margin: 12px auto 0; font-size: 12px; color: var(--text-faint); max-width: 640px; line-height: 1.5; }
+    /* overflow:hidden: the huge Archivo Black glyphs spill ~36px of empty
+       descent space below the 0.9 line box, which used to extend the page
+       past the footer and reveal the fixed background as a bottom band.
+       "SONARA" has no descenders, so the clip is invisible. */
+    .footer-wordmark {
+      font-size: clamp(88px, 16.5vw, 250px);
+      text-align: center; color: #d9f6ec; opacity: 0.95;
+      line-height: 0.9; padding: 44px 0 20px;
+      letter-spacing: -0.02em; user-select: none;
+      overflow: hidden;
+    }
+    /* Safety strip for browsers that ignore overscroll-behavior (rubber-band
+       overscroll would otherwise flash the fixed background below the page).
+       Painted as box-shadow: pure ink, adds zero scrollable height (an
+       absolutely positioned strip would re-create the very gap it guards). */
+    footer { box-shadow: 0 220px 0 0 #0e352c; }
+
     @media (max-width: 900px) {
-      .showcase-lower {
-        grid-template-columns: 1fr;
-      }
-      .mode-line-media {
-        height: 260px;
-      }
-      .mode-line-media--compact {
-        height: 120px;
-      }
-      .mode-line-media--shrunk {
-        min-height: 520px;
-      }
-      .mode-line-media--shrunk img { width: min(54%, 300px); }
-      .language-stack {
-        height: 420px;
-        overflow: visible;
-      }
-      .language-stack img {
-        width: calc(100% - 72px);
-        height: calc(100% - 62px);
-      }
-    }
-    @media (max-width: 680px) {
-      h1 { font-size: 42px; }
-      .sub { font-size: 16px; }
-      nav { align-items: flex-start; gap: 16px; flex-direction: column; }
-      nav .links { gap: 16px; flex-wrap: wrap; }
+      .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+      .hero-copy { text-align: center; }
+      .sub { margin: 20px auto 0; }
+      .panel { padding: 30px 24px; border-radius: 26px; }
+      .frow, .frow.rev { grid-template-columns: 1fr; gap: 28px; }
+      .frow.rev .fmedia { order: 0; }
+      .frow h2 { text-align: center; }
+      .frow p { text-align: center; margin: 0 auto; }
+      .sec { padding: 22px 0; }
+      .languages { padding: 48px 0; }
+      .language-stack { height: 420px; }
+      .language-stack img { width: calc(100% - 72px); height: calc(100% - 62px); }
+      nav .links { font-size: 13px; }
     }
     @media (max-width: 560px) {
-      .mode-line-media { height: 260px; }
-      .mode-line-media--compact { height: 120px; }
-      .feature-minis { grid-template-columns: 1fr; max-width: 360px; }
-      .feature-mini--eq { max-width: 360px; }
-      .feature-mini--sleep { max-width: 180px; margin-bottom: 0; }
-      .mode-line-media--shrunk { min-height: 430px; }
-      .mode-line-media--shrunk img { width: min(64%, 260px); }
       .language-stack { height: 300px; }
-      .language-stack img {
-        width: calc(100% - 42px);
-        height: calc(100% - 44px);
-      }
+      .language-stack img { width: calc(100% - 42px); height: calc(100% - 44px); }
       .language-stack img.is-next { transform: translate(calc(-50% + 16px), 14px) scale(0.965); }
       .language-stack img.is-after { transform: translate(calc(-50% + 32px), 28px) scale(0.93); }
       .language-stack img.is-back { transform: translate(calc(-50% + 48px), 42px) scale(0.895); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .clean-spotlight img {
-        transition: none;
-        transform: none;
-      }
-      .language-stack img {
-        transition: none;
-      }
+      .clean-spotlight img { transition: none; transform: none; }
+      .language-stack img { transition: none; }
       .language-stack img.is-active { transform: translate(-50%, 0) scale(1); }
+      .faq-a, .faq-a-inner p, .faq-plus, .faq-item { transition: none; }
     }
+
   </style>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="g-note" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></symbol>
+      <symbol id="g-note2" viewBox="0 0 24 24"><path d="M13 17V4l6 2v4" /><circle cx="10" cy="17" r="3" /></symbol>
+      <symbol id="g-phones" viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0" /><path d="M4 13v4a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2z" /><path d="M20 13v4a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2z" /></symbol>
+      <symbol id="g-vinyl" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="1.8" /><path d="M16.5 12a4.5 4.5 0 0 0-4.5-4.5" /></symbol>
+      <symbol id="g-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M10 8.8v6.4l5.2-3.2z" /></symbol>
+      <symbol id="g-spark" viewBox="0 0 24 24"><path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6z" /></symbol>
+      <symbol id="g-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v3.5" /><path d="M8.5 21.5h7" /></symbol>
+      <symbol id="g-speaker" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2" /><circle cx="12" cy="14.5" r="3" /><circle cx="12" cy="7.5" r="1.2" /></symbol>
+    </defs>
+  </svg>
+
   <div class="site-background" aria-hidden="true">
-    <canvas id="site-background-canvas"></canvas>
+    <div class="bg-neb bg-neb-a"></div>
+    <div class="bg-neb bg-neb-b"></div>
+    <div class="fx-layer fx-l3" data-depth="46">
+      <span class="fx-ic vi" style="top:6%;left:5%;width:130px;height:130px"><svg><use href="#g-note" /></svg></span>
+      <span class="fx-ic vi" style="top:10%;right:7%;width:112px;height:112px"><svg style="animation-delay:-6.5s"><use href="#g-play" /></svg></span>
+      <span class="fx-ic" style="top:36%;right:4%;width:150px;height:150px"><svg style="animation-delay:-3s"><use href="#g-phones" /></svg></span>
+      <span class="fx-ic" style="top:40%;left:3%;width:120px;height:120px"><svg style="animation-delay:-2s"><use href="#g-speaker" /></svg></span>
+      <span class="fx-ic dm" style="bottom:24%;left:6%;width:110px;height:110px"><svg style="animation-delay:-5s"><use href="#g-vinyl" /></svg></span>
+      <span class="fx-ic vi" style="bottom:20%;right:6%;width:100px;height:100px"><svg style="animation-delay:-7s"><use href="#g-note2" /></svg></span>
+      <span class="fx-ic" style="bottom:7%;left:32%;width:116px;height:116px"><svg style="animation-delay:-4.2s"><use href="#g-mic" /></svg></span>
+    </div>
+    <div class="fx-layer fx-l2" data-depth="26">
+      <span class="fx-ic" style="top:13%;right:13%;width:58px;height:58px"><svg style="animation-delay:-2s"><use href="#g-note2" /></svg></span>
+      <span class="fx-ic vi" style="top:52%;left:7%;width:54px;height:54px"><svg style="animation-delay:-6s"><use href="#g-play" /></svg></span>
+      <span class="fx-ic dm" style="top:74%;right:7%;width:48px;height:48px"><svg style="animation-delay:-4s"><use href="#g-note" /></svg></span>
+      <span class="fx-ic" style="top:33%;left:10%;width:40px;height:40px"><svg class="fill" style="animation-delay:-1s"><use href="#g-spark" /></svg></span>
+      <span class="fx-ic vi" style="bottom:4%;left:16%;width:58px;height:58px"><svg style="animation-delay:-8s"><use href="#g-phones" /></svg></span>
+      <span class="fx-ic" style="bottom:16%;right:16%;width:52px;height:52px"><svg style="animation-delay:-3.5s"><use href="#g-mic" /></svg></span>
+      <span class="fx-ic dm" style="top:6%;left:22%;width:46px;height:46px"><svg style="animation-delay:-5.5s"><use href="#g-speaker" /></svg></span>
+    </div>
+    <div class="fx-layer fx-l1" data-depth="13">
+      <span class="fx-ic" style="top:22%;left:18%;width:22px;height:22px"><svg class="fill" style="animation-delay:-2.5s"><use href="#g-spark" /></svg></span>
+      <span class="fx-ic vi" style="top:66%;left:11%;width:24px;height:24px"><svg style="animation-delay:-5.5s"><use href="#g-note" /></svg></span>
+      <span class="fx-ic dm" style="top:38%;right:11%;width:26px;height:26px"><svg style="animation-delay:-1.5s"><use href="#g-vinyl" /></svg></span>
+      <span class="fx-ic vi" style="bottom:8%;right:13%;width:22px;height:22px"><svg style="animation-delay:-4s"><use href="#g-mic" /></svg></span>
+      <span class="fx-star tw" style="top:10%;left:12%;width:11px;height:11px;--gd:6.4s"></span>
+      <span class="fx-star" style="top:18%;right:18%;width:15px;height:15px"></span>
+      <span class="fx-star tw" style="top:46%;left:6%;width:8px;height:8px;--gd:8.2s;animation-delay:-3.1s"></span>
+      <span class="fx-star" style="top:58%;right:7%;width:12px;height:12px"></span>
+      <span class="fx-star tw" style="bottom:24%;left:22%;width:9px;height:9px;--gd:7.3s;animation-delay:-1.7s"></span>
+      <span class="fx-star tw" style="bottom:10%;right:28%;width:13px;height:13px;--gd:9.1s;animation-delay:-5.2s"></span>
+      <span class="fx-star" style="top:6%;left:56%;width:8px;height:8px"></span>
+      <span class="fx-star tw" style="bottom:42%;right:40%;width:7px;height:7px;--gd:8.8s;animation-delay:-4.4s"></span>
+      <span class="fx-star" style="top:34%;left:44%;width:6px;height:6px"></span>
+      <span class="fx-star tw" style="top:72%;right:16%;width:9px;height:9px;--gd:7.9s;animation-delay:-2.2s"></span>
+      <span class="fx-star tw" style="top:28%;left:34%;width:10px;height:10px;--gd:8.6s;animation-delay:-1.2s"></span>
+      <span class="fx-star" style="top:52%;right:32%;width:9px;height:9px"></span>
+      <span class="fx-star tw" style="bottom:32%;left:54%;width:11px;height:11px;--gd:7.6s;animation-delay:-3.8s"></span>
+      <span class="fx-star" style="top:82%;left:42%;width:8px;height:8px"></span>
+      <span class="fx-star tw" style="top:12%;right:40%;width:9px;height:9px;--gd:9.4s;animation-delay:-6.1s"></span>
+    </div>
   </div>
+
   <div class="wrap">
     <nav>
       <a class="brand" href="./" aria-label="Sonara home">
         <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
-        Sonara
+        <span class="brand-name">Sonara</span>
       </a>
       <span class="links">
         <a href="#features">Features</a>
         <a href="#pricing">Free &amp; Premium</a>
-        <a href="#support">Support</a>
+        <a href="#support">Donate</a>
         <a href="#faq">FAQ</a>
-        <a id="nav-ideas" href="#" rel="noopener">Ideas</a>
-        <a id="nav-github" href="#" rel="noopener">GitHub</a>
+        <span class="nav-item">
+          <a id="nav-ideas" href="#" rel="noopener">Ideas<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></a>
+          <span class="menu">
+            <span class="menu-label">Categories</span>
+            <a id="nav-cat-ideas" href="#" rel="noopener">Ideas &amp; feedback</a>
+            <a id="nav-cat-announcements" href="#" rel="noopener">Announcements</a>
+            <a id="nav-cat-general" href="#" rel="noopener">General</a>
+            <a id="nav-cat-qa" href="#" rel="noopener">Q&amp;A</a>
+          </span>
+        </span>
+        <span class="nav-item">
+          <a id="nav-github" href="#" rel="noopener">GitHub<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></a>
+          <span class="menu">
+            <span class="menu-label">Project</span>
+            <a id="nav-gh-repo" href="#" rel="noopener">Repository</a>
+            <a id="nav-gh-releases" href="#" rel="noopener">Releases</a>
+            <a id="nav-gh-discussions" href="#" rel="noopener">Discussions</a>
+          </span>
+        </span>
+        <a id="nav-download" class="nav-dl" href="#" rel="noopener">Download</a>
       </span>
     </nav>
 
     <header>
-      <span class="beta-pill">Public beta · Windows 10/11 · x64 &amp; ARM64</span>
-      <h1>Your music.<br /><span class="accent">Your machine.</span></h1>
-      <p class="sub">
-        A fast, beautiful, local-first music player for Windows.
-        No cloud, no account, no ads. Just your library, played the way you want.
-      </p>
-      <div class="cta-row">
-        <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener">Download for Windows</a>
-      </div>
-      <div class="dl-grid">
-        <div class="dl-tile">
-          <strong>Installer</strong><span class="dl-chip">ARM64</span>
-          <p class="dl-tile-desc">Snapdragon / ARM laptops.</p>
-          <a id="dl-arm64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="beta-pill">Public beta · Windows 10/11 · x64 &amp; ARM64</span>
+          <h1 class="d">Your music.<br /><span class="accent">Your machine.</span></h1>
+          <p class="sub">
+            A fast, beautiful, local-first music player for Windows.
+            No cloud, no account, no ads. Just your library, played the way you want.
+          </p>
         </div>
-        <div class="dl-tile">
-          <strong>Portable</strong><span class="dl-chip">x64 · zip</span>
-          <p class="dl-tile-desc">Unzip and play, no install.</p>
-          <a id="dl-portable-x64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
-        </div>
-        <div class="dl-tile">
-          <strong>Portable</strong><span class="dl-chip">ARM64 · zip</span>
-          <p class="dl-tile-desc">Portable for ARM laptops.</p>
-          <a id="dl-portable-arm64" class="dl-btn" href="#" rel="noopener"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0 5-5m-5 5-5-5"/><path d="M4 20h16"/></svg>Download</a>
+        <div class="product-showcase" aria-label="Sonara screenshots">
+          <div class="clean-spotlight" data-clean-spotlight>
+            <img class="is-active" src="Img Player Screenshot.png" width="1450" height="963" alt="Sonara library view" />
+            <img class="spotlight-cover-art" src="Img - Cover.png" width="1672" height="941" alt="Sonara cover artwork" />
+            <img src="Img Mini Lyrics.png" width="1487" height="965" alt="Sonara mini lyrics view" />
+            <img src="Img Jump To track.png" width="1450" height="963" alt="Sonara jump to track" />
+          </div>
         </div>
       </div>
-      <p class="dl-all"><a id="dl-all" href="#" rel="noopener">All versions and release notes on GitHub</a></p>
-      <p class="cta-note">Free forever. Premium features unlock with a one-time license. <a href="#pricing">See what's included</a>.</p>
-
-      <div class="product-showcase" aria-label="Sonara screenshots">
-        <div class="clean-spotlight" data-clean-spotlight>
-          <img class="is-active" src="Img Player Screenshot.png" width="1450" height="963" alt="Sonara library view" />
-          <img class="spotlight-cover-art" src="Img - Cover.png" width="1672" height="941" alt="Sonara cover artwork" />
-          <img src="Img Mini Lyrics.png" width="1487" height="965" alt="Sonara mini lyrics view" />
-          <img src="Img Jump To track.png" width="1450" height="963" alt="Sonara jump to track" />
+      <div class="hero-actions">
+        <div class="cta-row">
+          <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+          <a class="btn btn-ghost" href="#pricing">See Free &amp; Premium</a>
         </div>
-
-        <div class="showcase-lower">
-          <article class="mode-line mode-line--tools">
-            <h2>Tune the sound</h2>
-            <p>Shape playback with the equalizer and keep the sound exactly where you want it.</p>
-            <div class="feature-minis" aria-label="Sonara equalizer">
-              <figure class="feature-mini feature-mini--eq">
-                <img src="Img Equalizer.png" width="789" height="458" alt="Sonara equalizer settings" />
-              </figure>
-            </div>
-          </article>
-
-          <article class="mode-line mode-line--sleep">
-            <h2>Sleep timer</h2>
-            <p>Let Sonara stop on its own when the night winds down.</p>
-            <div class="feature-minis" aria-label="Sonara sleep timer">
-              <figure class="feature-mini feature-mini--sleep">
-                <img src="Img Sleep Time.png" width="319" height="163" alt="Sonara sleep timer" />
-              </figure>
-            </div>
-          </article>
-
-          <article class="mode-line mode-line--small">
-            <h2>Small when your work needs the screen</h2>
-            <p>Keep playback close while games, creative tools or the desktop stay in front.</p>
-            <figure class="mode-line-media mode-line-media--compact">
-              <img src="Img Compact Player.png" width="627" height="57" alt="Sonara compact player" />
-            </figure>
-          </article>
-
-          <article class="mode-line mode-line--shrunk">
-            <h2>Super shrunk</h2>
-            <p>A minimal shape for moments when the music should stay present, not visible.</p>
-            <figure class="mode-line-media mode-line-media--shrunk">
-              <img src="Img Super Shrunk Player.png" width="475" height="963" alt="Sonara super shrunk player" />
-            </figure>
-          </article>
-
-          <section class="languages">
-            <div class="languages-head">
-              <div>
-                <h2>Available in 7 languages</h2>
-              </div>
-              <div class="language-stack" data-language-deck aria-hidden="true">
-                <img class="is-active" src="Lang English.png" width="1520" height="1019" alt="" />
-                <img class="is-next" src="Lang Bulgarian.png" width="1420" height="938" alt="" />
-                <img class="is-after" src="Lang Deutsch.png" width="1420" height="938" alt="" />
-                <img class="is-back" src="Lang Español.png" width="1420" height="938" alt="" />
-                <img src="Lang Français.png" width="1420" height="938" alt="" />
-                <img src="Lang Русский.png" width="1420" height="938" alt="" />
-                <img src="Lang 中文.png" width="1420" height="938" alt="" />
-              </div>
-            </div>
-            <div class="language-list" aria-label="Supported languages">
-              <button type="button" class="is-active" data-language-chip="0" aria-label="Show English screenshot">English</button>
-              <button type="button" data-language-chip="1" aria-label="Show Bulgarian screenshot">Bulgarian</button>
-              <button type="button" data-language-chip="2" aria-label="Show Deutsch screenshot">Deutsch</button>
-              <button type="button" data-language-chip="3" aria-label="Show Español screenshot">Español</button>
-              <button type="button" data-language-chip="4" aria-label="Show Français screenshot">Français</button>
-              <button type="button" data-language-chip="5" aria-label="Show Russian screenshot">Русский</button>
-              <button type="button" data-language-chip="6" aria-label="Show Chinese screenshot">中文</button>
-            </div>
-          </section>
+        <div class="dl-more">
+          <a id="dl-arm64" class="dl-mini" href="#" rel="noopener" title="Installer for Snapdragon / ARM laptops.">ARM64 installer</a>
+          <a id="dl-portable-x64" class="dl-mini" href="#" rel="noopener" title="Unzip and play, no install.">Portable x64</a>
+          <a id="dl-portable-arm64" class="dl-mini" href="#" rel="noopener" title="Portable zip for ARM laptops.">Portable ARM64</a>
+        </div>
+        <div class="dl-notes">
+          <a id="dl-all" class="dl-all-link" href="#" rel="noopener">All versions and release notes on GitHub</a>
+          <p class="cta-note">Free forever. Premium features unlock with a one-time license.</p>
         </div>
       </div>
     </header>
+  </div>
 
-    <section id="features">
-      <h2>Built for people who keep their music</h2>
+  <div class="ribbon-wrap" aria-hidden="true">
+    <div class="ribbon">
+      <div class="rtrack">
+        <span class="rt">
+          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
+        </span>
+        <span class="rt">
+          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No cloud</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">No account</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No ads</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Just your library</span><svg class="rspark"><use href="#g-spark" /></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="panel panel--mint">
+        <article class="frow">
+          <div class="fmedia fmedia--eq">
+            <img src="Img Equalizer.png" width="774" height="447" alt="Sonara equalizer settings" />
+          </div>
+          <div>
+            <h2 class="d">Tune the sound</h2>
+            <p>Shape playback with the equalizer and keep the sound exactly where you want it.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="panel panel--violet">
+        <article class="frow rev">
+          <div class="fmedia fmedia--sleep">
+            <img src="Img Sleep Time.png" width="302" height="149" alt="Sonara sleep timer" />
+          </div>
+          <div>
+            <h2 class="d">Sleep timer</h2>
+            <p>Let Sonara stop on its own when the night winds down.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="panel panel--rose">
+        <article class="frow">
+          <div class="fmedia fmedia--compact">
+            <img src="Img Compact Player.png" width="627" height="57" alt="Sonara compact player" />
+          </div>
+          <div>
+            <h2 class="d">Small when your work needs the screen</h2>
+            <p>Keep playback close while games, creative tools or the desktop stay in front.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="panel panel--mint" style="--px: 14%; --py: 16%;">
+        <article class="frow rev">
+          <div class="fmedia fmedia--shrunk">
+            <img src="Img Super Shrunk Player.png" width="475" height="963" alt="Sonara super shrunk player" />
+          </div>
+          <div>
+            <h2 class="d">Super shrunk</h2>
+            <p>A minimal shape for moments when the music should stay present, not visible.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <section class="languages">
+    <div class="wrap">
+      <h2 class="d">Available in 7 languages</h2>
+      <div class="language-stack" data-language-deck aria-hidden="true">
+        <img class="is-active" src="Lang English.png" width="1520" height="1019" alt="" />
+        <img class="is-next" src="Lang Bulgarian.png" width="1420" height="938" alt="" />
+        <img class="is-after" src="Lang Deutsch.png" width="1420" height="938" alt="" />
+        <img class="is-back" src="Lang Español.png" width="1420" height="938" alt="" />
+        <img src="Lang Français.png" width="1420" height="938" alt="" />
+        <img src="Lang Русский.png" width="1420" height="938" alt="" />
+        <img src="Lang 中文.png" width="1420" height="938" alt="" />
+      </div>
+      <div class="language-list" aria-label="Supported languages">
+        <button type="button" class="is-active" data-language-chip="0" aria-label="Show English screenshot">English</button>
+        <button type="button" data-language-chip="1" aria-label="Show Bulgarian screenshot">Bulgarian</button>
+        <button type="button" data-language-chip="2" aria-label="Show Deutsch screenshot">Deutsch</button>
+        <button type="button" data-language-chip="3" aria-label="Show Español screenshot">Español</button>
+        <button type="button" data-language-chip="4" aria-label="Show Français screenshot">Français</button>
+        <button type="button" data-language-chip="5" aria-label="Show Russian screenshot">Русский</button>
+        <button type="button" data-language-chip="6" aria-label="Show Chinese screenshot">中文</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="sec">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="d">Built for people who keep their music</h2></div>
       <p class="section-sub">Everything is designed around a local library: folders in, music out, zero friction in between.</p>
       <div class="grid">
         <div class="card"><h3><span class="dot"></span>Instant library</h3><p>Drop folders in and play. Built for real local libraries, smooth even with thousands of tracks.</p></div>
@@ -644,10 +795,39 @@
         <div class="card"><h3><span class="dot"></span>Touch-friendly</h3><p>Big targets, swipe selection and drag reordering that feel right on a Surface or any touch screen.</p></div>
         <div class="card"><h3><span class="dot"></span>Private by design</h3><p>No account, no ads. Your library and listening history never leave your computer - the only thing Sonara sends is anonymous usage stats, and one switch turns them off.</p></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="pricing">
-      <h2>Free &amp; Premium</h2>
+  <div class="ribbon-wrap" aria-hidden="true">
+    <div class="ribbon up">
+      <div class="rtrack">
+        <span class="rt">
+          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
+        </span>
+        <span class="rt">
+          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">Pay once</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Keep it forever</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw">No subscription</span><svg class="rspark"><use href="#g-spark" /></svg>
+          <span class="rw alt">Works offline</span><svg class="rspark"><use href="#g-spark" /></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <section id="pricing" class="sec" style="padding-top: 30px;">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="d">Free &amp; Premium</h2></div>
       <p class="section-sub">Start with a complete local player. Upgrade when you want deeper control over how you listen and organize.</p>
       <div class="tiers">
         <div class="tier">
@@ -688,258 +868,205 @@
           <a class="btn btn-primary" id="buy-premium" href="#premium" rel="noopener">Checkout</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="support">
+  <section id="support" class="sec">
+    <div class="wrap">
       <div class="support-block">
         <div class="support-copy">
-          <h2>Support Development</h2>
+          <h2 class="d">Support Development</h2>
           <p>Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs. Pay what you want - every bit helps and none of it is required.</p>
         </div>
         <a class="btn btn-primary" id="support-action" href="#support">Support Sonara</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="faq">
-      <h2>FAQ</h2>
+  <section id="faq" class="sec">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="d">FAQ</h2></div>
       <p class="section-sub">Short answers to the things people actually ask.</p>
       <div class="faq">
-        <details>
-          <summary>Windows says “Unknown publisher” / SmartScreen warns me. Is this safe?</summary>
-          <p>Yes. The beta is simply not code-signed yet (certificates are expensive for a free beta). Click <em>More info → Run anyway</em>. Every download is built from the same source and published only on our GitHub Releases page. A Microsoft Store version (signed by Microsoft) is planned for the stable release.</p>
-        </details>
-        <details>
-          <summary>Does it need the internet?</summary>
-          <p>No. Sonara is local-first: playback, your library and lyrics work fully offline. Activating a purchased Premium license takes one brief online check; after that Premium works fully offline too. The only optional network features are the update check and Discord presence.</p>
-        </details>
-        <details>
-          <summary>Which Windows versions and devices?</summary>
-          <p>Windows 10 and 11, with native builds for both x64 and ARM64. Snapdragon laptops run Sonara natively, not emulated.</p>
-        </details>
-        <details>
-          <summary>Is there a portable version?</summary>
-          <p>Yes. A zip you can unpack anywhere and run, no installation. Perfect for USB sticks and locked-down machines.</p>
-        </details>
-        <details>
-          <summary>What happens to my data if I uninstall?</summary>
-          <p>The uninstaller asks. By default your library, likes and settings are kept, so reinstalling later picks everything back up. You can choose to wipe everything instead.</p>
-        </details>
-        <details>
-          <summary>How does the Premium license work?</summary>
-          <p>One key, one-time payment, up to 3 of your own computers. Your key arrives by email right after checkout; paste it in Settings → License and you're done - after activation it works offline and never expires. Moving to a new computer is easy: deactivate in the app, or manage all your computers from the purchase portal linked in your email.</p>
-        </details>
-        <details>
-          <summary>Is Premium a subscription?</summary>
-          <p>No. It's a one-time purchase and the license is yours forever. If the price rises as bigger features arrive, licenses already bought simply keep working - buying early only means paying less.</p>
-        </details>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>Windows says “Unknown publisher” / SmartScreen warns me. Is this safe?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Yes. The beta is simply not code-signed yet (certificates are expensive for a free beta). Click <em>More info → Run anyway</em>. Every download is built from the same source and published only on our GitHub Releases page. A Microsoft Store version (signed by Microsoft) is planned for the stable release.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>Does it need the internet?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>No. Sonara is local-first: playback, your library and lyrics work fully offline. Activating a purchased Premium license takes one brief online check; after that Premium works fully offline too. The only optional network features are the update check and Discord presence.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>Which Windows versions and devices?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Windows 10 and 11, with native builds for both x64 and ARM64. Snapdragon laptops run Sonara natively, not emulated.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>Is there a portable version?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Yes. A zip you can unpack anywhere and run, no installation. Perfect for USB sticks and locked-down machines.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>What happens to my data if I uninstall?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>The uninstaller asks. By default your library, likes and settings are kept, so reinstalling later picks everything back up. You can choose to wipe everything instead.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>How does the Premium license work?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>One key, one-time payment, up to 3 of your own computers. Your key arrives by email right after checkout; paste it in Settings → License and you're done - after activation it works offline and never expires. Moving to a new computer is easy: deactivate in the app, or manage all your computers from the purchase portal linked in your email.</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-q" aria-expanded="false">
+            <span>Is Premium a subscription?</span>
+            <svg class="faq-plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>No. It's a one-time purchase and the license is yours forever. If the price rises as bigger features arrive, licenses already bought simply keep working - buying early only means paying less.</p>
+          </div></div>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      <p>Sonara - a local-first music player for Windows. · <a id="foot-releases" href="#">Releases</a> · <a id="foot-ideas" href="#">Ideas &amp; feedback</a> · <a id="foot-github" href="#">GitHub</a></p>
-      <p style="margin-top: 6px;">© <span id="year"></span> Tihomir Nyagolov</p>
-      <p style="margin: 12px auto 0; font-size: 12px; color: var(--text-muted); max-width: 620px; line-height: 1.5;">Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.</p>
-    </footer>
-  </div>
+  <section class="endcta">
+    <div class="wrap">
+      <h2 class="d">You can't scroll forever. Better go listen.</h2>
+      <a id="dl-cta" class="btn btn-primary" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="fgrid">
+        <div>
+          <span class="brand-mark brand-mark--big" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+          <div class="flabel">Language</div>
+          <!-- Site language selector: UI only for now. The site gets
+               translated into the player's 7 locales AFTER the design
+               is approved (en/bg/de/es/fr/ru/zh). -->
+          <div class="lang-select" id="lang-select">
+            <button type="button" class="lang-btn" aria-haspopup="listbox">
+              <span id="lang-current">English</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+            <div class="lang-menu" role="listbox" aria-label="Site language">
+              <button type="button" class="is-active" data-lang="en">English</button>
+              <button type="button" data-lang="bg">Български</button>
+              <button type="button" data-lang="de">Deutsch</button>
+              <button type="button" data-lang="es">Español</button>
+              <button type="button" data-lang="fr">Français</button>
+              <button type="button" data-lang="ru">Русский</button>
+              <button type="button" data-lang="zh">中文</button>
+            </div>
+          </div>
+          <div class="flabel">Social</div>
+          <div class="social" aria-label="Sonara on social media">
+            <a id="soc-x" href="#" rel="noopener" aria-label="Sonara on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 1.2h3.7l-8.1 9.3 9.5 12.3h-7.5l-5.8-7.6-6.7 7.6H.2l8.7-9.9L-.2 1.2h7.7l5.3 6.9 6.1-6.9z"/></svg></a>
+            <a id="soc-instagram" href="#" rel="noopener" aria-label="Sonara on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="2.8" y="2.8" width="18.4" height="18.4" rx="5.2"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.6" cy="6.4" r="1.15" fill="currentColor" stroke="none"/></svg></a>
+            <a id="soc-youtube" href="#" rel="noopener" aria-label="Sonara on YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg></a>
+            <a id="soc-tiktok" href="#" rel="noopener" aria-label="Sonara on TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.8a5.7 5.7 0 0 1-3.4-3.6h-3.2v13.5a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9.6a6.3 6.3 0 0 0-.9-.1 6.2 6.2 0 1 0 6.2 6.2V9.3a8.9 8.9 0 0 0 4.6 1.3V7.4a5.7 5.7 0 0 1-1.3-.2z"/></svg></a>
+            <a id="soc-discord" href="#" rel="noopener" aria-label="Sonara on Discord"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.6A19.9 19.9 0 0 0 15.4 3l-.6 1.2a15 15 0 0 0-5.6 0L8.6 3a19.9 19.9 0 0 0-4.9 1.6A20.5 20.5 0 0 0 .2 18.4a20 20 0 0 0 6 3l1-1.7a12.9 12.9 0 0 1-2-1l.5-.4a14.3 14.3 0 0 0 12.6 0l.5.4a12.9 12.9 0 0 1-2 1l1 1.7a20 20 0 0 0 6-3A20.5 20.5 0 0 0 20.3 4.6zM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4S7.1 10.5 8.3 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <a id="foot-download" href="#" rel="noopener">Download</a>
+          <a href="#pricing">Free &amp; Premium</a>
+          <a href="#features">Features</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="#support">Donate</a>
+          <a href="#faq">FAQ</a>
+          <a id="foot-ideas" href="#" rel="noopener">Ideas &amp; feedback</a>
+        </div>
+        <div>
+          <h4>Community</h4>
+          <a id="foot-github" href="#" rel="noopener">GitHub</a>
+          <a id="foot-releases" href="#" rel="noopener">Releases</a>
+          <a id="foot-discussions" href="#" rel="noopener">Discussions</a>
+        </div>
+      </div>
+      <div class="legal">
+        <p>© <span id="year"></span> Tihomir Nyagolov</p>
+        <p class="fine">Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.</p>
+      </div>
+    </div>
+    <div class="footer-wordmark d" aria-hidden="true">Sonara</div>
+  </footer>
 
   <script>
+    // ── Interactive background: pointer parallax + very light scroll drift
+    //    on the blurred icon layers. Transform-only (GPU); idle float and
+    //    the occasional star glints are pure CSS.
     (function () {
-      var canvas = document.getElementById('site-background-canvas');
-      if (!canvas || !canvas.getContext) return;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var layers = Array.prototype.map.call(document.querySelectorAll('.fx-layer'), function (el) {
+        return { el: el, depth: parseFloat(el.getAttribute('data-depth')) || 10 };
+      });
+      if (reduceMotion || !layers.length) return;
 
-      var ctx = canvas.getContext('2d', { alpha: true });
-      var width = 0;
-      var height = 0;
-      var dpr = 1;
-      var scrollTarget = 0;
-      var scrollCurrent = 0;
-      var pointerX = 0.5;
-      var pointerY = 0.42;
-      var pointerTargetX = 0.5;
-      var pointerTargetY = 0.42;
+      var strength = 0.6;
+      var ptx = 0, pty = 0, pcx = 0, pcy = 0;
+      var sct = 0, scc = 0;
       var rafId = 0;
 
-      var settings = {
-        alpha: 0.92,
-        edge: 0.16,
-        amp: 0.82,
-        saturation: 0.88,
-        lift: 0.52
-      };
-
-      function clamp(value, min, max) {
-        return Math.min(max, Math.max(min, value));
-      }
-
-      function lerp(a, b, t) {
-        return a + (b - a) * t;
-      }
-
-      function mixColor(a, b, t) {
-        return [
-          Math.round(lerp(a[0], b[0], t)),
-          Math.round(lerp(a[1], b[1], t)),
-          Math.round(lerp(a[2], b[2], t))
-        ];
-      }
-
-      function rgba(color, alpha) {
-        return 'rgba(' + color[0] + ', ' + color[1] + ', ' + color[2] + ', ' + alpha + ')';
-      }
-
-      function resizeBackground() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = Math.max(1, Math.round(width * dpr));
-        canvas.height = Math.max(1, Math.round(height * dpr));
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        updateScrollTarget();
-      }
-
-      function updateScrollTarget() {
-        var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        scrollTarget = clamp(window.scrollY / max, 0, 1);
-        requestDraw();
-      }
-
-      function requestDraw() {
-        if (!rafId) rafId = requestAnimationFrame(drawBackground);
-      }
-
-      function wavePoint(col, row, cols, rows) {
-        var u = col / cols;
-        var v = row / rows;
-        var scroll = scrollCurrent;
-        var horizon = height * lerp(0.34, 0.17, Math.sin(scroll * Math.PI) * settings.lift);
-        var bandHeight = height * lerp(0.58, 0.84, scroll);
-        var xBase = u * width;
-        var yBase = horizon + v * bandHeight;
-        var perspective = Math.pow(v, 1.42);
-        var amp = (22 + 82 * perspective) * settings.amp;
-        var scrollPhase = scroll * Math.PI * 3.8;
-        var pointerPull = (pointerX - 0.5) * 62 * perspective;
-        var waveA = Math.sin(u * Math.PI * 2.4 + scrollPhase);
-        var waveB = Math.sin(u * Math.PI * 6.2 - scrollPhase * 0.7 + v * 2.8);
-        var waveC = Math.cos((u + v) * Math.PI * 3.2 + scrollPhase * 1.2);
-        var rowOffset = (waveA * 0.58 + waveB * 0.26 + waveC * 0.16) * amp;
-        var xSkew = (v - 0.5) * width * lerp(-0.025, 0.045, scroll) + pointerPull;
-        var micro = Math.sin((col * 12.989 + row * 78.233) * 43758.5453) * 8;
-
-        return {
-          x: xBase + xSkew + micro * perspective,
-          y: yBase + rowOffset + (pointerY - 0.42) * 58 * perspective,
-          u: u,
-          v: v
-        };
-      }
-
-      function drawTriangle(a, b, c, color, alpha, edgeAlpha) {
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.lineTo(c.x, c.y);
-        ctx.closePath();
-        ctx.fillStyle = rgba(color, alpha);
-        ctx.fill();
-
-        if (edgeAlpha > 0) {
-          ctx.strokeStyle = 'rgba(255, 255, 255, ' + edgeAlpha + ')';
-          ctx.lineWidth = 0.65;
-          ctx.stroke();
-        }
-      }
-
-      function drawBackground() {
+      function draw() {
         rafId = 0;
-        scrollCurrent += (scrollTarget - scrollCurrent) * 0.1;
-        pointerX += (pointerTargetX - pointerX) * 0.08;
-        pointerY += (pointerTargetY - pointerY) * 0.08;
-
-        ctx.clearRect(0, 0, width, height);
-
-        var glow = ctx.createRadialGradient(width * 0.5, -height * 0.15, 0, width * 0.5, 0, height * 0.78);
-        glow.addColorStop(0, 'rgba(34, 211, 161, ' + (0.08 + scrollCurrent * 0.08) + ')');
-        glow.addColorStop(0.48, 'rgba(34, 211, 161, 0.02)');
-        glow.addColorStop(1, 'rgba(34, 211, 161, 0)');
-        ctx.fillStyle = glow;
-        ctx.fillRect(0, 0, width, height);
-
-        var cols = width < 720 ? 8 : 13;
-        var rows = width < 720 ? 8 : 10;
-        var points = [];
-        var row;
-        var col;
-
-        for (row = 0; row <= rows; row += 1) {
-          var line = [];
-          for (col = -1; col <= cols + 1; col += 1) {
-            line.push(wavePoint(col, row, cols, rows));
-          }
-          points.push(line);
-        }
-
-        var green = [34, 211, 161];
-        var blue = [71, 120, 255];
-        var violet = [143, 102, 255];
-        var dark = [18, 24, 23];
-
-        ctx.globalCompositeOperation = 'screen';
-
-        for (row = 0; row < rows; row += 1) {
-          for (col = 0; col < cols + 2; col += 1) {
-            var p1 = points[row][col];
-            var p2 = points[row][col + 1];
-            var p3 = points[row + 1][col];
-            var p4 = points[row + 1][col + 1];
-            var centerV = (p1.v + p4.v) * 0.5;
-            var centerU = (p1.u + p4.u) * 0.5;
-            var waveTone = Math.sin(centerU * Math.PI * 2 + scrollCurrent * Math.PI * 2.2 + row * 0.55) * 0.5 + 0.5;
-            var sectionTone = Math.sin(scrollCurrent * Math.PI * 2.6) * 0.5 + 0.5;
-            var color = mixColor(green, blue, clamp(sectionTone * 0.62 + centerV * 0.2, 0, 1));
-            color = mixColor(color, violet, clamp((waveTone - 0.62) * 0.7, 0, 0.42));
-            color = mixColor(dark, color, clamp(settings.saturation * (0.38 + centerV * 0.7), 0, 1));
-
-            var alpha = settings.alpha * (0.045 + centerV * 0.13 + waveTone * 0.035);
-            var edgeAlpha = settings.edge * (0.08 + centerV * 0.2);
-
-            if ((row + col) % 2 === 0) {
-              drawTriangle(p1, p2, p3, color, alpha, edgeAlpha);
-              drawTriangle(p2, p4, p3, color, alpha * 0.82, edgeAlpha * 0.7);
-            } else {
-              drawTriangle(p1, p2, p4, color, alpha * 0.82, edgeAlpha * 0.7);
-              drawTriangle(p1, p4, p3, color, alpha, edgeAlpha);
-            }
-          }
-        }
-
-        ctx.globalCompositeOperation = 'source-over';
-
-        var shade = ctx.createLinearGradient(0, 0, 0, height);
-        shade.addColorStop(0, 'rgba(15, 15, 15, 0.04)');
-        shade.addColorStop(0.5, 'rgba(15, 15, 15, 0)');
-        shade.addColorStop(1, 'rgba(15, 15, 15, 0.72)');
-        ctx.fillStyle = shade;
-        ctx.fillRect(0, 0, width, height);
-
-        if (Math.abs(scrollTarget - scrollCurrent) > 0.001 ||
-            Math.abs(pointerTargetX - pointerX) > 0.001 ||
-            Math.abs(pointerTargetY - pointerY) > 0.001) {
-          requestDraw();
+        pcx += (ptx - pcx) * 0.08;
+        pcy += (pty - pcy) * 0.08;
+        scc += (sct - scc) * 0.1;
+        var scrollOn = strength > 0 ? 1 : 0;
+        layers.forEach(function (l) {
+          // Scroll factor is deliberately tiny: with the old 0.0007 the
+          // layers drifted hundreds of px over a full page and the big
+          // icons ended up above the viewport - "missing" background.
+          var x = pcx * l.depth * strength;
+          var y = pcy * l.depth * strength - scc * l.depth * 0.00008 * scrollOn;
+          l.el.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
+        });
+        if (Math.abs(ptx - pcx) > 0.001 || Math.abs(pty - pcy) > 0.001 || Math.abs(sct - scc) > 0.5) {
+          kick();
         }
       }
+      function kick() { if (!rafId) rafId = requestAnimationFrame(draw); }
 
-      addEventListener('resize', resizeBackground);
-      addEventListener('scroll', updateScrollTarget, { passive: true });
       addEventListener('pointermove', function (event) {
-        pointerTargetX = clamp(event.clientX / Math.max(1, width), 0, 1);
-        pointerTargetY = clamp(event.clientY / Math.max(1, height), 0, 1);
-        requestDraw();
+        ptx = (event.clientX / Math.max(1, innerWidth) - 0.5) * -1;
+        pty = (event.clientY / Math.max(1, innerHeight) - 0.5) * -1;
+        kick();
       }, { passive: true });
-
-      resizeBackground();
+      addEventListener('scroll', function () {
+        sct = window.scrollY;
+        kick();
+      }, { passive: true });
     })();
 
     // ── Single place to point the site at the repo ──────────────────────
@@ -947,22 +1074,73 @@
     var PREMIUM_URL = 'https://buy.polar.sh/polar_cl_lkgmJowx2np3ZeKbyIBISpUMdNiSJIH39BFbb0Riuy6';
     var SUPPORT_URL = 'https://buy.polar.sh/polar_cl_2RegxENvkIFmYygTu5Ymg6BEGmprzqg53GWEw0E5IDY';
 
+    // Social profiles: fill in real URLs when the accounts exist; icons
+    // with an empty URL keep a dead "#" link for now (design preview).
+    var SOCIAL_URLS = {
+      'soc-x': '',
+      'soc-instagram': '',
+      'soc-youtube': '',
+      'soc-tiktok': '',
+      'soc-discord': ''
+    };
+
     var releasesPage = 'https://github.com/' + GH + '/releases/latest';
     var repoPage = 'https://github.com/' + GH;
-    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases'].forEach(function (id) {
+    var releasesAll = repoPage + '/releases';
+    var discussionsPage = repoPage + '/discussions';
+    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases', 'nav-download', 'dl-cta', 'foot-download'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.href = releasesPage;
     });
     document.getElementById('nav-github').href = repoPage;
     document.getElementById('foot-github').href = repoPage;
-    var ideasPage = repoPage + '/discussions/categories/ideas';
-    ['nav-ideas', 'foot-ideas'].forEach(function (id) {
+    document.getElementById('nav-gh-repo').href = repoPage;
+    document.getElementById('nav-gh-releases').href = releasesAll;
+    document.getElementById('nav-gh-discussions').href = discussionsPage;
+    document.getElementById('foot-discussions').href = discussionsPage;
+    var ideasPage = discussionsPage + '/categories/ideas';
+    ['nav-ideas', 'foot-ideas', 'nav-cat-ideas'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.href = ideasPage;
+    });
+    document.getElementById('nav-cat-announcements').href = discussionsPage + '/categories/announcements';
+    document.getElementById('nav-cat-general').href = discussionsPage + '/categories/general';
+    document.getElementById('nav-cat-qa').href = discussionsPage + '/categories/q-a';
+    Object.keys(SOCIAL_URLS).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && SOCIAL_URLS[id]) el.href = SOCIAL_URLS[id];
     });
     document.getElementById('buy-premium').href = PREMIUM_URL;
     document.getElementById('support-action').href = SUPPORT_URL;
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── Site language selector (footer): UI only until the site is
+    //    translated after the design sign-off. Remembers the choice.
+    (function () {
+      var sel = document.getElementById('lang-select');
+      if (!sel) return;
+      var btn = sel.querySelector('.lang-btn');
+      var label = document.getElementById('lang-current');
+      btn.addEventListener('click', function () { sel.classList.toggle('open'); });
+      sel.querySelectorAll('.lang-menu button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          sel.querySelectorAll('.lang-menu button').forEach(function (x) { x.classList.toggle('is-active', x === b); });
+          label.textContent = b.textContent;
+          sel.classList.remove('open');
+          try { localStorage.setItem('sonara-site-lang', b.dataset.lang); } catch (e) {}
+        });
+      });
+      document.addEventListener('click', function (e) { if (!sel.contains(e.target)) sel.classList.remove('open'); });
+    })();
+
+    // ── FAQ accordion: smooth grid-rows height animation + spinning icon.
+    document.querySelectorAll('.faq-item').forEach(function (item) {
+      var q = item.querySelector('.faq-q');
+      q.addEventListener('click', function () {
+        var open = item.classList.toggle('open');
+        q.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
 
     document.querySelectorAll('[data-clean-spotlight]').forEach(function (root) {
       var slides = Array.from(root.querySelectorAll('img'));
@@ -1074,9 +1252,11 @@
             btn.href = x64;
             var free = document.getElementById('dl-free');
             if (free) free.href = x64;
+            var cta = document.getElementById('dl-cta');
+            if (cta) cta.href = x64;
           }
-          // Hero download grid: direct links for the other three artifacts.
-          // Anything not found keeps its releases-page fallback href.
+          // Hero "More downloads" row: direct links for the other three
+          // artifacts. Anything not found keeps its releases-page fallback.
           // (Artifact names per package.json build config:
           //  Sonara-Setup-<v>-<arch>.exe / Sonara-<v>-win-<arch>-portable.zip)
           [['dl-arm64', /Setup.*arm64\.exe$/i],
@@ -1090,8 +1270,8 @@
           // (keep buttons simple - user decision 2026-07-03). Tag v0.86.1-beta
           // renders as "Public beta v0.86.1".
           if (rel.tag_name) {
-            var pill = document.querySelector('.beta-pill');
-            if (pill) pill.textContent = 'Public beta ' + rel.tag_name.replace(/-beta$/, '') + ' · Windows 10/11 · x64 & ARM64';
+            window.__relTag = rel.tag_name.replace(/-beta$/, '');
+            if (window.__renderPill) window.__renderPill();
             // The longer pill text can rewrap on narrow windows and shift
             // layout - re-align the anchor once it settles.
             requestAnimationFrame(realignAnchor);
@@ -1099,6 +1279,945 @@
         })
         .catch(function () {});
     }
+  </script>
+  <script>
+    // ── Site i18n: the player's 7 locales (en/bg/de/es/fr/ru/zh).
+    // English is the source copy baked into the HTML; applyLang() swaps the
+    // strings in place. The visitor's choice persists in localStorage and
+    // the first visit follows the browser language.
+    var I18N = {};
+    I18N.en = {
+      'meta.title': 'Sonara - local-first music player for Windows',
+      'meta.desc': 'A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library.',
+      'nav.features': 'Features',
+      'nav.pricing': 'Free &amp; Premium',
+      'nav.donate': 'Donate',
+      'nav.faq': 'FAQ',
+      'nav.ideas': 'Ideas',
+      'nav.download': 'Download',
+      'nav.mlabel.cat': 'Categories',
+      'nav.cat.ideas': 'Ideas &amp; feedback',
+      'nav.cat.ann': 'Announcements',
+      'nav.cat.gen': 'General',
+      'nav.cat.qa': 'Q&amp;A',
+      'nav.mlabel.proj': 'Project',
+      'nav.gh.repo': 'Repository',
+      'nav.gh.rel': 'Releases',
+      'nav.gh.disc': 'Discussions',
+      'hero.beta': 'Public beta',
+      'hero.title': 'Your music.<br /><span class="accent">Your machine.</span>',
+      'hero.sub': 'A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library, played the way you want.',
+      'cta.dl': 'Download for Windows',
+      'cta.pricing': 'See Free &amp; Premium',
+      'dl.arm64': 'ARM64 installer',
+      'dl.arm64.t': 'Installer for Snapdragon / ARM laptops.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Unzip and play, no install.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Portable zip for ARM laptops.',
+      'dl.all': 'All versions and release notes on GitHub',
+      'cta.note': 'Free forever. Premium features unlock with a one-time license.',
+      'r1.a': 'No cloud', 'r1.b': 'No account', 'r1.c': 'No ads', 'r1.d': 'Just your library',
+      'r2.a': 'Pay once', 'r2.b': 'Keep it forever', 'r2.c': 'No subscription', 'r2.d': 'Works offline',
+      'f.eq.h': 'Tune the sound',
+      'f.eq.p': 'Shape playback with the equalizer and keep the sound exactly where you want it.',
+      'f.sl.h': 'Sleep timer',
+      'f.sl.p': 'Let Sonara stop on its own when the night winds down.',
+      'f.cp.h': 'Small when your work needs the screen',
+      'f.cp.p': 'Keep playback close while games, creative tools or the desktop stay in front.',
+      'f.sh.h': 'Super shrunk',
+      'f.sh.p': 'A minimal shape for moments when the music should stay present, not visible.',
+      'langs.h': 'Available in 7 languages',
+      'ft.h': 'Built for people who keep their music',
+      'ft.sub': 'Everything is designed around a local library: folders in, music out, zero friction in between.',
+      'c1.h': 'Instant library',
+      'c1.p': 'Drop folders in and play. Built for real local libraries, smooth even with thousands of tracks.',
+      'c2.h': 'Gapless &amp; crossfade',
+      'c2.p': "Tracks preload before they're needed and can blend into each other, even on repeat-one.",
+      'c3.h': 'Synced lyrics',
+      'c3.p': 'Time-synced lyrics from your files, inline or fullscreen, without covering your controls.',
+      'c4.h': 'Mini player',
+      'c4.p': 'A slim always-on-top ribbon with a live equalizer readout, scrolling title and edge snapping.',
+      'c5.h': 'Touch-friendly',
+      'c5.p': 'Big targets, swipe selection and drag reordering that feel right on a Surface or any touch screen.',
+      'c6.h': 'Private by design',
+      'c6.p': 'No account, no ads. Your library and listening history never leave your computer - the only thing Sonara sends is anonymous usage stats, and one switch turns them off.',
+      'pr.h': 'Free &amp; Premium',
+      'pr.sub': 'Start with a complete local player. Upgrade when you want deeper control over how you listen and organize.',
+      't1.h': 'Free',
+      't1.note': 'No account · no time limits',
+      't1.i1': 'Local music library with fast search and sorting',
+      't1.i2': 'Smooth listening with a 5-band EQ, crossfade and gapless playback',
+      't1.i3': 'Mini player, 3D visualizer and synced lyrics',
+      't1.i4': 'Performance modes for games, creative work and battery life',
+      't1.i5': 'Native x64 and ARM64 builds for Windows 10/11',
+      't1.i6': 'Media keys, hotkeys, Discord presence and touch-friendly controls',
+      't1.i7': 'Likes, playlists, queue basics and quick copy from the playlist',
+      't1.btn': 'Download free',
+      't2.badge': 'Premium',
+      't2.once': 'one-time',
+      't2.note': 'One license · up to 3 of your computers · works offline',
+      't2.i1': 'Everything in Free, plus:',
+      't2.i2': 'Full 10-band EQ with saved custom presets',
+      't2.i3': 'Spatial audio and stereo width effects',
+      't2.i4': 'Unlimited Play Next queue',
+      't2.i5': 'Never Repeat and Listening Order',
+      't2.i6': 'Sleep timer for music at night',
+      't2.i7': 'Super-likes and saved likes inside your music files',
+      't2.i8': 'Multi-copy for song names and files',
+      't2.i9': 'Precise drag-and-drop placement from File Explorer',
+      't2.btn': 'Checkout',
+      'sp.h': 'Support Development',
+      'sp.p': 'Sonara is built independently. Voluntary contributions help cover development time, testing, and release costs. Pay what you want - every bit helps and none of it is required.',
+      'sp.btn': 'Support Sonara',
+      'faq.h': 'FAQ',
+      'faq.sub': 'Short answers to the things people actually ask.',
+      'faq.q1': 'Windows says “Unknown publisher” / SmartScreen warns me. Is this safe?',
+      'faq.a1': 'Yes. The beta is simply not code-signed yet (certificates are expensive for a free beta). Click <em>More info → Run anyway</em>. Every download is built from the same source and published only on our GitHub Releases page. A Microsoft Store version (signed by Microsoft) is planned for the stable release.',
+      'faq.q2': 'Does it need the internet?',
+      'faq.a2': 'No. Sonara is local-first: playback, your library and lyrics work fully offline. Activating a purchased Premium license takes one brief online check; after that Premium works fully offline too. The only optional network features are the update check and Discord presence.',
+      'faq.q3': 'Which Windows versions and devices?',
+      'faq.a3': 'Windows 10 and 11, with native builds for both x64 and ARM64. Snapdragon laptops run Sonara natively, not emulated.',
+      'faq.q4': 'Is there a portable version?',
+      'faq.a4': 'Yes. A zip you can unpack anywhere and run, no installation. Perfect for USB sticks and locked-down machines.',
+      'faq.q5': 'What happens to my data if I uninstall?',
+      'faq.a5': 'The uninstaller asks. By default your library, likes and settings are kept, so reinstalling later picks everything back up. You can choose to wipe everything instead.',
+      'faq.q6': 'How does the Premium license work?',
+      'faq.a6': "One key, one-time payment, up to 3 of your own computers. Your key arrives by email right after checkout; paste it in Settings → License and you're done - after activation it works offline and never expires. Moving to a new computer is easy: deactivate in the app, or manage all your computers from the purchase portal linked in your email.",
+      'faq.q7': 'Is Premium a subscription?',
+      'faq.a7': "No. It's a one-time purchase and the license is yours forever. If the price rises as bigger features arrive, licenses already bought simply keep working - buying early only means paying less.",
+      'end.h': "You can't scroll forever. Better go listen.",
+      'fo.tag': 'A local-first music player for Windows.',
+      'fo.lang': 'Language',
+      'fo.soc': 'Social',
+      'fo.prod': 'Product',
+      'fo.res': 'Resources',
+      'fo.com': 'Community',
+      'fo.dl': 'Download',
+      'legal.fine': 'Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.'
+    };
+    I18N.bg = {
+      'meta.title': 'Sonara - локален музикален плеър за Windows',
+      'meta.desc': 'Бърз, красив, локален музикален плеър за Windows. Без облак, без акаунт, без реклами. Само твоята библиотека.',
+      'nav.features': 'Функции',
+      'nav.pricing': 'Безплатен и Premium',
+      'nav.donate': 'Дарение',
+      'nav.faq': 'Въпроси',
+      'nav.ideas': 'Идеи',
+      'nav.download': 'Изтегли',
+      'nav.mlabel.cat': 'Категории',
+      'nav.cat.ideas': 'Идеи и предложения',
+      'nav.cat.ann': 'Новини',
+      'nav.cat.gen': 'Общи',
+      'nav.cat.qa': 'Въпроси и отговори',
+      'nav.mlabel.proj': 'Проект',
+      'nav.gh.repo': 'Хранилище',
+      'nav.gh.rel': 'Версии',
+      'nav.gh.disc': 'Дискусии',
+      'hero.beta': 'Публична бета',
+      'hero.title': 'Твоята музика.<br /><span class="accent">Твоята машина.</span>',
+      'hero.sub': 'Бърз, красив, локален музикален плеър за Windows. Без облак, без акаунт, без реклами. Само твоята библиотека, пусната както ти искаш.',
+      'cta.dl': 'Изтегли за Windows',
+      'cta.pricing': 'Виж Безплатен и Premium',
+      'dl.arm64': 'ARM64 инсталатор',
+      'dl.arm64.t': 'Инсталатор за Snapdragon / ARM лаптопи.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Разархивирай и слушай, без инсталация.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Portable zip за ARM лаптопи.',
+      'dl.all': 'Всички версии и бележки по изданията в GitHub',
+      'cta.note': 'Безплатен завинаги. Premium функциите се отключват с еднократен лиценз.',
+      'r1.a': 'Без облак', 'r1.b': 'Без акаунт', 'r1.c': 'Без реклами', 'r1.d': 'Само твоята библиотека',
+      'r2.a': 'Плащаш веднъж', 'r2.b': 'Твой завинаги', 'r2.c': 'Без абонамент', 'r2.d': 'Работи офлайн',
+      'f.eq.h': 'Настрой звука',
+      'f.eq.p': 'Оформи звученето с еквалайзера и дръж звука точно там, където го искаш.',
+      'f.sl.h': 'Таймер за заспиване',
+      'f.sl.p': 'Остави Sonara да спре сама, когато нощта се уталожи.',
+      'f.cp.h': 'Малък, когато работата иска екрана',
+      'f.cp.p': 'Музиката остава подръка, докато игрите, творческите инструменти или десктопът са отпред.',
+      'f.sh.h': 'Супер смален',
+      'f.sh.p': 'Минимална форма за моментите, в които музиката трябва да присъства, без да се вижда.',
+      'langs.h': 'Наличен на 7 езика',
+      'ft.h': 'Създаден за хора, които пазят музиката си',
+      'ft.sub': 'Всичко е изградено около локалната библиотека: папките влизат, музиката излиза, без никакво триене по пътя.',
+      'c1.h': 'Мигновена библиотека',
+      'c1.p': 'Пусни папките и слушай. Създаден за истински локални библиотеки, плавен дори с хиляди песни.',
+      'c2.h': 'Gapless и crossfade',
+      'c2.p': 'Песните се зареждат предварително и могат да преливат една в друга, дори при повторение на една песен.',
+      'c3.h': 'Синхронизиран текст',
+      'c3.p': 'Текстове с тайминг от твоите файлове, в плеъра или на цял екран, без да закриват контролите.',
+      'c4.h': 'Мини плеър',
+      'c4.p': 'Тънка лента винаги най-отгоре с жив еквалайзер, плъзгащо се заглавие и прилепване към ръбовете.',
+      'c5.h': 'Удобен за докосване',
+      'c5.p': 'Големи бутони, селекция с плъзгане и пренареждане с влачене, които са на място на Surface или всеки тъч екран.',
+      'c6.h': 'Поверителен по дизайн',
+      'c6.p': 'Без акаунт, без реклами. Библиотеката и историята ти на слушане никога не напускат компютъра - единственото, което Sonara изпраща, са анонимни статистики, и един ключ ги спира.',
+      'pr.h': 'Безплатен и Premium',
+      'pr.sub': 'Започни с пълноценен локален плеър. Надгради, когато поискаш по-дълбок контрол върху слушането и подредбата.',
+      't1.h': 'Безплатен',
+      't1.note': 'Без акаунт · без времеви лимити',
+      't1.i1': 'Локална музикална библиотека с бързо търсене и сортиране',
+      't1.i2': 'Плавно слушане с 5-лентов EQ, crossfade и gapless',
+      't1.i3': 'Мини плеър, 3D визуализатор и синхронизиран текст',
+      't1.i4': 'Режими на производителност за игри, творческа работа и батерия',
+      't1.i5': 'Нативни x64 и ARM64 билдове за Windows 10/11',
+      't1.i6': 'Медийни клавиши, преки пътища, Discord присъствие и тъч контроли',
+      't1.i7': 'Харесвания, плейлисти, основна опашка и бързо копиране от плейлиста',
+      't1.btn': 'Изтегли безплатно',
+      't2.badge': 'Premium',
+      't2.once': 'еднократно',
+      't2.note': 'Един лиценз · до 3 твои компютъра · работи офлайн',
+      't2.i1': 'Всичко от Безплатен, плюс:',
+      't2.i2': 'Пълен 10-лентов EQ със запазени твои пресети',
+      't2.i3': 'Spatial Audio и ефекти за ширина на стереото',
+      't2.i4': 'Неограничена опашка Пусни следваща',
+      't2.i5': 'Без повтаряне напред и Ред на слушане',
+      't2.i6': 'Таймер за заспиване за музика през нощта',
+      't2.i7': 'Супер харесвания и харесвания, записани в самите файлове',
+      't2.i8': 'Множествено копиране на имена и файлове',
+      't2.i9': 'Прецизно пускане с влачене от File Explorer',
+      't2.btn': 'Купи',
+      'sp.h': 'Подкрепи разработката',
+      'sp.p': 'Sonara се разработва независимо. Доброволните дарения помагат за времето за разработка, тестването и разходите по изданията. Плати колкото искаш - всяка помощ е ценна и нищо не е задължително.',
+      'sp.btn': 'Подкрепи Sonara',
+      'faq.h': 'Въпроси',
+      'faq.sub': 'Кратки отговори на нещата, които хората наистина питат.',
+      'faq.q1': 'Windows казва “Неизвестен издател” / SmartScreen ме предупреждава. Безопасно ли е?',
+      'faq.a1': 'Да. Бетата просто още няма подписан код (сертификатите са скъпи за безплатна бета). Натисни <em>Още информация → Изпълни въпреки това</em>. Всяко сваляне е билднато от един и същ код и се публикува само на нашата GitHub Releases страница. Версия за Microsoft Store (подписана от Microsoft) е планирана за стабилното издание.',
+      'faq.q2': 'Трябва ли му интернет?',
+      'faq.a2': 'Не. Sonara е локален: възпроизвеждането, библиотеката и текстовете работят изцяло офлайн. Активирането на закупен Premium лиценз изисква една кратка онлайн проверка; след нея Premium също работи изцяло офлайн. Единствените незадължителни мрежови функции са проверката за обновления и Discord присъствието.',
+      'faq.q3': 'Кои версии на Windows и устройства?',
+      'faq.a3': 'Windows 10 и 11, с нативни билдове за x64 и ARM64. Snapdragon лаптопите изпълняват Sonara нативно, не под емулация.',
+      'faq.q4': 'Има ли portable версия?',
+      'faq.a4': 'Да. Zip, който разархивираш където искаш и пускаш, без инсталация. Идеален за флашки и заключени машини.',
+      'faq.q5': 'Какво става с данните ми, ако деинсталирам?',
+      'faq.a5': 'Деинсталаторът пита. По подразбиране библиотеката, харесванията и настройките се пазят, така че при повторна инсталация всичко се връща. Можеш да избереш и пълно изтриване.',
+      'faq.q6': 'Как работи Premium лицензът?',
+      'faq.a6': 'Един ключ, еднократно плащане, до 3 твои компютъра. Ключът пристига по имейл веднага след покупката; поставяш го в Настройки → Лиценз и готово - след активацията работи офлайн и не изтича. Преместването на нов компютър е лесно: деактивирай в приложението или управлявай компютрите си от портала за покупки, свързан в имейла ти.',
+      'faq.q7': 'Premium абонамент ли е?',
+      'faq.a7': 'Не. Еднократна покупка е и лицензът е твой завинаги. Ако цената се вдигне с идването на по-големи функции, вече купените лицензи просто продължават да работят - да купиш рано значи само да платиш по-малко.',
+      'end.h': 'Не можеш да скролваш вечно. Върви да слушаш.',
+      'fo.tag': 'Локален музикален плеър за Windows.',
+      'fo.lang': 'Език',
+      'fo.soc': 'Социални',
+      'fo.prod': 'Продукт',
+      'fo.res': 'Ресурси',
+      'fo.com': 'Общност',
+      'fo.dl': 'Изтегли',
+      'legal.fine': 'Sonara се предоставя както си е, без гаранция. Безплатната версия е свободна за ползване; Premium функциите изискват валиден лиценз. Анонимните статистики за ползване са включени по подразбиране и могат да се изключат от предпочитанията. Музикалната ти библиотека и историята на слушане никога не се изпращат никъде - остават строго локални на твоя компютър.'
+    };
+    I18N.de = {
+      'meta.title': 'Sonara - Local-First-Musikplayer für Windows',
+      'meta.desc': 'Ein schneller, schöner Local-First-Musikplayer für Windows. Keine Cloud, kein Konto, keine Werbung. Nur deine Bibliothek.',
+      'nav.features': 'Funktionen',
+      'nav.pricing': 'Free &amp; Premium',
+      'nav.donate': 'Spenden',
+      'nav.faq': 'FAQ',
+      'nav.ideas': 'Ideen',
+      'nav.download': 'Download',
+      'nav.mlabel.cat': 'Kategorien',
+      'nav.cat.ideas': 'Ideen &amp; Feedback',
+      'nav.cat.ann': 'Ankündigungen',
+      'nav.cat.gen': 'Allgemein',
+      'nav.cat.qa': 'Fragen &amp; Antworten',
+      'nav.mlabel.proj': 'Projekt',
+      'nav.gh.repo': 'Repository',
+      'nav.gh.rel': 'Releases',
+      'nav.gh.disc': 'Diskussionen',
+      'hero.beta': 'Öffentliche Beta',
+      'hero.title': 'Deine Musik.<br /><span class="accent">Deine Maschine.</span>',
+      'hero.sub': 'Ein schneller, schöner Local-First-Musikplayer für Windows. Keine Cloud, kein Konto, keine Werbung. Nur deine Bibliothek, abgespielt wie du willst.',
+      'cta.dl': 'Für Windows herunterladen',
+      'cta.pricing': 'Free &amp; Premium ansehen',
+      'dl.arm64': 'ARM64-Installer',
+      'dl.arm64.t': 'Installer für Snapdragon-/ARM-Laptops.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Entpacken und abspielen, keine Installation.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Portable-Zip für ARM-Laptops.',
+      'dl.all': 'Alle Versionen und Release Notes auf GitHub',
+      'cta.note': 'Für immer kostenlos. Premium-Funktionen schaltet eine einmalige Lizenz frei.',
+      'r1.a': 'Keine Cloud', 'r1.b': 'Kein Konto', 'r1.c': 'Keine Werbung', 'r1.d': 'Nur deine Bibliothek',
+      'r2.a': 'Einmal zahlen', 'r2.b': 'Für immer deins', 'r2.c': 'Kein Abo', 'r2.d': 'Funktioniert offline',
+      'f.eq.h': 'Stimm den Klang ab',
+      'f.eq.p': 'Forme die Wiedergabe mit dem Equalizer und halte den Klang genau dort, wo du ihn willst.',
+      'f.sl.h': 'Sleep-Timer',
+      'f.sl.p': 'Lass Sonara von selbst stoppen, wenn die Nacht zur Ruhe kommt.',
+      'f.cp.h': 'Klein, wenn die Arbeit den Bildschirm braucht',
+      'f.cp.p': 'Die Musik bleibt griffbereit, während Spiele, Kreativ-Tools oder der Desktop vorne bleiben.',
+      'f.sh.h': 'Supergeschrumpft',
+      'f.sh.p': 'Eine minimale Form für Momente, in denen die Musik da sein soll, ohne sichtbar zu sein.',
+      'langs.h': 'In 7 Sprachen verfügbar',
+      'ft.h': 'Gebaut für Menschen, die ihre Musik behalten',
+      'ft.sub': 'Alles ist um eine lokale Bibliothek herum gestaltet: Ordner rein, Musik raus, null Reibung dazwischen.',
+      'c1.h': 'Sofortige Bibliothek',
+      'c1.p': 'Ordner hineinziehen und abspielen. Gebaut für echte lokale Bibliotheken, flüssig selbst mit Tausenden Titeln.',
+      'c2.h': 'Gapless &amp; Crossfade',
+      'c2.p': 'Titel werden vorgeladen und können ineinander übergehen, sogar bei Einzelwiederholung.',
+      'c3.h': 'Synchronisierte Lyrics',
+      'c3.p': 'Zeitsynchronisierte Lyrics aus deinen Dateien, inline oder im Vollbild, ohne deine Bedienelemente zu verdecken.',
+      'c4.h': 'Mini-Player',
+      'c4.p': 'Ein schmales Always-on-top-Band mit Live-Equalizer, laufendem Titel und Andocken an Bildschirmkanten.',
+      'c5.h': 'Touch-freundlich',
+      'c5.p': 'Große Ziele, Wischauswahl und Umsortieren per Ziehen - fühlt sich auf einem Surface oder jedem Touchscreen richtig an.',
+      'c6.h': 'Privat by Design',
+      'c6.p': 'Kein Konto, keine Werbung. Deine Bibliothek und dein Hörverlauf verlassen nie deinen Computer - Sonara sendet nur anonyme Nutzungsstatistiken, und ein Schalter stellt sie ab.',
+      'pr.h': 'Free &amp; Premium',
+      'pr.sub': 'Starte mit einem vollwertigen lokalen Player. Rüste auf, wenn du tiefere Kontrolle über Hören und Organisieren willst.',
+      't1.h': 'Free',
+      't1.note': 'Kein Konto · keine Zeitlimits',
+      't1.i1': 'Lokale Musikbibliothek mit schneller Suche und Sortierung',
+      't1.i2': 'Sanftes Hören mit 5-Band-EQ, Crossfade und Gapless-Wiedergabe',
+      't1.i3': 'Mini-Player, 3D-Visualizer und synchronisierte Lyrics',
+      't1.i4': 'Leistungsmodi für Spiele, Kreativarbeit und Akku',
+      't1.i5': 'Native x64- und ARM64-Builds für Windows 10/11',
+      't1.i6': 'Medientasten, Hotkeys, Discord-Präsenz und Touch-Bedienung',
+      't1.i7': 'Likes, Playlists, Warteschlangen-Basics und Schnellkopie aus der Playlist',
+      't1.btn': 'Kostenlos laden',
+      't2.badge': 'Premium',
+      't2.once': 'einmalig',
+      't2.note': 'Eine Lizenz · bis zu 3 deiner Computer · funktioniert offline',
+      't2.i1': 'Alles aus Free, plus:',
+      't2.i2': 'Voller 10-Band-EQ mit gespeicherten eigenen Presets',
+      't2.i3': 'Spatial Audio und Stereobreite-Effekte',
+      't2.i4': 'Unbegrenzte Als-Nächstes-Warteschlange',
+      't2.i5': 'Nicht erneut abspielen und Hörreihenfolge',
+      't2.i6': 'Sleep-Timer für Musik in der Nacht',
+      't2.i7': 'Super-Likes und Likes, gespeichert in deinen Musikdateien',
+      't2.i8': 'Mehrfachkopie für Titelnamen und Dateien',
+      't2.i9': 'Präzises Drag-and-drop-Einfügen aus dem Datei-Explorer',
+      't2.btn': 'Zur Kasse',
+      'sp.h': 'Entwicklung unterstützen',
+      'sp.p': 'Sonara wird unabhängig entwickelt. Freiwillige Beiträge helfen, Entwicklungszeit, Tests und Release-Kosten zu decken. Zahl, was du willst - alles hilft, nichts ist Pflicht.',
+      'sp.btn': 'Sonara unterstützen',
+      'faq.h': 'FAQ',
+      'faq.sub': 'Kurze Antworten auf die Fragen, die wirklich kommen.',
+      'faq.q1': 'Windows meldet “Unbekannter Herausgeber” / SmartScreen warnt. Ist das sicher?',
+      'faq.a1': 'Ja. Die Beta ist schlicht noch nicht code-signiert (Zertifikate sind für eine kostenlose Beta teuer). Klicke <em>Weitere Informationen → Trotzdem ausführen</em>. Jeder Download wird aus derselben Quelle gebaut und nur auf unserer GitHub-Releases-Seite veröffentlicht. Eine Microsoft-Store-Version (von Microsoft signiert) ist für das stabile Release geplant.',
+      'faq.q2': 'Braucht es Internet?',
+      'faq.a2': 'Nein. Sonara ist local-first: Wiedergabe, Bibliothek und Lyrics funktionieren komplett offline. Die Aktivierung einer gekauften Premium-Lizenz braucht eine kurze Online-Prüfung; danach funktioniert auch Premium komplett offline. Die einzigen optionalen Netzwerkfunktionen sind die Update-Prüfung und die Discord-Präsenz.',
+      'faq.q3': 'Welche Windows-Versionen und Geräte?',
+      'faq.a3': 'Windows 10 und 11, mit nativen Builds für x64 und ARM64. Snapdragon-Laptops führen Sonara nativ aus, nicht emuliert.',
+      'faq.q4': 'Gibt es eine portable Version?',
+      'faq.a4': 'Ja. Ein Zip zum Entpacken und Starten, ohne Installation. Perfekt für USB-Sticks und gesperrte Rechner.',
+      'faq.q5': 'Was passiert mit meinen Daten beim Deinstallieren?',
+      'faq.a5': 'Der Deinstaller fragt. Standardmäßig bleiben Bibliothek, Likes und Einstellungen erhalten, sodass eine spätere Neuinstallation alles wieder aufnimmt. Du kannst stattdessen auch alles löschen lassen.',
+      'faq.q6': 'Wie funktioniert die Premium-Lizenz?',
+      'faq.a6': 'Ein Schlüssel, einmalige Zahlung, bis zu 3 eigene Computer. Der Schlüssel kommt direkt nach dem Kauf per E-Mail; in Einstellungen → Lizenz einfügen, fertig - nach der Aktivierung funktioniert er offline und läuft nie ab. Der Umzug auf einen neuen Computer ist einfach: in der App deaktivieren oder alle Computer über das in der E-Mail verlinkte Kaufportal verwalten.',
+      'faq.q7': 'Ist Premium ein Abo?',
+      'faq.a7': 'Nein. Es ist ein Einmalkauf und die Lizenz gehört dir für immer. Steigt der Preis mit größeren Funktionen, laufen bereits gekaufte Lizenzen einfach weiter - früh kaufen heißt nur weniger zahlen.',
+      'end.h': 'Du kannst nicht ewig scrollen. Geh lieber Musik hören.',
+      'fo.tag': 'Ein Local-First-Musikplayer für Windows.',
+      'fo.lang': 'Sprache',
+      'fo.soc': 'Social',
+      'fo.prod': 'Produkt',
+      'fo.res': 'Ressourcen',
+      'fo.com': 'Community',
+      'fo.dl': 'Download',
+      'legal.fine': 'Sonara wird bereitgestellt wie es ist, ohne Gewähr. Die kostenlose Version ist frei nutzbar; Premium-Funktionen brauchen eine gültige Lizenz. Anonyme Nutzungsstatistiken sind standardmäßig aktiv und lassen sich in den Einstellungen abschalten. Deine Musikbibliothek und dein Hörverlauf werden nirgendwohin gesendet - sie bleiben strikt lokal auf deinem Computer.'
+    };
+    I18N.es = {
+      'meta.title': 'Sonara - reproductor de música local para Windows',
+      'meta.desc': 'Un reproductor de música local para Windows, rápido y bonito. Sin nube, sin cuenta, sin anuncios. Solo tu biblioteca.',
+      'nav.features': 'Funciones',
+      'nav.pricing': 'Free y Premium',
+      'nav.donate': 'Donar',
+      'nav.faq': 'FAQ',
+      'nav.ideas': 'Ideas',
+      'nav.download': 'Descargar',
+      'nav.mlabel.cat': 'Categorías',
+      'nav.cat.ideas': 'Ideas y sugerencias',
+      'nav.cat.ann': 'Anuncios',
+      'nav.cat.gen': 'General',
+      'nav.cat.qa': 'Preguntas y respuestas',
+      'nav.mlabel.proj': 'Proyecto',
+      'nav.gh.repo': 'Repositorio',
+      'nav.gh.rel': 'Versiones',
+      'nav.gh.disc': 'Discusiones',
+      'hero.beta': 'Beta pública',
+      'hero.title': 'Tu música.<br /><span class="accent">Tu máquina.</span>',
+      'hero.sub': 'Un reproductor de música local para Windows, rápido y bonito. Sin nube, sin cuenta, sin anuncios. Solo tu biblioteca, reproducida como tú quieras.',
+      'cta.dl': 'Descargar para Windows',
+      'cta.pricing': 'Ver Free y Premium',
+      'dl.arm64': 'Instalador ARM64',
+      'dl.arm64.t': 'Instalador para portátiles Snapdragon / ARM.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Descomprime y reproduce, sin instalación.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Zip portable para portátiles ARM.',
+      'dl.all': 'Todas las versiones y notas en GitHub',
+      'cta.note': 'Gratis para siempre. Las funciones Premium se desbloquean con una licencia de pago único.',
+      'r1.a': 'Sin nube', 'r1.b': 'Sin cuenta', 'r1.c': 'Sin anuncios', 'r1.d': 'Solo tu biblioteca',
+      'r2.a': 'Paga una vez', 'r2.b': 'Tuyo para siempre', 'r2.c': 'Sin suscripción', 'r2.d': 'Funciona sin conexión',
+      'f.eq.h': 'Ajusta el sonido',
+      'f.eq.p': 'Da forma a la reproducción con el ecualizador y mantén el sonido exactamente donde lo quieres.',
+      'f.sl.h': 'Temporizador',
+      'f.sl.p': 'Deja que Sonara se detenga sola cuando la noche se apaga.',
+      'f.cp.h': 'Pequeño cuando el trabajo necesita la pantalla',
+      'f.cp.p': 'Mantén la música cerca mientras los juegos, las herramientas creativas o el escritorio están delante.',
+      'f.sh.h': 'Súper reducido',
+      'f.sh.p': 'Una forma mínima para los momentos en que la música debe estar presente, no visible.',
+      'langs.h': 'Disponible en 7 idiomas',
+      'ft.h': 'Hecho para quienes conservan su música',
+      'ft.sub': 'Todo gira en torno a una biblioteca local: carpetas dentro, música fuera, cero fricción entre medias.',
+      'c1.h': 'Biblioteca instantánea',
+      'c1.p': 'Arrastra carpetas y reproduce. Hecho para bibliotecas locales reales, fluido incluso con miles de pistas.',
+      'c2.h': 'Gapless y crossfade',
+      'c2.p': 'Las pistas se precargan antes de necesitarse y pueden fundirse entre sí, incluso repitiendo una sola.',
+      'c3.h': 'Letras sincronizadas',
+      'c3.p': 'Letras sincronizadas desde tus archivos, integradas o a pantalla completa, sin tapar tus controles.',
+      'c4.h': 'Mini reproductor',
+      'c4.p': 'Una cinta fina siempre visible con ecualizador en vivo, título deslizante y ajuste a los bordes.',
+      'c5.h': 'Táctil',
+      'c5.p': 'Objetivos grandes, selección deslizando y reordenar arrastrando: se sienten bien en una Surface o cualquier pantalla táctil.',
+      'c6.h': 'Privado por diseño',
+      'c6.p': 'Sin cuenta, sin anuncios. Tu biblioteca y tu historial nunca salen de tu equipo - lo único que Sonara envía son estadísticas anónimas de uso, y un interruptor las apaga.',
+      'pr.h': 'Free y Premium',
+      'pr.sub': 'Empieza con un reproductor local completo. Mejora cuando quieras un control más profundo de cómo escuchas y organizas.',
+      't1.h': 'Free',
+      't1.note': 'Sin cuenta · sin límites de tiempo',
+      't1.i1': 'Biblioteca musical local con búsqueda y orden rápidos',
+      't1.i2': 'Escucha fluida con EQ de 5 bandas, crossfade y gapless',
+      't1.i3': 'Mini reproductor, visualizador 3D y letras sincronizadas',
+      't1.i4': 'Modos de rendimiento para juegos, trabajo creativo y batería',
+      't1.i5': 'Builds nativos x64 y ARM64 para Windows 10/11',
+      't1.i6': 'Teclas multimedia, atajos, presencia en Discord y controles táctiles',
+      't1.i7': 'Me gusta, listas, cola básica y copia rápida desde la lista',
+      't1.btn': 'Descargar gratis',
+      't2.badge': 'Premium',
+      't2.once': 'pago único',
+      't2.note': 'Una licencia · hasta 3 de tus equipos · funciona sin conexión',
+      't2.i1': 'Todo lo de Free, más:',
+      't2.i2': 'EQ completo de 10 bandas con presets propios guardados',
+      't2.i3': 'Spatial Audio y efectos de amplitud estéreo',
+      't2.i4': 'Cola Reproducir a continuación ilimitada',
+      't2.i5': 'No repetir hacia adelante y Orden de escucha',
+      't2.i6': 'Temporizador para la música de noche',
+      't2.i7': 'Súper me gusta y me gusta guardados dentro de tus archivos',
+      't2.i8': 'Copia múltiple de nombres y archivos',
+      't2.i9': 'Colocación precisa arrastrando desde el Explorador de archivos',
+      't2.btn': 'Comprar',
+      'sp.h': 'Apoya el desarrollo',
+      'sp.p': 'Sonara se desarrolla de forma independiente. Las aportaciones voluntarias ayudan a cubrir el tiempo de desarrollo, las pruebas y los costes de publicación. Paga lo que quieras - todo suma y nada es obligatorio.',
+      'sp.btn': 'Apoyar a Sonara',
+      'faq.h': 'FAQ',
+      'faq.sub': 'Respuestas cortas a lo que la gente pregunta de verdad.',
+      'faq.q1': 'Windows dice “Editor desconocido” / SmartScreen me avisa. ¿Es seguro?',
+      'faq.a1': 'Sí. La beta simplemente aún no está firmada (los certificados son caros para una beta gratuita). Pulsa <em>Más información → Ejecutar de todas formas</em>. Cada descarga se compila del mismo código y se publica solo en nuestra página de GitHub Releases. Para la versión estable está prevista una versión de Microsoft Store (firmada por Microsoft).',
+      'faq.q2': '¿Necesita internet?',
+      'faq.a2': 'No. Sonara es local: la reproducción, tu biblioteca y las letras funcionan totalmente sin conexión. Activar una licencia Premium comprada requiere una breve comprobación en línea; después, Premium también funciona totalmente sin conexión. Las únicas funciones de red opcionales son la comprobación de actualizaciones y la presencia en Discord.',
+      'faq.q3': '¿Qué versiones de Windows y dispositivos?',
+      'faq.a3': 'Windows 10 y 11, con builds nativos para x64 y ARM64. Los portátiles Snapdragon ejecutan Sonara de forma nativa, sin emulación.',
+      'faq.q4': '¿Hay versión portable?',
+      'faq.a4': 'Sí. Un zip que descomprimes donde quieras y ejecutas, sin instalación. Perfecto para memorias USB y equipos restringidos.',
+      'faq.q5': '¿Qué pasa con mis datos si desinstalo?',
+      'faq.a5': 'El desinstalador pregunta. Por defecto tu biblioteca, tus me gusta y tus ajustes se conservan, así que al reinstalar todo vuelve. También puedes elegir borrarlo todo.',
+      'faq.q6': '¿Cómo funciona la licencia Premium?',
+      'faq.a6': 'Una clave, un pago único, hasta 3 equipos tuyos. La clave llega por correo justo después de la compra; pégala en Ajustes → Licencia y listo - tras la activación funciona sin conexión y no caduca. Cambiar de equipo es fácil: desactiva en la app o gestiona tus equipos desde el portal de compra enlazado en tu correo.',
+      'faq.q7': '¿Premium es una suscripción?',
+      'faq.a7': 'No. Es una compra única y la licencia es tuya para siempre. Si el precio sube con funciones mayores, las licencias ya compradas siguen funcionando - comprar pronto solo significa pagar menos.',
+      'end.h': 'No puedes hacer scroll para siempre. Mejor ve a escuchar.',
+      'fo.tag': 'Un reproductor de música local para Windows.',
+      'fo.lang': 'Idioma',
+      'fo.soc': 'Redes',
+      'fo.prod': 'Producto',
+      'fo.res': 'Recursos',
+      'fo.com': 'Comunidad',
+      'fo.dl': 'Descargar',
+      'legal.fine': 'Sonara se ofrece tal cual, sin garantía. La versión gratuita es de uso libre; las funciones Premium requieren una licencia válida. Las estadísticas anónimas de uso están activadas por defecto y pueden desactivarse en Preferencias. Tu biblioteca musical y tu historial de escucha nunca se envían a ningún sitio - permanecen estrictamente locales en tu equipo.'
+    };
+    I18N.fr = {
+      'meta.title': 'Sonara - lecteur de musique local pour Windows',
+      'meta.desc': 'Un lecteur de musique local pour Windows, rapide et élégant. Pas de cloud, pas de compte, pas de pub. Juste votre bibliothèque.',
+      'nav.features': 'Fonctions',
+      'nav.pricing': 'Free et Premium',
+      'nav.donate': 'Faire un don',
+      'nav.faq': 'FAQ',
+      'nav.ideas': 'Idées',
+      'nav.download': 'Télécharger',
+      'nav.mlabel.cat': 'Catégories',
+      'nav.cat.ideas': 'Idées et retours',
+      'nav.cat.ann': 'Annonces',
+      'nav.cat.gen': 'Général',
+      'nav.cat.qa': 'Questions-réponses',
+      'nav.mlabel.proj': 'Projet',
+      'nav.gh.repo': 'Dépôt',
+      'nav.gh.rel': 'Versions',
+      'nav.gh.disc': 'Discussions',
+      'hero.beta': 'Bêta publique',
+      'hero.title': 'Votre musique.<br /><span class="accent">Votre machine.</span>',
+      'hero.sub': 'Un lecteur de musique local pour Windows, rapide et élégant. Pas de cloud, pas de compte, pas de pub. Juste votre bibliothèque, jouée comme vous voulez.',
+      'cta.dl': 'Télécharger pour Windows',
+      'cta.pricing': 'Voir Free et Premium',
+      'dl.arm64': 'Installateur ARM64',
+      'dl.arm64.t': 'Installateur pour portables Snapdragon / ARM.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Décompressez et écoutez, sans installation.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Zip portable pour portables ARM.',
+      'dl.all': 'Toutes les versions et notes sur GitHub',
+      'cta.note': 'Gratuit pour toujours. Les fonctions Premium se débloquent avec une licence à paiement unique.',
+      'r1.a': 'Pas de cloud', 'r1.b': 'Pas de compte', 'r1.c': 'Pas de pub', 'r1.d': 'Juste votre bibliothèque',
+      'r2.a': 'Payez une fois', 'r2.b': 'À vous pour toujours', 'r2.c': "Pas d'abonnement", 'r2.d': 'Fonctionne hors ligne',
+      'f.eq.h': 'Réglez le son',
+      'f.eq.p': "Façonnez la lecture avec l'égaliseur et gardez le son exactement là où vous le voulez.",
+      'f.sl.h': 'Minuteur de veille',
+      'f.sl.p': "Laissez Sonara s'arrêter d'elle-même quand la nuit s'apaise.",
+      'f.cp.h': "Petit quand le travail a besoin de l'écran",
+      'f.cp.p': 'Gardez la musique à portée pendant que les jeux, les outils créatifs ou le bureau restent devant.',
+      'f.sh.h': 'Super réduit',
+      'f.sh.p': 'Une forme minimale pour les moments où la musique doit être présente, pas visible.',
+      'langs.h': 'Disponible en 7 langues',
+      'ft.h': 'Conçu pour ceux qui gardent leur musique',
+      'ft.sub': "Tout est pensé autour d'une bibliothèque locale : les dossiers entrent, la musique sort, zéro friction entre les deux.",
+      'c1.h': 'Bibliothèque instantanée',
+      'c1.p': 'Déposez vos dossiers et écoutez. Conçu pour de vraies bibliothèques locales, fluide même avec des milliers de titres.',
+      'c2.h': 'Gapless et crossfade',
+      'c2.p': "Les titres se préchargent avant d'être nécessaires et peuvent se fondre l'un dans l'autre, même en répétition d'un seul titre.",
+      'c3.h': 'Paroles synchronisées',
+      'c3.p': 'Paroles synchronisées depuis vos fichiers, intégrées ou en plein écran, sans couvrir vos commandes.',
+      'c4.h': 'Mini-lecteur',
+      'c4.p': 'Un ruban fin toujours au premier plan avec égaliseur en direct, titre défilant et accrochage aux bords.',
+      'c5.h': 'Tactile',
+      'c5.p': 'Grandes cibles, sélection par glissement et réorganisation par glisser-déposer : parfait sur une Surface ou tout écran tactile.',
+      'c6.h': 'Privé par conception',
+      'c6.p': "Pas de compte, pas de pub. Votre bibliothèque et votre historique d'écoute ne quittent jamais votre ordinateur - Sonara n'envoie que des statistiques anonymes d'utilisation, et un interrupteur les coupe.",
+      'pr.h': 'Free et Premium',
+      'pr.sub': 'Commencez avec un lecteur local complet. Passez à Premium quand vous voulez un contrôle plus fin de votre écoute et de votre organisation.',
+      't1.h': 'Free',
+      't1.note': 'Pas de compte · pas de limite de temps',
+      't1.i1': 'Bibliothèque musicale locale avec recherche et tri rapides',
+      't1.i2': 'Écoute fluide avec EQ 5 bandes, crossfade et lecture gapless',
+      't1.i3': 'Mini-lecteur, visualiseur 3D et paroles synchronisées',
+      't1.i4': 'Modes performance pour les jeux, la création et la batterie',
+      't1.i5': 'Builds natifs x64 et ARM64 pour Windows 10/11',
+      't1.i6': 'Touches multimédias, raccourcis, présence Discord et commandes tactiles',
+      't1.i7': "Likes, playlists, file d'attente de base et copie rapide depuis la playlist",
+      't1.btn': 'Télécharger gratuitement',
+      't2.badge': 'Premium',
+      't2.once': 'paiement unique',
+      't2.note': "Une licence · jusqu'à 3 de vos ordinateurs · fonctionne hors ligne",
+      't2.i1': 'Tout Free, plus :',
+      't2.i2': 'EQ complet 10 bandes avec présets personnels enregistrés',
+      't2.i3': 'Spatial Audio et effets de largeur stéréo',
+      't2.i4': 'File Lire ensuite illimitée',
+      't2.i5': "Ne pas répéter en avant et Ordre d'écoute",
+      't2.i6': 'Minuteur de veille pour la musique la nuit',
+      't2.i7': 'Super-likes et likes enregistrés dans vos fichiers musicaux',
+      't2.i8': 'Copie multiple des titres et des fichiers',
+      't2.i9': "Placement précis par glisser-déposer depuis l'Explorateur de fichiers",
+      't2.btn': 'Acheter',
+      'sp.h': 'Soutenir le développement',
+      'sp.p': "Sonara est développé de façon indépendante. Les contributions volontaires aident à couvrir le temps de développement, les tests et les coûts de publication. Payez ce que vous voulez - tout aide et rien n'est obligatoire.",
+      'sp.btn': 'Soutenir Sonara',
+      'faq.h': 'FAQ',
+      'faq.sub': "Des réponses courtes aux questions qu'on pose vraiment.",
+      'faq.q1': "Windows affiche “Éditeur inconnu” / SmartScreen m'avertit. Est-ce sûr ?",
+      'faq.a1': "Oui. La bêta n'est simplement pas encore signée (les certificats coûtent cher pour une bêta gratuite). Cliquez sur <em>Informations complémentaires → Exécuter quand même</em>. Chaque téléchargement est compilé depuis la même source et publié uniquement sur notre page GitHub Releases. Une version Microsoft Store (signée par Microsoft) est prévue pour la version stable.",
+      'faq.q2': "A-t-il besoin d'internet ?",
+      'faq.a2': "Non. Sonara est local : la lecture, votre bibliothèque et les paroles fonctionnent entièrement hors ligne. L'activation d'une licence Premium achetée demande une brève vérification en ligne ; ensuite Premium fonctionne aussi entièrement hors ligne. Les seules fonctions réseau optionnelles sont la vérification des mises à jour et la présence Discord.",
+      'faq.q3': 'Quelles versions de Windows et quels appareils ?',
+      'faq.a3': 'Windows 10 et 11, avec des builds natifs x64 et ARM64. Les portables Snapdragon exécutent Sonara nativement, sans émulation.',
+      'faq.q4': 'Existe-t-il une version portable ?',
+      'faq.a4': "Oui. Un zip à décompresser n'importe où et à lancer, sans installation. Parfait pour les clés USB et les machines verrouillées.",
+      'faq.q5': 'Que deviennent mes données si je désinstalle ?',
+      'faq.a5': 'Le désinstalleur demande. Par défaut, votre bibliothèque, vos likes et vos réglages sont conservés : une réinstallation ultérieure retrouve tout. Vous pouvez aussi choisir de tout effacer.',
+      'faq.q6': 'Comment fonctionne la licence Premium ?',
+      'faq.a6': "Une clé, un paiement unique, jusqu'à 3 de vos ordinateurs. La clé arrive par e-mail juste après l'achat ; collez-la dans Réglages → Licence et c'est fait - après activation elle fonctionne hors ligne et n'expire jamais. Changer d'ordinateur est simple : désactivez dans l'application ou gérez vos ordinateurs depuis le portail d'achat lié dans votre e-mail.",
+      'faq.q7': 'Premium est-il un abonnement ?',
+      'faq.a7': "Non. C'est un achat unique et la licence est à vous pour toujours. Si le prix augmente avec l'arrivée de fonctions majeures, les licences déjà achetées continuent de fonctionner - acheter tôt, c'est juste payer moins.",
+      'end.h': 'Vous ne pouvez pas défiler pour toujours. Allez plutôt écouter.',
+      'fo.tag': 'Un lecteur de musique local pour Windows.',
+      'fo.lang': 'Langue',
+      'fo.soc': 'Réseaux',
+      'fo.prod': 'Produit',
+      'fo.res': 'Ressources',
+      'fo.com': 'Communauté',
+      'fo.dl': 'Télécharger',
+      'legal.fine': "Sonara est fourni tel quel, sans garantie. La version gratuite est libre d'utilisation ; les fonctions Premium nécessitent une licence valide. Les statistiques anonymes d'utilisation sont activées par défaut et peuvent être désactivées dans les Préférences. Votre bibliothèque musicale et votre historique d'écoute ne sont jamais envoyés nulle part - ils restent strictement locaux sur votre ordinateur."
+    };
+    I18N.ru = {
+      'meta.title': 'Sonara - локальный музыкальный плеер для Windows',
+      'meta.desc': 'Быстрый, красивый, локальный музыкальный плеер для Windows. Без облака, без аккаунта, без рекламы. Только ваша библиотека.',
+      'nav.features': 'Функции',
+      'nav.pricing': 'Free и Premium',
+      'nav.donate': 'Поддержать',
+      'nav.faq': 'Вопросы',
+      'nav.ideas': 'Идеи',
+      'nav.download': 'Скачать',
+      'nav.mlabel.cat': 'Категории',
+      'nav.cat.ideas': 'Идеи и отзывы',
+      'nav.cat.ann': 'Анонсы',
+      'nav.cat.gen': 'Общее',
+      'nav.cat.qa': 'Вопросы и ответы',
+      'nav.mlabel.proj': 'Проект',
+      'nav.gh.repo': 'Репозиторий',
+      'nav.gh.rel': 'Релизы',
+      'nav.gh.disc': 'Обсуждения',
+      'hero.beta': 'Публичная бета',
+      'hero.title': 'Ваша музыка.<br /><span class="accent">Ваша машина.</span>',
+      'hero.sub': 'Быстрый, красивый, локальный музыкальный плеер для Windows. Без облака, без аккаунта, без рекламы. Только ваша библиотека, звучащая так, как хотите вы.',
+      'cta.dl': 'Скачать для Windows',
+      'cta.pricing': 'Смотреть Free и Premium',
+      'dl.arm64': 'Установщик ARM64',
+      'dl.arm64.t': 'Установщик для ноутбуков Snapdragon / ARM.',
+      'dl.px64': 'Portable x64',
+      'dl.px64.t': 'Распакуйте и слушайте, без установки.',
+      'dl.parm': 'Portable ARM64',
+      'dl.parm.t': 'Portable-zip для ARM-ноутбуков.',
+      'dl.all': 'Все версии и заметки о релизах на GitHub',
+      'cta.note': 'Бесплатно навсегда. Premium-функции открываются разовой лицензией.',
+      'r1.a': 'Без облака', 'r1.b': 'Без аккаунта', 'r1.c': 'Без рекламы', 'r1.d': 'Только ваша библиотека',
+      'r2.a': 'Платите один раз', 'r2.b': 'Ваше навсегда', 'r2.c': 'Без подписки', 'r2.d': 'Работает офлайн',
+      'f.eq.h': 'Настройте звук',
+      'f.eq.p': 'Формируйте звучание эквалайзером и держите звук именно там, где хотите.',
+      'f.sl.h': 'Таймер сна',
+      'f.sl.p': 'Пусть Sonara остановится сама, когда ночь затихает.',
+      'f.cp.h': 'Маленький, когда работе нужен экран',
+      'f.cp.p': 'Музыка остаётся под рукой, пока игры, творческие инструменты или рабочий стол впереди.',
+      'f.sh.h': 'Супер-мини',
+      'f.sh.p': 'Минимальная форма для моментов, когда музыка должна присутствовать, но не быть на виду.',
+      'langs.h': 'Доступен на 7 языках',
+      'ft.h': 'Создан для тех, кто хранит свою музыку',
+      'ft.sub': 'Всё построено вокруг локальной библиотеки: папки внутрь, музыка наружу, ноль трения между ними.',
+      'c1.h': 'Мгновенная библиотека',
+      'c1.p': 'Перетащите папки и слушайте. Создан для настоящих локальных библиотек, плавный даже с тысячами треков.',
+      'c2.h': 'Gapless и кроссфейд',
+      'c2.p': 'Треки подгружаются заранее и могут перетекать друг в друга, даже при повторе одного трека.',
+      'c3.h': 'Синхронный текст',
+      'c3.p': 'Синхронизированный текст из ваших файлов, в плеере или на весь экран, не закрывая управление.',
+      'c4.h': 'Мини-плеер',
+      'c4.p': 'Тонкая лента поверх окон с живым эквалайзером, бегущим заголовком и прилипанием к краям.',
+      'c5.h': 'Удобен для касаний',
+      'c5.p': 'Крупные цели, выделение свайпом и перетаскивание, которые естественны на Surface и любом сенсорном экране.',
+      'c6.h': 'Приватный по замыслу',
+      'c6.p': 'Без аккаунта и рекламы. Ваша библиотека и история прослушивания никогда не покидают компьютер - Sonara отправляет только анонимную статистику, и один переключатель её отключает.',
+      'pr.h': 'Free и Premium',
+      'pr.sub': 'Начните с полноценного локального плеера. Обновитесь, когда захотите более глубокого контроля над прослушиванием и порядком.',
+      't1.h': 'Free',
+      't1.note': 'Без аккаунта · без ограничений по времени',
+      't1.i1': 'Локальная музыкальная библиотека с быстрым поиском и сортировкой',
+      't1.i2': 'Плавное прослушивание с 5-полосным EQ, кроссфейдом и gapless',
+      't1.i3': 'Мини-плеер, 3D-визуализатор и синхронный текст',
+      't1.i4': 'Режимы производительности для игр, творчества и батареи',
+      't1.i5': 'Нативные сборки x64 и ARM64 для Windows 10/11',
+      't1.i6': 'Медиаклавиши, горячие клавиши, Discord-статус и сенсорное управление',
+      't1.i7': 'Лайки, плейлисты, базовая очередь и быстрое копирование из плейлиста',
+      't1.btn': 'Скачать бесплатно',
+      't2.badge': 'Premium',
+      't2.once': 'разовый платёж',
+      't2.note': 'Одна лицензия · до 3 ваших компьютеров · работает офлайн',
+      't2.i1': 'Всё из Free, плюс:',
+      't2.i2': 'Полный 10-полосный EQ с сохранёнными пресетами',
+      't2.i3': 'Spatial Audio и эффекты ширины стерео',
+      't2.i4': 'Безлимитная очередь «Играть следующим»',
+      't2.i5': '«Не повторять вперёд» и Порядок прослушивания',
+      't2.i6': 'Таймер сна для музыки ночью',
+      't2.i7': 'Супер-лайки и лайки, сохранённые в самих файлах',
+      't2.i8': 'Мультикопирование названий и файлов',
+      't2.i9': 'Точное перетаскивание из Проводника',
+      't2.btn': 'Купить',
+      'sp.h': 'Поддержать разработку',
+      'sp.p': 'Sonara разрабатывается независимо. Добровольные взносы помогают покрыть время разработки, тестирование и расходы на релизы. Платите сколько хотите - помогает всё, и ничего не обязательно.',
+      'sp.btn': 'Поддержать Sonara',
+      'faq.h': 'Вопросы',
+      'faq.sub': 'Короткие ответы на то, о чём действительно спрашивают.',
+      'faq.q1': 'Windows пишет “Неизвестный издатель” / SmartScreen предупреждает. Это безопасно?',
+      'faq.a1': 'Да. Бета просто ещё не подписана (сертификаты дороги для бесплатной беты). Нажмите <em>Подробнее → Выполнить в любом случае</em>. Каждая загрузка собрана из одного исходника и публикуется только на нашей странице GitHub Releases. Версия для Microsoft Store (подписанная Microsoft) запланирована к стабильному релизу.',
+      'faq.q2': 'Нужен ли интернет?',
+      'faq.a2': 'Нет. Sonara локален: воспроизведение, библиотека и тексты работают полностью офлайн. Активация купленной Premium-лицензии требует одной короткой онлайн-проверки; после неё Premium тоже работает полностью офлайн. Единственные необязательные сетевые функции - проверка обновлений и Discord-статус.',
+      'faq.q3': 'Какие версии Windows и устройства?',
+      'faq.a3': 'Windows 10 и 11, с нативными сборками для x64 и ARM64. Ноутбуки на Snapdragon запускают Sonara нативно, без эмуляции.',
+      'faq.q4': 'Есть ли portable-версия?',
+      'faq.a4': 'Да. Zip, который можно распаковать где угодно и запустить без установки. Идеален для флешек и закрытых машин.',
+      'faq.q5': 'Что будет с моими данными при удалении?',
+      'faq.a5': 'Деинсталлятор спросит. По умолчанию библиотека, лайки и настройки сохраняются, и повторная установка всё подхватит. Можно выбрать и полное удаление.',
+      'faq.q6': 'Как работает Premium-лицензия?',
+      'faq.a6': 'Один ключ, разовый платёж, до 3 ваших компьютеров. Ключ приходит на почту сразу после покупки; вставьте его в Настройки → Лицензия, и готово - после активации он работает офлайн и не истекает. Переезд на новый компьютер прост: деактивируйте в приложении или управляйте компьютерами через портал покупки из письма.',
+      'faq.q7': 'Premium - это подписка?',
+      'faq.a7': 'Нет. Это разовая покупка, и лицензия ваша навсегда. Если цена вырастет с приходом больших функций, уже купленные лицензии просто продолжат работать - купить раньше значит заплатить меньше.',
+      'end.h': 'Нельзя скроллить вечно. Идите лучше слушать.',
+      'fo.tag': 'Локальный музыкальный плеер для Windows.',
+      'fo.lang': 'Язык',
+      'fo.soc': 'Соцсети',
+      'fo.prod': 'Продукт',
+      'fo.res': 'Ресурсы',
+      'fo.com': 'Сообщество',
+      'fo.dl': 'Скачать',
+      'legal.fine': 'Sonara предоставляется как есть, без гарантий. Бесплатная версия свободна для использования; Premium-функции требуют действующей лицензии. Анонимная статистика включена по умолчанию и отключается в настройках. Ваша библиотека и история прослушивания никуда не отправляются - они остаются строго локально на вашем компьютере.'
+    };
+    I18N.zh = {
+      'meta.title': 'Sonara - Windows 本地优先音乐播放器',
+      'meta.desc': '快速、精美的 Windows 本地优先音乐播放器。无云端、无账户、无广告。只有你的音乐库。',
+      'nav.features': '功能',
+      'nav.pricing': '免费与 Premium',
+      'nav.donate': '捐助',
+      'nav.faq': '常见问题',
+      'nav.ideas': '想法',
+      'nav.download': '下载',
+      'nav.mlabel.cat': '分类',
+      'nav.cat.ideas': '想法与反馈',
+      'nav.cat.ann': '公告',
+      'nav.cat.gen': '综合',
+      'nav.cat.qa': '问答',
+      'nav.mlabel.proj': '项目',
+      'nav.gh.repo': '代码仓库',
+      'nav.gh.rel': '版本发布',
+      'nav.gh.disc': '讨论区',
+      'hero.beta': '公开测试版',
+      'hero.title': '你的音乐。<br /><span class="accent">你的机器。</span>',
+      'hero.sub': '快速、精美的 Windows 本地优先音乐播放器。无云端、无账户、无广告。只有你的音乐库，按你想要的方式播放。',
+      'cta.dl': '下载 Windows 版',
+      'cta.pricing': '查看免费与 Premium',
+      'dl.arm64': 'ARM64 安装包',
+      'dl.arm64.t': '适用于骁龙 / ARM 笔记本的安装包。',
+      'dl.px64': '便携版 x64',
+      'dl.px64.t': '解压即用，无需安装。',
+      'dl.parm': '便携版 ARM64',
+      'dl.parm.t': '适用于 ARM 笔记本的便携 zip。',
+      'dl.all': 'GitHub 上的全部版本与更新说明',
+      'cta.note': '永久免费。Premium 功能通过一次性许可证解锁。',
+      'r1.a': '无云端', 'r1.b': '无账户', 'r1.c': '无广告', 'r1.d': '只有你的音乐库',
+      'r2.a': '一次付费', 'r2.b': '永久拥有', 'r2.c': '无订阅', 'r2.d': '离线可用',
+      'f.eq.h': '调校声音',
+      'f.eq.p': '用均衡器塑造播放效果，让声音始终停在你想要的位置。',
+      'f.sl.h': '睡眠定时器',
+      'f.sl.p': '夜深了，让 Sonara 自己停下来。',
+      'f.cp.h': '工作需要屏幕时，它很小',
+      'f.cp.p': '游戏、创作工具或桌面在前台时，音乐依然近在手边。',
+      'f.sh.h': '超级迷你',
+      'f.sh.p': '极简形态，让音乐保持存在，却不占视线。',
+      'langs.h': '支持 7 种语言',
+      'ft.h': '为珍藏音乐的人而生',
+      'ft.sub': '一切围绕本地音乐库设计：文件夹进，音乐出，中间零阻力。',
+      'c1.h': '即刻建库',
+      'c1.p': '拖入文件夹即可播放。为真实的本地音乐库打造，数千首曲目依然流畅。',
+      'c2.h': '无缝与交叉淡化',
+      'c2.p': '曲目提前预载，可彼此交融，即使单曲循环也不例外。',
+      'c3.h': '同步歌词',
+      'c3.p': '来自你文件的逐句歌词，内嵌或全屏显示，绝不遮挡控件。',
+      'c4.h': '迷你播放器',
+      'c4.p': '纤细的置顶条，带实时均衡器、滚动标题和边缘吸附。',
+      'c5.h': '触控友好',
+      'c5.p': '大按钮、滑动多选、拖拽排序，在 Surface 或任何触屏上都得心应手。',
+      'c6.h': '隐私为本',
+      'c6.p': '无账户、无广告。你的音乐库和收听记录绝不离开电脑 - Sonara 只发送匿名使用统计，一个开关即可关闭。',
+      'pr.h': '免费与 Premium',
+      'pr.sub': '从完整的本地播放器开始。想更深入掌控收听与整理时，再升级。',
+      't1.h': '免费',
+      't1.note': '无账户 · 无时间限制',
+      't1.i1': '本地音乐库，搜索与排序飞快',
+      't1.i2': '5 段均衡器、交叉淡化与无缝播放',
+      't1.i3': '迷你播放器、3D 可视化与同步歌词',
+      't1.i4': '面向游戏、创作与省电的性能模式',
+      't1.i5': 'Windows 10/11 原生 x64 与 ARM64 构建',
+      't1.i6': '多媒体键、快捷键、Discord 状态与触控操作',
+      't1.i7': '喜欢、播放列表、基础队列与快速复制',
+      't1.btn': '免费下载',
+      't2.badge': 'Premium',
+      't2.once': '一次性',
+      't2.note': '一份许可证 · 最多 3 台你的电脑 · 离线可用',
+      't2.i1': '免费版全部功能，另加：',
+      't2.i2': '完整 10 段均衡器，可保存自定义预设',
+      't2.i3': 'Spatial Audio 与立体声宽度效果',
+      't2.i4': '无限“下一首播放”队列',
+      't2.i5': '“不向前重复”与收听顺序',
+      't2.i6': '夜间听歌的睡眠定时器',
+      't2.i7': '超级喜欢，喜欢还能直接存入音乐文件',
+      't2.i8': '歌名与文件的批量复制',
+      't2.i9': '从文件资源管理器精准拖放插入',
+      't2.btn': '购买',
+      'sp.h': '支持开发',
+      'sp.p': 'Sonara 独立开发。自愿捐助用于支付开发时间、测试与发布成本。金额随意 - 每份支持都珍贵，且完全不强制。',
+      'sp.btn': '支持 Sonara',
+      'faq.h': '常见问题',
+      'faq.sub': '对大家真正会问的问题，给出简短回答。',
+      'faq.q1': 'Windows 提示“未知发布者”/ SmartScreen 警告，安全吗？',
+      'faq.a1': '安全。测试版只是尚未进行代码签名（证书对免费测试版来说很贵）。点击<em>更多信息 → 仍要运行</em>。所有下载都由同一份源码构建，且只发布在我们的 GitHub Releases 页面。稳定版将提供由 Microsoft 签名的 Microsoft Store 版本。',
+      'faq.q2': '需要联网吗？',
+      'faq.a2': '不需要。Sonara 本地优先：播放、音乐库和歌词完全离线可用。激活已购买的 Premium 许可证需要一次简短的在线验证；之后 Premium 同样完全离线可用。唯一可选的联网功能是更新检查和 Discord 状态。',
+      'faq.q3': '支持哪些 Windows 版本和设备？',
+      'faq.a3': 'Windows 10 和 11，提供 x64 与 ARM64 原生构建。骁龙笔记本原生运行 Sonara，无需模拟。',
+      'faq.q4': '有便携版吗？',
+      'faq.a4': '有。一个 zip，解压到任意位置即可运行，无需安装。非常适合 U 盘和受限的电脑。',
+      'faq.q5': '卸载后我的数据会怎样？',
+      'faq.a5': '卸载程序会询问。默认保留音乐库、喜欢和设置，之后重装即可全部恢复。你也可以选择全部清除。',
+      'faq.q6': 'Premium 许可证如何使用？',
+      'faq.a6': '一个密钥，一次付费，最多 3 台自己的电脑。付款后密钥立即发送到邮箱；粘贴到 设置 → 许可证 即可 - 激活后离线可用且永不过期。换新电脑很简单：在应用内停用，或通过邮件中的购买门户管理你的电脑。',
+      'faq.q7': 'Premium 是订阅吗？',
+      'faq.a7': '不是。一次性购买，许可证永久属于你。若未来功能增多导致价格上调，已购许可证依然有效 - 早买只是更便宜。',
+      'end.h': '总不能一直滚动吧。快去听歌。',
+      'fo.tag': 'Windows 本地优先音乐播放器。',
+      'fo.lang': '语言',
+      'fo.soc': '社交',
+      'fo.prod': '产品',
+      'fo.res': '资源',
+      'fo.com': '社区',
+      'fo.dl': '下载',
+      'legal.fine': 'Sonara 按现状提供，不含任何保证。免费版可自由使用；Premium 功能需要有效许可证。匿名使用统计默认开启，可在偏好设置中关闭。你的音乐库与收听记录绝不会被发送到任何地方 - 它们严格保留在你的电脑本地。'
+    };
+
+    (function () {
+      var LANGS = ['en', 'bg', 'de', 'es', 'fr', 'ru', 'zh'];
+      var current = 'en';
+      function t(k) {
+        var d = I18N[current] || {};
+        return d[k] != null ? d[k] : I18N.en[k];
+      }
+      function setAll(sel, k) {
+        document.querySelectorAll(sel).forEach(function (el) { el.innerHTML = t(k); });
+      }
+      function setAt(sel, i, k) {
+        var el = document.querySelectorAll(sel)[i];
+        if (el) el.innerHTML = t(k);
+      }
+      function setTitleAttr(id, k) {
+        var el = document.getElementById(id);
+        if (el) el.title = t(k);
+      }
+      function renderPill() {
+        var pill = document.querySelector('.beta-pill');
+        if (!pill) return;
+        pill.textContent = t('hero.beta') + (window.__relTag ? ' ' + window.__relTag : '') + ' · Windows 10/11 · x64 & ARM64';
+      }
+      window.__renderPill = renderPill;
+      function applyLang(lang) {
+        if (!I18N[lang]) lang = 'en';
+        current = lang;
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+        document.title = t('meta.title');
+        var md = document.querySelector('meta[name="description"]');
+        if (md) md.setAttribute('content', t('meta.desc'));
+        setAll('nav .links > a[href="#features"]', 'nav.features');
+        setAll('nav .links > a[href="#pricing"]', 'nav.pricing');
+        setAll('nav .links > a[href="#support"]', 'nav.donate');
+        setAll('nav .links > a[href="#faq"]', 'nav.faq');
+        var ideasLink = document.getElementById('nav-ideas');
+        if (ideasLink && ideasLink.childNodes.length) ideasLink.childNodes[0].nodeValue = t('nav.ideas');
+        setAt('.menu-label', 0, 'nav.mlabel.cat');
+        setAt('.menu-label', 1, 'nav.mlabel.proj');
+        setAll('#nav-cat-ideas', 'nav.cat.ideas');
+        setAll('#nav-cat-announcements', 'nav.cat.ann');
+        setAll('#nav-cat-general', 'nav.cat.gen');
+        setAll('#nav-cat-qa', 'nav.cat.qa');
+        setAll('#nav-gh-repo', 'nav.gh.repo');
+        setAll('#nav-gh-releases', 'nav.gh.rel');
+        setAll('#nav-gh-discussions', 'nav.gh.disc');
+        setAll('#nav-download', 'nav.download');
+        setAll('header h1', 'hero.title');
+        setAll('header .sub', 'hero.sub');
+        setAll('#dl-x64 span', 'cta.dl');
+        setAll('#dl-cta span', 'cta.dl');
+        setAll('.cta-row .btn-ghost', 'cta.pricing');
+        setAll('#dl-arm64', 'dl.arm64'); setTitleAttr('dl-arm64', 'dl.arm64.t');
+        setAll('#dl-portable-x64', 'dl.px64'); setTitleAttr('dl-portable-x64', 'dl.px64.t');
+        setAll('#dl-portable-arm64', 'dl.parm'); setTitleAttr('dl-portable-arm64', 'dl.parm.t');
+        setAll('#dl-all', 'dl.all');
+        setAll('.cta-note', 'cta.note');
+        document.querySelectorAll('.ribbon-wrap').forEach(function (wrap, wi) {
+          var keys = wi === 0 ? ['r1.a', 'r1.b', 'r1.c', 'r1.d'] : ['r2.a', 'r2.b', 'r2.c', 'r2.d'];
+          wrap.querySelectorAll('.rw').forEach(function (w, i) { w.innerHTML = t(keys[i % 4]); });
+        });
+        var rows = document.querySelectorAll('.panel .frow');
+        [['f.eq.h', 'f.eq.p'], ['f.sl.h', 'f.sl.p'], ['f.cp.h', 'f.cp.p'], ['f.sh.h', 'f.sh.p']].forEach(function (pair, i) {
+          if (!rows[i]) return;
+          rows[i].querySelector('h2').innerHTML = t(pair[0]);
+          rows[i].querySelector('p').innerHTML = t(pair[1]);
+        });
+        setAll('.languages h2', 'langs.h');
+        setAll('#features .sec-head h2', 'ft.h');
+        setAll('#features .section-sub', 'ft.sub');
+        document.querySelectorAll('#features .card').forEach(function (card, i) {
+          card.querySelector('h3').innerHTML = '<span class="dot"></span>' + t('c' + (i + 1) + '.h');
+          card.querySelector('p').innerHTML = t('c' + (i + 1) + '.p');
+        });
+        setAll('#pricing .sec-head h2', 'pr.h');
+        setAll('#pricing .section-sub', 'pr.sub');
+        var tiers = document.querySelectorAll('.tier');
+        if (tiers[0]) {
+          tiers[0].querySelector('h3').innerHTML = t('t1.h');
+          tiers[0].querySelector('.plan-note').innerHTML = t('t1.note');
+          tiers[0].querySelectorAll('ul li').forEach(function (li, i) {
+            li.innerHTML = '<span class="tick">✓</span>' + t('t1.i' + (i + 1));
+          });
+        }
+        if (tiers[1]) {
+          tiers[1].querySelector('.premium-badge').innerHTML = t('t2.badge');
+          tiers[1].querySelector('.price small').innerHTML = t('t2.once');
+          tiers[1].querySelector('.plan-note').innerHTML = t('t2.note');
+          tiers[1].querySelectorAll('ul li').forEach(function (li, i) {
+            li.innerHTML = '<span class="tick">✓</span>' + t('t2.i' + (i + 1));
+          });
+        }
+        setAll('#dl-free', 't1.btn');
+        setAll('#buy-premium', 't2.btn');
+        setAll('.support-copy h2', 'sp.h');
+        setAll('.support-copy p', 'sp.p');
+        setAll('#support-action', 'sp.btn');
+        setAll('#faq .sec-head h2', 'faq.h');
+        setAll('#faq .section-sub', 'faq.sub');
+        document.querySelectorAll('.faq-item').forEach(function (item, i) {
+          item.querySelector('.faq-q span').innerHTML = t('faq.q' + (i + 1));
+          item.querySelector('.faq-a-inner p').innerHTML = t('faq.a' + (i + 1));
+        });
+        setAll('.endcta h2', 'end.h');
+        setAt('.flabel', 0, 'fo.lang');
+        setAt('.flabel', 1, 'fo.soc');
+        setAt('.fgrid h4', 0, 'fo.prod');
+        setAt('.fgrid h4', 1, 'fo.res');
+        setAt('.fgrid h4', 2, 'fo.com');
+        setAll('#foot-download', 'fo.dl');
+        setAll('footer .fgrid a[href="#pricing"]', 'nav.pricing');
+        setAll('footer .fgrid a[href="#features"]', 'nav.features');
+        setAll('footer .fgrid a[href="#support"]', 'nav.donate');
+        setAll('footer .fgrid a[href="#faq"]', 'nav.faq');
+        setAll('#foot-ideas', 'nav.cat.ideas');
+        setAll('#foot-releases', 'nav.gh.rel');
+        setAll('#foot-discussions', 'nav.gh.disc');
+        setAll('footer .tagline', 'fo.tag');
+        setAll('.legal .fine', 'legal.fine');
+        renderPill();
+        var label = document.getElementById('lang-current');
+        document.querySelectorAll('.lang-menu button').forEach(function (b) {
+          var on = b.dataset.lang === lang;
+          b.classList.toggle('is-active', on);
+          if (on && label) label.textContent = b.textContent;
+        });
+        try { localStorage.setItem('sonara-site-lang', lang); } catch (e) {}
+      }
+      document.querySelectorAll('.lang-menu button').forEach(function (b) {
+        b.addEventListener('click', function () { applyLang(b.dataset.lang); });
+      });
+      // Language resolution, strongest signal first:
+      //   1. ?lang=xx in the URL - lets the player (or any link) open the
+      //      site in its own UI language, e.g. index.html?lang=bg#premium.
+      //   2. The visitor's saved choice from a previous visit.
+      //   3. The browser's preferred-language list.
+      //   4. English.
+      // No IP geolocation on purpose: the site promises no tracking, and
+      // browser language is the correct signal anyway (a Bulgarian abroad
+      // still gets Bulgarian).
+      function detectLang() {
+        try {
+          var m = location.search.match(/[?&]lang=([A-Za-z-]+)/);
+          if (m) {
+            var fromUrl = m[1].slice(0, 2).toLowerCase();
+            if (LANGS.indexOf(fromUrl) >= 0) return fromUrl;
+          }
+        } catch (e) {}
+        var saved = null;
+        try { saved = localStorage.getItem('sonara-site-lang'); } catch (e) {}
+        if (saved && LANGS.indexOf(saved) >= 0) return saved;
+        var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+        for (var i = 0; i < list.length; i++) {
+          var code = String(list[i]).slice(0, 2).toLowerCase();
+          if (LANGS.indexOf(code) >= 0) return code;
+        }
+        return 'en';
+      }
+      var initial = detectLang();
+      if (initial !== 'en') applyLang(initial);
+    })();
   </script>
   <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->
   <script data-goatcounter="https://sonara-player.goatcounter.com/count"
