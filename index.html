@@ -184,8 +184,6 @@
     .menu-label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); font-weight: 800; padding: 4px 12px 5px; }
     .menu a { display: block; padding: 8px 12px; border-radius: 10px; color: var(--text-strong); font-weight: 700; font-size: 13.5px; }
     .menu a:hover { background: rgba(34, 211, 161, 0.14); text-decoration: none; }
-    .nav-dl { background: #fff; color: #12142e !important; border-radius: 999px; padding: 9px 19px !important; font-size: 13.5px; margin-left: 6px; }
-    .nav-dl:hover { background: #fff !important; transform: translateY(-1px); }
 
     /* ── Hero: copy left, rotating showcase right, actions centered below ── */
     header { position: relative; z-index: 1; padding: 48px 0 0; }
@@ -627,7 +625,6 @@
             <a id="nav-gh-discussions" href="#" rel="noopener">Discussions</a>
           </span>
         </span>
-        <a id="nav-download" class="nav-dl" href="#" rel="noopener">Download</a>
       </span>
     </nav>
 
@@ -1088,7 +1085,7 @@
     var repoPage = 'https://github.com/' + GH;
     var releasesAll = repoPage + '/releases';
     var discussionsPage = repoPage + '/discussions';
-    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases', 'nav-download', 'dl-cta', 'foot-download'].forEach(function (id) {
+    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases', 'dl-cta', 'foot-download'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.href = releasesPage;
     });
@@ -2103,7 +2100,6 @@
         setAll('#nav-gh-repo', 'nav.gh.repo');
         setAll('#nav-gh-releases', 'nav.gh.rel');
         setAll('#nav-gh-discussions', 'nav.gh.disc');
-        setAll('#nav-download', 'nav.download');
         setAll('header h1', 'hero.title');
         setAll('header .sub', 'hero.sub');
         setAll('#dl-x64 span', 'cta.dl');
@@ -2188,15 +2184,49 @@
       document.querySelectorAll('.lang-menu button').forEach(function (b) {
         b.addEventListener('click', function () { applyLang(b.dataset.lang); });
       });
-      // Language resolution, strongest signal first:
-      //   1. ?lang=xx in the URL - lets the player (or any link) open the
-      //      site in its own UI language, e.g. index.html?lang=bg#premium.
+      // Language resolution, strongest signal first (user decision 2026-07-07):
+      //   1. ?lang=xx in the URL - the player deep-links its own language,
+      //      e.g. index.html?lang=bg#premium.
       //   2. The visitor's saved choice from a previous visit.
-      //   3. The browser's preferred-language list.
-      //   4. English.
-      // No IP geolocation on purpose: the site promises no tracking, and
-      // browser language is the correct signal anyway (a Bulgarian abroad
-      // still gets Bulgarian).
+      //   3. A NON-English match from the browser's language list (someone
+      //      whose browser is set to bg/de/... said so explicitly).
+      //   4. Timezone heuristic (Europe/Sofia -> bg, ...): catches locals
+      //      whose OS/browser runs in English - instant, offline, private.
+      //   5. IP country lookup (geojs.io, keyless + CORS) as the last
+      //      resort on a first visit; applied async when it resolves.
+      //   6. English.
+      // The footer selector always wins afterwards and the choice sticks.
+      var TZ_LANG = {
+        'Europe/Sofia': 'bg',
+        'Europe/Berlin': 'de', 'Europe/Vienna': 'de', 'Europe/Zurich': 'de', 'Europe/Busingen': 'de', 'Europe/Vaduz': 'de',
+        'Europe/Paris': 'fr', 'Europe/Monaco': 'fr', 'Europe/Luxembourg': 'fr',
+        'Europe/Madrid': 'es', 'Atlantic/Canary': 'es', 'Europe/Andorra': 'es',
+        'Europe/Moscow': 'ru', 'Europe/Kaliningrad': 'ru', 'Europe/Samara': 'ru', 'Europe/Volgograd': 'ru', 'Europe/Saratov': 'ru', 'Europe/Kirov': 'ru', 'Europe/Astrakhan': 'ru', 'Europe/Ulyanovsk': 'ru', 'Europe/Minsk': 'ru',
+        'Asia/Yekaterinburg': 'ru', 'Asia/Omsk': 'ru', 'Asia/Novosibirsk': 'ru', 'Asia/Krasnoyarsk': 'ru', 'Asia/Irkutsk': 'ru', 'Asia/Yakutsk': 'ru', 'Asia/Vladivostok': 'ru', 'Asia/Sakhalin': 'ru', 'Asia/Magadan': 'ru', 'Asia/Kamchatka': 'ru',
+        'Asia/Shanghai': 'zh', 'Asia/Chongqing': 'zh', 'Asia/Harbin': 'zh', 'Asia/Urumqi': 'zh', 'Asia/Hong_Kong': 'zh', 'Asia/Macau': 'zh', 'Asia/Taipei': 'zh'
+      };
+      var TZ_PREFIX_ES = ['America/Mexico', 'America/Monterrey', 'America/Cancun', 'America/Merida', 'America/Chihuahua', 'America/Tijuana', 'America/Hermosillo', 'America/Mazatlan', 'America/Bogota', 'America/Lima', 'America/Santiago', 'America/Buenos_Aires', 'America/Argentina', 'America/Caracas', 'America/Guayaquil', 'America/La_Paz', 'America/Asuncion', 'America/Montevideo', 'America/Havana', 'America/Santo_Domingo', 'America/Guatemala', 'America/El_Salvador', 'America/Tegucigalpa', 'America/Managua', 'America/Costa_Rica', 'America/Panama'];
+      function langFromTimezone(tz) {
+        if (!tz) return null;
+        if (TZ_LANG[tz]) return TZ_LANG[tz];
+        for (var i = 0; i < TZ_PREFIX_ES.length; i++) {
+          if (tz.indexOf(TZ_PREFIX_ES[i]) === 0) return 'es';
+        }
+        return null;
+      }
+      // Multilingual countries (CH, BE) are left to the browser language;
+      // for single-language matches the country decides.
+      var COUNTRY_LANG = {
+        BG: 'bg',
+        DE: 'de', AT: 'de', LI: 'de',
+        FR: 'fr', MC: 'fr', LU: 'fr',
+        RU: 'ru', BY: 'ru',
+        CN: 'zh', TW: 'zh', HK: 'zh', MO: 'zh', SG: 'zh',
+        ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es', VE: 'es', EC: 'es', GT: 'es', CU: 'es', BO: 'es', DO: 'es', HN: 'es', PY: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es', UY: 'es'
+      };
+      function langFromCountry(cc) { return COUNTRY_LANG[String(cc || '').toUpperCase()] || null; }
+      window.__langFromTimezone = langFromTimezone;
+      window.__langFromCountry = langFromCountry;
       function detectLang() {
         try {
           var m = location.search.match(/[?&]lang=([A-Za-z-]+)/);
@@ -2208,15 +2238,35 @@
         var saved = null;
         try { saved = localStorage.getItem('sonara-site-lang'); } catch (e) {}
         if (saved && LANGS.indexOf(saved) >= 0) return saved;
-        var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+        var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
         for (var i = 0; i < list.length; i++) {
           var code = String(list[i]).slice(0, 2).toLowerCase();
-          if (LANGS.indexOf(code) >= 0) return code;
+          if (code !== 'en' && LANGS.indexOf(code) >= 0) return code;
         }
+        var tz = null;
+        try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
+        var byTz = langFromTimezone(tz);
+        if (byTz) return byTz;
         return 'en';
       }
       var initial = detectLang();
       if (initial !== 'en') applyLang(initial);
+      else {
+        var savedAny = null;
+        try { savedAny = localStorage.getItem('sonara-site-lang'); } catch (e) {}
+        if (!savedAny) {
+          fetch('https://get.geojs.io/v1/ip/country.json')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (d) {
+              if (!d) return;
+              var byIp = langFromCountry(d.country);
+              var untouched = true;
+              try { untouched = !localStorage.getItem('sonara-site-lang'); } catch (e) {}
+              if (byIp && untouched) applyLang(byIp);
+            })
+            .catch(function () {});
+        }
+      }
     })();
   </script>
   <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->
