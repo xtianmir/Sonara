@@ -1,0 +1,4 @@
+# update.json is machine-written by scripts/release.mjs with LF endings on
+# every release; declare that canonical so git on Windows (autocrlf) neither
+# converts it nor warns "LF will be replaced by CRLF" during the release flow.
+/update.json text eol=lf
