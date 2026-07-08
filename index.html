@@ -1316,6 +1316,8 @@
       'fo.res': 'Resources',
       'fo.com': 'Community',
       'fo.dl': 'Download',
+      'legal.terms': 'Terms of Service',
+      'legal.privacy': 'Privacy Policy',
       'legal.fine': 'Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.'
     };
     I18N.bg = {
@@ -1424,6 +1426,8 @@
       'fo.res': 'Ресурси',
       'fo.com': 'Общност',
       'fo.dl': 'Изтегли',
+      'legal.terms': 'Общи условия',
+      'legal.privacy': 'Политика за поверителност',
       'legal.fine': 'Sonara се предоставя както си е, без гаранция. Безплатната версия е свободна за ползване; Premium функциите изискват валиден лиценз. Анонимните статистики за ползване са включени по подразбиране и могат да се изключат от предпочитанията. Музикалната ти библиотека и историята на слушане никога не се изпращат никъде - остават строго локални на твоя компютър.'
     };
     I18N.de = {
@@ -1532,6 +1536,8 @@
       'fo.res': 'Ressourcen',
       'fo.com': 'Community',
       'fo.dl': 'Download',
+      'legal.terms': 'Nutzungsbedingungen',
+      'legal.privacy': 'Datenschutzerklärung',
       'legal.fine': 'Sonara wird bereitgestellt wie es ist, ohne Gewähr. Die kostenlose Version ist frei nutzbar; Premium-Funktionen brauchen eine gültige Lizenz. Anonyme Nutzungsstatistiken sind standardmäßig aktiv und lassen sich in den Einstellungen abschalten. Deine Musikbibliothek und dein Hörverlauf werden nirgendwohin gesendet - sie bleiben strikt lokal auf deinem Computer.'
     };
     I18N.es = {
@@ -1640,6 +1646,8 @@
       'fo.res': 'Recursos',
       'fo.com': 'Comunidad',
       'fo.dl': 'Descargar',
+      'legal.terms': 'Condiciones de servicio',
+      'legal.privacy': 'Política de privacidad',
       'legal.fine': 'Sonara se ofrece tal cual, sin garantía. La versión gratuita es de uso libre; las funciones Premium requieren una licencia válida. Las estadísticas anónimas de uso están activadas por defecto y pueden desactivarse en Preferencias. Tu biblioteca musical y tu historial de escucha nunca se envían a ningún sitio - permanecen estrictamente locales en tu equipo.'
     };
     I18N.fr = {
@@ -1748,6 +1756,8 @@
       'fo.res': 'Ressources',
       'fo.com': 'Communauté',
       'fo.dl': 'Télécharger',
+      'legal.terms': "Conditions d'utilisation",
+      'legal.privacy': 'Politique de confidentialité',
       'legal.fine': "Sonara est fourni tel quel, sans garantie. La version gratuite est libre d'utilisation ; les fonctions Premium nécessitent une licence valide. Les statistiques anonymes d'utilisation sont activées par défaut et peuvent être désactivées dans les Préférences. Votre bibliothèque musicale et votre historique d'écoute ne sont jamais envoyés nulle part - ils restent strictement locaux sur votre ordinateur."
     };
     I18N.ru = {
@@ -1856,6 +1866,8 @@
       'fo.res': 'Ресурсы',
       'fo.com': 'Сообщество',
       'fo.dl': 'Скачать',
+      'legal.terms': 'Условия использования',
+      'legal.privacy': 'Политика конфиденциальности',
       'legal.fine': 'Sonara предоставляется как есть, без гарантий. Бесплатная версия свободна для использования; Premium-функции требуют действующей лицензии. Анонимная статистика включена по умолчанию и отключается в настройках. Ваша библиотека и история прослушивания никуда не отправляются - они остаются строго локально на вашем компьютере.'
     };
     I18N.zh = {
@@ -1964,6 +1976,8 @@
       'fo.res': '资源',
       'fo.com': '社区',
       'fo.dl': '下载',
+      'legal.terms': '服务条款',
+      'legal.privacy': '隐私政策',
       'legal.fine': 'Sonara 按现状提供，不含任何保证。免费版可自由使用；Premium 功能需要有效许可证。匿名使用统计默认开启，可在偏好设置中关闭。你的音乐库与收听记录绝不会被发送到任何地方 - 它们严格保留在你的电脑本地。'
     };
 
@@ -2080,6 +2094,8 @@
         setAll('#foot-releases', 'nav.gh.rel');
         setAll('#foot-discussions', 'nav.gh.disc');
         setAll('footer .tagline', 'fo.tag');
+        setAll('.legal-links a[href="terms.html"]', 'legal.terms');
+        setAll('.legal-links a[href="privacy.html"]', 'legal.privacy');
         setAll('.legal .fine', 'legal.fine');
         renderPill();
         var label = document.getElementById('lang-current');
