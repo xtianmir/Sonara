@@ -6,11 +6,16 @@
   <title>Privacy Policy - Sonara</title>
   <meta name="description" content="Privacy Policy for Sonara, the local-first music player for Windows. Your music stays on your computer." />
   <!-- Legal pages (approved design 2026-07-07: mint-tint summary box + display-font headings).
-       Effective 2026-07-08. Keep wording in sync with .work/Legal/privacy-en.md
-       (source of truth); process in .work/Legal/LEGAL-PLAN.md. -->
+       Effective 2026-07-08. English is the AUTHORITATIVE version and lives in
+       this HTML (no-JS safe). Translations live in legal-i18n.js and are painted
+       in by the script at the bottom; the language is GLOBAL via site-lang.js.
+       Wording source of truth: .work/Legal/privacy-en.md; process: LEGAL-PLAN.md. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet" />
+  <script src="site-config.js"></script>
+  <script src="site-lang.js"></script>
+  <script src="legal-i18n.js"></script>
   <style>
     :root {
       --bg: #08091a;
@@ -65,7 +70,6 @@
     .plain ul { list-style: none; }
     .plain li { padding-left: 26px; position: relative; margin: 9px 0; color: var(--text-secondary); font-size: 15.5px; }
     .plain li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); }
-    .plain .note { margin-top: 14px; font-size: 13px; color: var(--text-faint); }
     section.doc { margin: 0 0 38px; }
     section.doc h2 { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--text-strong); font-size: 17px; letter-spacing: 0.6px; margin-bottom: 12px; padding-top: 6px; }
     section.doc h2 .num { color: var(--accent); margin-right: 10px; }
@@ -79,9 +83,19 @@
     .email-js:hover { text-decoration: underline; }
     .contact { display: inline-flex; align-items: center; gap: 10px; background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 999px; padding: 10px 20px; font-size: 15px; margin-top: 4px; }
     footer { position: relative; z-index: 1; border-top: 1px solid var(--glass-border); padding: 26px 24px 40px; text-align: center; font-size: 13px; color: var(--text-faint); }
-    footer .links { margin-bottom: 10px; }
+    footer .links { margin-bottom: 14px; }
     footer .links a { color: var(--text-muted); margin: 0 12px; font-weight: 700; }
     footer .links a:hover { color: var(--accent); }
+    .lang-pick { margin: 0 0 14px; }
+    .lang-pick select {
+      font-family: var(--font-sans); font-size: 13px; font-weight: 700; color: var(--text-secondary);
+      background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: 999px;
+      padding: 7px 30px 7px 16px; cursor: pointer; -webkit-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238489b8' stroke-width='2.5' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    .lang-pick select:hover { color: var(--text-strong); border-color: var(--accent); }
+    .lang-pick select option { background: var(--bg-card); color: var(--text); }
   </style>
 </head>
 <body>
@@ -90,17 +104,17 @@
   <div class="wrap">
     <nav>
       <a class="wordmark d" href="./">Sonara</a>
-      <a class="back" href="./">&larr; Back to home</a>
+      <a class="back" href="./" data-legal="back">&larr; Back to home</a>
     </nav>
 
     <header class="page">
-      <h1 class="d">Privacy Policy</h1>
-      <p class="meta">Effective date: <b>July 8, 2026</b> &middot; ArtSolver Ltd.</p>
+      <h1 class="d" data-legal="title">Privacy Policy</h1>
+      <p class="meta"><span data-legal="effLabel">Effective date:</span> <b data-legal="effDate">July 8, 2026</b> &middot; ArtSolver Ltd.</p>
     </header>
 
     <div class="plain">
-      <div class="label">&#9835; In plain words</div>
-      <ul>
+      <div class="label" data-legal="plainLabel">&#9835; In plain words</div>
+      <ul data-legal="plainList">
         <li>Your music stays yours. Sonara never uploads or scans your files, library, playlists or listening history; all of that lives only on your computer.</li>
         <li>No account is needed to use Sonara, not even for Premium.</li>
         <li>The app sends one small anonymous usage ping per day (app version, Windows version, language and similar). You can switch it off in Settings at any time.</li>
@@ -110,100 +124,166 @@
     </div>
 
     <section class="doc">
-      <h2><span class="num">1.</span>Who is responsible</h2>
-      <p>The data controller for the processing described here is <strong>ArtSolver Ltd.</strong> (&#1040;&#1088;&#1090;&#1057;&#1086;&#1083;&#1074;&#1098;&#1088; &#1045;&#1054;&#1054;&#1044;), UIC 204535372, Bulgaria, the company of Sonara's creator Tihomir Nyagolov. Contact: <span class="email-js" role="link" tabindex="0"></span>.</p>
+      <h2><span class="num">1.</span><span data-legal="s1h">Who is responsible</span></h2>
+      <div data-legal="s1b">
+        <p>The data controller for the processing described here is <strong>ArtSolver Ltd.</strong> (&#1040;&#1088;&#1090;&#1057;&#1086;&#1083;&#1074;&#1098;&#1088; &#1045;&#1054;&#1054;&#1044;), UIC 204535372, Bulgaria, the company of Sonara's creator Tihomir Nyagolov. Contact: <span class="email-js" role="link" tabindex="0"></span>.</p>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">2.</span>The principle: local first</h2>
-      <p>Sonara is a desktop player for your own music files. Your library, playlists, play history, ratings, lyrics and settings are stored <strong>only on your computer</strong> and are never transmitted to us or anyone else.</p>
+      <h2><span class="num">2.</span><span data-legal="s2h">The principle: local first</span></h2>
+      <div data-legal="s2b">
+        <p>Sonara is a desktop player for your own music files. Your library, playlists, play history, ratings, lyrics and settings are stored <strong>only on your computer</strong> and are never transmitted to us or anyone else.</p>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">3.</span>What the app does send, and when</h2>
-
-      <h3><span class="num">3.1</span>Anonymous usage statistics (can be turned off)</h3>
-      <p>Once per day the app sends one small ping so we can see how many installs are active and which versions and languages matter most. It contains: app version, release channel, processor architecture, Windows version, install type (installer or portable), system language, the app language you chose, and an anonymous identifier.</p>
-      <ul>
-        <li>The identifier is derived by one-way hashing from a machine ID. It cannot be reversed to identify you or your computer, and it is deliberately built so it <strong>cannot be linked</strong> to your license or purchase.</li>
-        <li>The ping contains no names, no file names, no music data, no listening history and no location, and your IP address is not stored with the statistics.</li>
-        <li>The data is stored on servers in the <strong>EU</strong> (Supabase, EU region).</li>
-        <li><strong>Turning it off:</strong> Preferences, "Share anonymous usage statistics". Switching it off stops the pings immediately.</li>
-        <li>Legal basis: our legitimate interest in understanding basic usage of the app (GDPR art. 6(1)(f)), with an opt-out available at any time.</li>
-      </ul>
-
-      <h3><span class="num">3.2</span>Premium purchase (Polar)</h3>
-      <p>Checkout is operated by <strong>Polar</strong> as merchant of record. Polar collects the data needed for the sale (email, country for tax purposes, payment details) under <a href="https://polar.sh/legal/privacy" rel="noopener">its own privacy policy</a>. We never receive your payment details; we can see order information (your email and license key) needed for support and abuse prevention.</p>
-
-      <h3><span class="num">3.3</span>License activation</h3>
-      <p>When you activate a Premium key, the app sends to Polar: the key, your computer's name (so that <em>you</em> can recognize which of your 3 slots it occupies) and a one-way hashed machine fingerprint (used to enforce the 3-computer limit). Deactivating a computer frees the slot and removes that activation. The fingerprint is a hash: it does not identify you personally and cannot be linked to the anonymous usage statistics.</p>
-
-      <h3><span class="num">3.4</span>Free trial</h3>
-      <p>The 7-day trial is entirely local. Nothing about it is sent anywhere.</p>
-
-      <h3><span class="num">3.5</span>Update checks</h3>
-      <p>The app contacts <strong>GitHub</strong>, where releases are hosted, to check for and download updates. As with any internet request, GitHub sees your IP address and standard request metadata (GitHub's privacy policy applies). The app sends no identifiers with these requests.</p>
-
-      <h3><span class="num">3.6</span>Discord "Now playing"</h3>
-      <p>If the Discord desktop app is running on your computer, Sonara can pass the current track's title and artist to it, so your Discord profile shows what you are listening to. You can turn this off in Sonara at any time: Preferences, System, "Show activity on Discord". It also goes through your own Discord client, so your Discord privacy settings (Activity Privacy) apply as well. If Discord is not running, nothing is shared.</p>
+      <h2><span class="num">3.</span><span data-legal="s3h">What the app does send, and when</span></h2>
+      <div data-legal="s3b">
+        <h3><span class="num">3.1</span>Anonymous usage statistics (can be turned off)</h3>
+        <p>Once per day the app sends one small ping so we can see how many installs are active and which versions and languages matter most. It contains: app version, release channel, processor architecture, Windows version, install type (installer or portable), system language, the app language you chose, and an anonymous identifier.</p>
+        <ul>
+          <li>The identifier is derived by one-way hashing from a machine ID. It cannot be reversed to identify you or your computer, and it is deliberately built so it <strong>cannot be linked</strong> to your license or purchase.</li>
+          <li>The ping contains no names, no file names, no music data, no listening history and no location, and your IP address is not stored with the statistics.</li>
+          <li>The data is stored on servers in the <strong>EU</strong> (Supabase, EU region).</li>
+          <li><strong>Turning it off:</strong> Preferences, "Share anonymous usage statistics". Switching it off stops the pings immediately.</li>
+          <li>Legal basis: our legitimate interest in understanding basic usage of the app (GDPR art. 6(1)(f)), with an opt-out available at any time.</li>
+        </ul>
+        <h3><span class="num">3.2</span>Premium purchase (Polar)</h3>
+        <p>Checkout is operated by <strong>Polar</strong> as merchant of record. Polar collects the data needed for the sale (email, country for tax purposes, payment details) under <a href="https://polar.sh/legal/privacy" rel="noopener">its own privacy policy</a>. We never receive your payment details; we can see order information (your email and license key) needed for support and abuse prevention.</p>
+        <h3><span class="num">3.3</span>License activation</h3>
+        <p>When you activate a Premium key, the app sends to Polar: the key, your computer's name (so that <em>you</em> can recognize which of your 3 slots it occupies) and a one-way hashed machine fingerprint (used to enforce the 3-computer limit). Deactivating a computer frees the slot and removes that activation. The fingerprint is a hash: it does not identify you personally and cannot be linked to the anonymous usage statistics.</p>
+        <h3><span class="num">3.4</span>Free trial</h3>
+        <p>The 7-day trial is entirely local. Nothing about it is sent anywhere.</p>
+        <h3><span class="num">3.5</span>Update checks</h3>
+        <p>The app contacts <strong>GitHub</strong>, where releases are hosted, to check for and download updates. As with any internet request, GitHub sees your IP address and standard request metadata (GitHub's privacy policy applies). The app sends no identifiers with these requests.</p>
+        <h3><span class="num">3.6</span>Discord "Now playing"</h3>
+        <p>If the Discord desktop app is running on your computer, Sonara can pass the current track's title and artist to it, so your Discord profile shows what you are listening to. You can turn this off in Sonara at any time: Preferences, System, "Show activity on Discord". It also goes through your own Discord client, so your Discord privacy settings (Activity Privacy) apply as well. If Discord is not running, nothing is shared.</p>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">4.</span>The website</h2>
-      <ul>
-        <li>The site is hosted on <strong>GitHub Pages</strong>; GitHub processes standard server logs (such as IP addresses) as the host.</li>
-        <li>We count page views with <strong>GoatCounter</strong>, a privacy-friendly, cookieless counter that stores no personal identifiers and shows us only aggregate numbers.</li>
-        <li>The site sets no advertising or tracking cookies.</li>
-      </ul>
+      <h2><span class="num">4.</span><span data-legal="s4h">The website</span></h2>
+      <div data-legal="s4b">
+        <ul>
+          <li>The site is hosted on <strong>GitHub Pages</strong>; GitHub processes standard server logs (such as IP addresses) as the host.</li>
+          <li>We count page views with <strong>GoatCounter</strong>, a privacy-friendly, cookieless counter that stores no personal identifiers and shows us only aggregate numbers.</li>
+          <li>The site sets no advertising or tracking cookies.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">5.</span>What we never do</h2>
-      <p>We do not collect your files or listening history, we do not profile you, we do not show ads, and we do not sell or share data with anyone beyond the processors named above (Polar, Supabase, GitHub).</p>
+      <h2><span class="num">5.</span><span data-legal="s5h">What we never do</span></h2>
+      <div data-legal="s5b">
+        <p>We do not collect your files or listening history, we do not profile you, we do not show ads, and we do not sell or share data with anyone beyond the processors named above (Polar, Supabase, GitHub).</p>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">6.</span>How long data is kept</h2>
-      <ul>
-        <li>Anonymous usage pings: kept as statistics; they contain nothing that identifies you.</li>
-        <li>Order and invoice data at Polar: kept as long as tax and accounting law requires.</li>
-        <li>Activation records: until you deactivate the computer or the key.</li>
-      </ul>
+      <h2><span class="num">6.</span><span data-legal="s6h">How long data is kept</span></h2>
+      <div data-legal="s6b">
+        <ul>
+          <li>Anonymous usage pings: kept as statistics; they contain nothing that identifies you.</li>
+          <li>Order and invoice data at Polar: kept as long as tax and accounting law requires.</li>
+          <li>Activation records: until you deactivate the computer or the key.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">7.</span>Your rights</h2>
-      <p>Under the GDPR you can request access, correction, deletion, restriction or portability of your data, and you can object to processing. Write to <span class="email-js" role="link" tabindex="0"></span>. One honest note: the usage statistics are anonymous, so we cannot tell which pings are "yours"; there is nothing we could look up or delete for a specific person. You can also lodge a complaint with a supervisory authority: in Bulgaria that is the Commission for Personal Data Protection (cpdp.bg), or the authority of your own country.</p>
+      <h2><span class="num">7.</span><span data-legal="s7h">Your rights</span></h2>
+      <div data-legal="s7b">
+        <p>Under the GDPR you can request access, correction, deletion, restriction or portability of your data, and you can object to processing. Write to <span class="email-js" role="link" tabindex="0"></span>. One honest note: the usage statistics are anonymous, so we cannot tell which pings are "yours"; there is nothing we could look up or delete for a specific person. You can also lodge a complaint with a supervisory authority: in Bulgaria that is the Commission for Personal Data Protection (cpdp.bg), or the authority of your own country.</p>
+      </div>
     </section>
 
     <section class="doc">
-      <h2><span class="num">8.</span>Changes to this policy</h2>
-      <p>If a future feature starts sending or processing new data (for example optional online accounts), we will update this policy first and change the effective date above. Significant changes will be pointed out on the website or in the app.</p>
-      <p class="contact">Contact: <span class="email-js" role="link" tabindex="0"></span></p>
+      <h2><span class="num">8.</span><span data-legal="s8h">Changes to this policy</span></h2>
+      <div data-legal="s8b">
+        <p>If a future feature starts sending or processing new data (for example optional online accounts), we will update this policy first and change the effective date above. Significant changes will be pointed out on the website or in the app.</p>
+      </div>
+    </section>
+
+    <section class="doc">
+      <h2><span class="num">9.</span><span data-legal="s9h">Language</span></h2>
+      <div data-legal="s9b">
+        <p>This policy is offered in several languages for your convenience. If there is any difference between the translations, the <strong>English version</strong> is the one that legally applies.</p>
+        <p class="contact">Contact: <span class="email-js" role="link" tabindex="0"></span></p>
+      </div>
     </section>
   </div>
 
   <footer>
+    <div class="lang-pick">
+      <select id="lang-select-legal" aria-label="Language">
+        <option value="en">English</option>
+        <option value="bg">&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;</option>
+        <option value="de">Deutsch</option>
+        <option value="es">Espa&#241;ol</option>
+        <option value="fr">Fran&#231;ais</option>
+        <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+        <option value="zh">&#20013;&#25991;</option>
+      </select>
+    </div>
     <div class="links">
-      <a href="./">Home</a>
-      <a href="terms.html">Terms of Service</a>
-      <a href="privacy.html">Privacy Policy</a>
+      <a href="./" data-legal="footHome">Home</a>
+      <a href="terms.html" data-legal="footTerms">Terms of Service</a>
+      <a href="privacy.html" data-legal="footPrivacy">Privacy Policy</a>
     </div>
     &copy; <span id="year"></span> ArtSolver Ltd. &middot; Sonara is created by Tihomir Nyagolov
   </footer>
 
   <script>
-    // Anti-scraper email: the address never appears as plain text in the HTML
-    // source - it is assembled at render time (LEGAL-PLAN.md standing rule).
+    // Legal-page painter - see terms.html for the full explanation. English is
+    // the no-JS-safe DOM default; translations come from legal-i18n.js; the
+    // language is global via site-lang.js.
     (function () {
-      var u = 'sonara', d = 'artsolver.com';
-      function go() { location.href = 'mailto:' + u + '@' + d; }
-      document.querySelectorAll('.email-js').forEach(function (el) {
-        el.textContent = u + '@' + d;
-        el.addEventListener('click', go);
-        el.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
-      });
-      document.getElementById('year').textContent = new Date().getFullYear();
+      var DOC = 'privacy';
+      var dict = (window.LEGAL_I18N && window.LEGAL_I18N[DOC]) || {};
+      var nodes = document.querySelectorAll('[data-legal]');
+      var EN = {};
+      nodes.forEach(function (el) { EN[el.getAttribute('data-legal')] = el.innerHTML; });
+
+      var EMAIL_U = 'sonara', EMAIL_D = 'artsolver.com';
+      function mailto() { location.href = 'mailto:' + EMAIL_U + '@' + EMAIL_D; }
+      function fillDynamic() {
+        var cfg = window.SONARA_CONFIG || {};
+        document.querySelectorAll('[data-sonara-price]').forEach(function (el) {
+          var c = el.getAttribute('data-sonara-price') || 'usd';
+          el.textContent = (c === 'eur') ? cfg.priceEUR : (cfg.promoPriceUSD || cfg.priceUSD) || el.textContent;
+        });
+        document.querySelectorAll('.email-js').forEach(function (el) {
+          el.textContent = EMAIL_U + '@' + EMAIL_D;
+          if (!el.dataset.wired) {
+            el.dataset.wired = '1';
+            el.addEventListener('click', mailto);
+            el.addEventListener('keydown', function (e) { if (e.key === 'Enter') mailto(); });
+          }
+        });
+        var y = document.getElementById('year');
+        if (y) y.textContent = new Date().getFullYear();
+      }
+
+      function applyLang(lang, persist) {
+        var t = (lang === 'en') ? EN : (dict[lang] || null);
+        nodes.forEach(function (el) {
+          var k = el.getAttribute('data-legal');
+          var val = (t && t[k] != null) ? t[k] : EN[k];
+          if (val != null) el.innerHTML = val;
+        });
+        fillDynamic();
+        document.documentElement.setAttribute('lang', lang);
+        var sel = document.getElementById('lang-select-legal');
+        if (sel) sel.value = lang;
+        if (persist) SonaraLang.save(lang);
+      }
+
+      var sel = document.getElementById('lang-select-legal');
+      if (sel) sel.addEventListener('change', function () { applyLang(sel.value, true); });
+
+      applyLang(SonaraLang.detect(), false);
+      SonaraLang.detectAsyncIp(function (byIp) { applyLang(byIp, false); });
     })();
   </script>
   <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->

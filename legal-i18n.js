@@ -1,0 +1,916 @@
+// Legal-page translations (Terms + Privacy). English is NOT here - it is the
+// authoritative copy that lives directly in terms.html / privacy.html (no-JS
+// safe). This file holds only the non-English languages; the page painter
+// swaps a section's innerHTML by its data-legal key, falling back to the
+// English DOM for any key a language has not translated yet.
+//
+// TRANSLATION RULE (mirrors the player's i18n, see AGENTS.md + LEGAL-PLAN.md
+// Phase 6): English is the master. Translate ONLY after the English wording is
+// final. When English changes, run scripts/check-legal-translations.mjs - it
+// flags every language whose translation went stale, so nothing is missed.
+//
+// IMPORTANT when translating: keep the inline placeholders intact -
+//   <span data-sonara-price="usd">...</span>   (price, refilled from config)
+//   <span class="email-js" ...></span>         (email, assembled anti-scraper)
+//   <span class="num">3.1</span>               (section numbers, language-neutral)
+// and keep the same tags (<strong>, <a href>, <em>, <ul>/<li>) as English.
+window.LEGAL_I18N = {
+  terms: {
+    bg: {
+      back: '&larr; Обратно към началото',
+      title: 'Общи условия',
+      effLabel: 'В сила от:',
+      effDate: '8 юли 2026',
+      plainLabel: '&#9835; С прости думи',
+      plainList:
+        '<li>Sonara е музикален плеър за Windows за твоите собствени, локални музикални файлове. Безплатната версия е безплатна.</li>' +
+        '<li>Premium е еднократна покупка от <span data-sonara-price="usd">$9.99</span> за до 3 твои компютъра. Има 7-дневен безплатен пробен период и 14-дневна гаранция за връщане на парите.</li>' +
+        '<li>Плащанията се обработват от Polar, нашият merchant of record. Те се грижат за плащането, данъците и фактурите; ние никога не виждаме данните на картата ти.</li>' +
+        '<li>Пази лицензния си ключ за себе си и пускай само музика, за която имаш права.</li>' +
+        '<li>Приложението се предоставя "както е". Законовите ти потребителски права остават незасегнати.</li>',
+      plainNote: 'Това резюме е за улеснение; самите условия са секциите по-долу.',
+      s1h: 'Кои сме ние',
+      s1b:
+        '<p>Sonara е създадена от <strong>Тихомир Няголов</strong> и се издава и продава от неговата фирма <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), регистрирана в България с ЕИК 204535372. Контакт: <span class="email-js" role="link" tabindex="0"></span>.</p>' +
+        '<p>Тези условия се отнасят за десктоп приложението Sonara и за този уебсайт. С инсталирането или използването на Sonara ти се съгласяваш с тях.</p>',
+      s2h: 'Твоят лиценз да ползваш Sonara',
+      s2b:
+        '<ul>' +
+        '<li>Безплатната версия на Sonara може да се ползва безплатно.</li>' +
+        '<li>Даваме ти личен, неизключителен, непрехвърляем лиценз да инсталираш и ползваш Sonara. Самият софтуер остава наша собственост: лицензираме ти го, не ти го продаваме.</li>' +
+        '<li>Sonara възпроизвежда аудио файлове, съхранени на твоя компютър. Ти отговаряш да имаш необходимите права върху файловете, които пускаш. Sonara не предоставя, не хоства и не стриймва музикално съдържание.</li>' +
+        '</ul>',
+      s3h: 'Premium и лицензни ключове',
+      s3b:
+        '<ul>' +
+        '<li>Premium е <strong>еднократна покупка, не абонамент</strong>. Отключва завинаги Premium функциите на до <strong>3 компютъра</strong>.</li>' +
+        '<li>След покупката получаваш лицензен ключ по имейл. Активацията изисква кратка интернет връзка; след това Premium работи напълно офлайн.</li>' +
+        '<li>Можеш да освободиш слот по всяко време, като деактивираш компютър (в приложението или през клиентския портал на Polar), например когато сменяш компютъра си.</li>' +
+        '<li>Лицензният ключ е за теб. Не го публикувай, не го споделяй, не го препродавай и не го разпространявай. Може да блокираме ключове, които са изтекли публично, препродадени, върнати (refund) или придобити чрез измама. Ако смяташ, че ключ е блокиран по погрешка, пиши на поддръжката и ще го изясним.</li>' +
+        '<li>Функциите, включени в Premium към момента на покупката ти, остават включени. С времето може да добавяме нови.</li>' +
+        '</ul>',
+      s4h: 'Безплатен пробен период',
+      s4b:
+        '<p>Sonara предлага незадължителен <strong>7-дневен Premium пробен период</strong>, по един на компютър. Не изисква платежни данни и започва само когато ти решиш да го стартираш. Когато изтече, приложението просто се връща към безплатната версия. Никога нищо не се таксува.</p>',
+      s5h: 'Покупки, цени и данъци',
+      s5b:
+        '<p>Покупките се обработват от <a href="https://polar.sh" rel="noopener">Polar</a> в ролята на <strong>merchant of record</strong>. Това значи, че Polar е страната, която ти продава: Polar оперира checkout-а, таксува платежния ти метод, начислява и внася ДДС/данък върху продажбите където е приложимо, и издава фактурата ти. За процеса на плащане важат собствените условия и политика за поверителност на Polar.</p>' +
+        '<p>Цената, показана на checkout, е крайната цена, с включен данък където е приложимо.</p>',
+      s6h: 'Връщане на пари: 14-дневна гаранция',
+      s6b:
+        '<p>Ако не си доволен от Premium покупката си, кажи ни до <strong>14 дни от покупката</strong> и ще получиш пълно възстановяване, без въпроси. Просто пиши на <span class="email-js" role="link" tabindex="0"></span>, по възможност от имейла, с който си купувал, за да намерим поръчката ти; ние издаваме възстановяването през Polar и сумата се връща по оригиналния платежен метод.</p>' +
+        '<p>Тази доброволна гаранция ти дава поне защитата на 14-дневното право на отказ в ЕС и не ограничава законовите ти права.</p>',
+      s7h: 'Ъпдейти и промени по приложението',
+      s7b:
+        '<ul>' +
+        '<li>Sonara може да проверява за ъпдейти и ти казва, когато има нов; нищо не се инсталира без твое действие.</li>' +
+        '<li>Sonara се разработва активно: функции може да се добавят, променят или премахват с времето. Няма да отнемем Premium функции, за които си платил, без да осигурим разумен еквивалент.</li>' +
+        '</ul>',
+      s8h: 'Коректно използване на софтуера',
+      s8b:
+        '<p>Нямаш право да:</p>' +
+        '<ul>' +
+        '<li>заобикаляш или опитваш да заобиколиш лицензните проверки или Premium ограниченията;</li>' +
+        '<li>декомпилираш, правиш reverse engineering или променяш приложението, освен доколкото законът изрично го позволява;</li>' +
+        '<li>разпространяваш Sonara в променен вид или в комплект със зловреден/нежелан софтуер;</li>' +
+        '<li>използваш Sonara за нещо незаконно.</li>' +
+        '</ul>',
+      s9h: 'Гаранция и отговорност',
+      s9b:
+        '<p>Sonara се предоставя <strong>"както е"</strong>, без каквато и да е гаранция; не обещаваме, че ще е без грешки или без прекъсвания. Доколкото законът позволява, общата ни отговорност по претенции, свързани със Sonara, е ограничена до сумата, която си платил за нея. Нищо в тези условия не изключва отговорност, която не може да бъде изключена по закон (например при умисъл или груба небрежност), и нищо в тях не ограничава законовите ти потребителски права.</p>',
+      s10h: 'Прекратяване',
+      s10b:
+        '<p>Можеш да спреш да ползваш Sonara по всяко време. Ние може да прекратим лиценза ти при съществено нарушение на тези условия (например злоупотреба с лицензен ключ по секция 3). Секции 9 и 11 остават в сила и след прекратяване.</p>',
+      s11h: 'Промени по условията; приложимо право',
+      s11b:
+        '<ul>' +
+        '<li>Може да актуализираме тези условия с развитието на приложението. Актуалната версия, с датата на влизане в сила, е винаги публикувана на тази страница; съществените промени ще бъдат посочени на сайта или в приложението.</li>' +
+        '<li>Тези условия се уреждат от правото на <strong>България</strong>. Ако си потребител в ЕС, запазваш и защитата на задължителните потребителски норми на държавата си по местоживеене и можеш да водиш спорове пред местните си съдилища.</li>' +
+        '</ul>',
+      s12h: 'Език',
+      s12b:
+        '<p>Тези условия се предлагат на няколко езика за твое удобство. Ако има разлика между преводите, меродавна е <strong>английската версия</strong>.</p>' +
+        '<p class="contact">Въпроси? <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Начало',
+      footTerms: 'Общи условия',
+      footPrivacy: 'Политика за поверителност'
+    },
+    de: {
+      back: '&larr; Zurück zur Startseite',
+      title: 'Nutzungsbedingungen',
+      effLabel: 'Gültig ab:',
+      effDate: '8. Juli 2026',
+      plainLabel: '&#9835; Kurz gesagt',
+      plainList:
+        '<li>Sonara ist ein Musikplayer für Windows für deine eigenen, lokalen Musikdateien. Die kostenlose Version ist kostenlos.</li>' +
+        '<li>Premium ist ein einmaliger Kauf von <span data-sonara-price="usd">$9.99</span> für bis zu 3 deiner Computer. Es gibt eine 7-tägige kostenlose Testphase und eine 14-tägige Geld-zurück-Garantie.</li>' +
+        '<li>Zahlungen werden von Polar abgewickelt, unserem Merchant of Record. Es kümmert sich um Checkout, Steuern und Rechnungen; wir sehen deine Kartendaten nie.</li>' +
+        '<li>Behalte deinen Lizenzschlüssel für dich und spiele nur Musik ab, für die du die Rechte hast.</li>' +
+        '<li>Die App wird "wie besehen" bereitgestellt. Deine gesetzlichen Verbraucherrechte bleiben unberührt.</li>',
+      plainNote: 'Diese Zusammenfassung soll dir helfen; die eigentlichen Bedingungen stehen in den Abschnitten unten.',
+      s1h: 'Wer wir sind',
+      s1b:
+        '<p>Sonara wurde von <strong>Tihomir Nyagolov</strong> entwickelt und wird von seinem Unternehmen <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД) herausgegeben und verkauft, eingetragen in Bulgarien unter der Unternehmensnummer (UIC) 204535372. Kontakt: <span class="email-js" role="link" tabindex="0"></span>.</p>' +
+        '<p>Diese Bedingungen gelten für die Sonara-Desktop-Anwendung und diese Website. Mit der Installation oder Nutzung von Sonara stimmst du ihnen zu.</p>',
+      s2h: 'Deine Lizenz zur Nutzung von Sonara',
+      s2b:
+        '<ul>' +
+        '<li>Die kostenlose Version von Sonara darf kostenlos genutzt werden.</li>' +
+        '<li>Wir gewähren dir eine persönliche, nicht ausschließliche, nicht übertragbare Lizenz zur Installation und Nutzung von Sonara. Die Software selbst bleibt unser Eigentum: Wir lizenzieren sie an dich, wir verkaufen sie nicht.</li>' +
+        '<li>Sonara spielt Audiodateien ab, die auf deinem Computer gespeichert sind. Du bist dafür verantwortlich, die nötigen Rechte an den Dateien zu haben, die du abspielst. Sonara stellt keine Musikinhalte bereit, hostet oder streamt sie nicht.</li>' +
+        '</ul>',
+      s3h: 'Premium und Lizenzschlüssel',
+      s3b:
+        '<ul>' +
+        '<li>Premium ist ein <strong>einmaliger Kauf, kein Abonnement</strong>. Es schaltet die Premium-Funktionen dauerhaft auf bis zu <strong>3 Computern</strong> frei.</li>' +
+        '<li>Nach dem Kauf erhältst du einen Lizenzschlüssel per E-Mail. Die Aktivierung erfordert eine kurze Internetverbindung; danach funktioniert Premium vollständig offline.</li>' +
+        '<li>Du kannst jederzeit einen Platz freigeben, indem du einen Computer deaktivierst (in der App oder über das Polar-Kundenportal), zum Beispiel wenn du einen PC ersetzt.</li>' +
+        '<li>Dein Lizenzschlüssel gehört dir. Veröffentliche, teile, verkaufe oder verbreite ihn nicht. Wir können Schlüssel sperren, die durchgesickert, weiterverkauft, erstattet oder betrügerisch erlangt wurden. Wenn du glaubst, dass ein Schlüssel irrtümlich gesperrt wurde, wende dich an den Support und wir klären das.</li>' +
+        '<li>Funktionen, die zum Zeitpunkt deines Kaufs in Premium enthalten sind, bleiben enthalten. Wir können mit der Zeit neue hinzufügen.</li>' +
+        '</ul>',
+      s4h: 'Kostenlose Testphase',
+      s4b:
+        '<p>Sonara bietet eine optionale <strong>7-tägige Premium-Testphase</strong>, eine pro Computer. Sie erfordert keine Zahlungsdaten und beginnt nur, wenn du sie startest. Wenn sie endet, kehrt die App einfach zur kostenlosen Version zurück. Es wird nie etwas berechnet.</p>',
+      s5h: 'Käufe, Preise und Steuern',
+      s5b:
+        '<p>Käufe werden von <a href="https://polar.sh" rel="noopener">Polar</a> als <strong>Merchant of Record</strong> abgewickelt. Das bedeutet, Polar ist die Partei, die an dich verkauft: Es betreibt den Checkout, belastet deine Zahlungsmethode, berechnet und führt Umsatzsteuer bzw. Verkaufssteuer ab, wo zutreffend, und stellt deine Rechnung aus. Für den Checkout-Prozess gelten die eigenen Bedingungen und die Datenschutzerklärung von Polar.</p>' +
+        '<p>Der beim Checkout angezeigte Preis ist der Endpreis, inklusive Steuer, wo zutreffend.</p>',
+      s6h: 'Rückerstattungen: 14-tägige Geld-zurück-Garantie',
+      s6b:
+        '<p>Wenn du mit deinem Premium-Kauf nicht zufrieden bist, sag uns innerhalb von <strong>14 Tagen nach dem Kauf</strong> Bescheid und du erhältst eine vollständige Rückerstattung, ohne Nachfragen. Schreib einfach an <span class="email-js" role="link" tabindex="0"></span>, idealerweise von der Adresse, die du beim Checkout verwendet hast, damit wir deine Bestellung finden; wir veranlassen die Rückerstattung dann über Polar und das Geld geht auf deine ursprüngliche Zahlungsmethode zurück.</p>' +
+        '<p>Diese freiwillige Garantie gibt dir mindestens den Schutz des 14-tägigen Widerrufsrechts der EU und schränkt keine gesetzlichen Rechte ein, die du haben magst.</p>',
+      s7h: 'Updates und Änderungen an der App',
+      s7b:
+        '<ul>' +
+        '<li>Sonara kann nach Updates suchen und sagt dir, wenn eines verfügbar ist; nichts wird ohne dein Zutun installiert.</li>' +
+        '<li>Sonara wird aktiv weiterentwickelt: Funktionen können im Laufe der Zeit hinzugefügt, geändert oder entfernt werden. Wir nehmen dir keine bezahlten Premium-Funktionen weg, ohne einen angemessenen Ersatz zu bieten.</li>' +
+        '</ul>',
+      s8h: 'Faire Nutzung der Software',
+      s8b:
+        '<p>Du darfst nicht:</p>' +
+        '<ul>' +
+        '<li>Lizenzprüfungen oder Premium-Beschränkungen umgehen oder zu umgehen versuchen;</li>' +
+        '<li>die App dekompilieren, zurückentwickeln (Reverse Engineering) oder verändern, außer soweit das Gesetz es ausdrücklich erlaubt;</li>' +
+        '<li>Sonara in veränderter Form weiterverbreiten oder mit Schadsoftware bzw. unerwünschter Software bündeln;</li>' +
+        '<li>Sonara für etwas Rechtswidriges nutzen.</li>' +
+        '</ul>',
+      s9h: 'Gewährleistung und Haftung',
+      s9b:
+        '<p>Sonara wird <strong>"wie besehen"</strong> bereitgestellt, ohne jegliche Gewährleistung; wir versprechen nicht, dass es fehlerfrei oder unterbrechungsfrei läuft. Soweit gesetzlich zulässig, ist unsere Gesamthaftung für Ansprüche im Zusammenhang mit Sonara auf den von dir dafür gezahlten Betrag begrenzt. Nichts in diesen Bedingungen schließt eine Haftung aus, die gesetzlich nicht ausgeschlossen werden kann (etwa Haftung für Vorsatz oder grobe Fahrlässigkeit), und nichts darin schränkt deine gesetzlichen Verbraucherrechte ein.</p>',
+      s10h: 'Beendigung',
+      s10b:
+        '<p>Du kannst die Nutzung von Sonara jederzeit beenden. Wir können deine Lizenz beenden, wenn du diese Bedingungen wesentlich verletzt (zum Beispiel Missbrauch des Lizenzschlüssels nach Abschnitt 3). Die Abschnitte 9 und 11 gelten auch nach der Beendigung fort.</p>',
+      s11h: 'Änderungen dieser Bedingungen; anwendbares Recht',
+      s11b:
+        '<ul>' +
+        '<li>Wir können diese Bedingungen weiterentwickeln, während sich die App entwickelt. Die aktuelle Version mit ihrem Gültigkeitsdatum wird stets auf dieser Seite veröffentlicht; auf wesentliche Änderungen wird auf der Website oder in der App hingewiesen.</li>' +
+        '<li>Diese Bedingungen unterliegen dem Recht <strong>Bulgariens</strong>. Wenn du Verbraucher in der EU bist, behältst du zusätzlich den Schutz der zwingenden verbraucherrechtlichen Vorschriften deines Wohnsitzlandes und kannst Streitigkeiten vor deinen örtlichen Gerichten austragen.</li>' +
+        '</ul>',
+      s12h: 'Sprache',
+      s12b:
+        '<p>Diese Bedingungen werden dir zur Vereinfachung in mehreren Sprachen angeboten. Bei Abweichungen zwischen den Übersetzungen ist die <strong>englische Fassung</strong> rechtlich maßgeblich.</p>' +
+        '<p class="contact">Fragen? <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Startseite',
+      footTerms: 'Nutzungsbedingungen',
+      footPrivacy: 'Datenschutzerklärung'
+    },
+    es: {
+      back: '&larr; Volver al inicio',
+      title: 'Condiciones de servicio',
+      effLabel: 'Fecha de entrada en vigor:',
+      effDate: '8 de julio de 2026',
+      plainLabel: '&#9835; En pocas palabras',
+      plainList:
+        '<li>Sonara es un reproductor de música para Windows para tus propios archivos de música locales. La versión gratuita es gratuita.</li>' +
+        '<li>Premium es una compra única de <span data-sonara-price="usd">$9.99</span> para hasta 3 de tus ordenadores. Hay una prueba gratuita de 7 días y una garantía de devolución de 14 días.</li>' +
+        '<li>Los pagos los procesa Polar, nuestro comerciante registrado (merchant of record). Se encarga del pago, los impuestos y las facturas; nosotros nunca vemos los datos de tu tarjeta.</li>' +
+        '<li>Guarda tu clave de licencia para ti y reproduce solo música sobre la que tengas derechos.</li>' +
+        '<li>La aplicación se ofrece "tal cual". Tus derechos legales como consumidor no se ven afectados.</li>',
+      plainNote: 'Este resumen es para ayudarte; las condiciones reales son las secciones de abajo.',
+      s1h: 'Quiénes somos',
+      s1b:
+        '<p>Sonara está creada por <strong>Tihomir Nyagolov</strong> y es publicada y vendida por su empresa <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), registrada en Bulgaria con el número de empresa (UIC) 204535372. Contacto: <span class="email-js" role="link" tabindex="0"></span>.</p>' +
+        '<p>Estas condiciones cubren la aplicación de escritorio Sonara y este sitio web. Al instalar o usar Sonara, aceptas estas condiciones.</p>',
+      s2h: 'Tu licencia para usar Sonara',
+      s2b:
+        '<ul>' +
+        '<li>La versión gratuita de Sonara puede usarse de forma gratuita.</li>' +
+        '<li>Te concedemos una licencia personal, no exclusiva e intransferible para instalar y usar Sonara. El software en sí sigue siendo nuestra propiedad: te lo licenciamos, no te lo vendemos.</li>' +
+        '<li>Sonara reproduce archivos de audio almacenados en tu ordenador. Eres responsable de tener los derechos necesarios sobre los archivos que reproduces. Sonara no proporciona, aloja ni transmite ningún contenido musical.</li>' +
+        '</ul>',
+      s3h: 'Premium y claves de licencia',
+      s3b:
+        '<ul>' +
+        '<li>Premium es una <strong>compra única, no una suscripción</strong>. Desbloquea permanentemente las funciones Premium en hasta <strong>3 ordenadores</strong>.</li>' +
+        '<li>Tras la compra recibes una clave de licencia por correo electrónico. La activación necesita una breve conexión a internet; después, Premium funciona totalmente sin conexión.</li>' +
+        '<li>Puedes liberar una plaza en cualquier momento desactivando un ordenador (en la aplicación o a través del portal de clientes de Polar), por ejemplo cuando cambies de PC.</li>' +
+        '<li>Tu clave de licencia es para ti. No la publiques, compartas, revendas ni distribuyas de ningún otro modo. Podemos bloquear claves que se hayan filtrado, revendido, reembolsado u obtenido de forma fraudulenta. Si crees que una clave se bloqueó por error, contacta con soporte y lo resolveremos.</li>' +
+        '<li>Las funciones incluidas en Premium en el momento de tu compra siguen incluidas. Con el tiempo podemos añadir nuevas.</li>' +
+        '</ul>',
+      s4h: 'Prueba gratuita',
+      s4b:
+        '<p>Sonara ofrece una <strong>prueba Premium opcional de 7 días</strong>, una por ordenador. No requiere datos de pago y solo comienza cuando decides iniciarla. Cuando termina, la aplicación simplemente vuelve a la versión gratuita. Nunca se cobra nada.</p>',
+      s5h: 'Compras, precios e impuestos',
+      s5b:
+        '<p>Las compras las procesa <a href="https://polar.sh" rel="noopener">Polar</a>, actuando como <strong>comerciante registrado (merchant of record)</strong>. Esto significa que Polar es la parte que te vende: gestiona el pago, cobra tu método de pago, aplica y remite el IVA o el impuesto sobre las ventas cuando corresponda, y emite tu factura. Al proceso de pago se aplican las propias condiciones y la política de privacidad de Polar.</p>' +
+        '<p>El precio mostrado en el pago es el precio final, con impuestos incluidos cuando corresponda.</p>',
+      s6h: 'Reembolsos: garantía de devolución de 14 días',
+      s6b:
+        '<p>Si no estás satisfecho con tu compra Premium, díselo dentro de los <strong>14 días posteriores a la compra</strong> y recibirás un reembolso completo, sin preguntas. Solo escribe a <span class="email-js" role="link" tabindex="0"></span>, idealmente desde la dirección que usaste al pagar para que podamos encontrar tu pedido; luego emitimos el reembolso a través de Polar y el dinero vuelve a tu método de pago original.</p>' +
+        '<p>Esta garantía voluntaria te da al menos la protección del derecho de desistimiento de 14 días de la UE y no limita ningún derecho legal que puedas tener.</p>',
+      s7h: 'Actualizaciones y cambios en la aplicación',
+      s7b:
+        '<ul>' +
+        '<li>Sonara puede buscar actualizaciones y te avisa cuando hay una disponible; no se instala nada sin tu acción.</li>' +
+        '<li>Sonara está en desarrollo activo: con el tiempo pueden añadirse, cambiarse o eliminarse funciones. No te quitaremos funciones Premium por las que hayas pagado sin ofrecer un equivalente razonable.</li>' +
+        '</ul>',
+      s8h: 'Uso correcto del software',
+      s8b:
+        '<p>No debes:</p>' +
+        '<ul>' +
+        '<li>eludir o intentar eludir las comprobaciones de licencia o las restricciones de Premium;</li>' +
+        '<li>descompilar, aplicar ingeniería inversa o modificar la aplicación, salvo en la medida en que la ley lo permita expresamente;</li>' +
+        '<li>redistribuir Sonara de forma modificada, ni combinarla con malware o software no deseado;</li>' +
+        '<li>usar Sonara para algo ilícito.</li>' +
+        '</ul>',
+      s9h: 'Garantía y responsabilidad',
+      s9b:
+        '<p>Sonara se ofrece <strong>"tal cual"</strong>, sin garantía de ningún tipo; no prometemos que esté libre de errores ni que funcione sin interrupciones. En la medida en que lo permita la ley, nuestra responsabilidad total por reclamaciones relacionadas con Sonara se limita al importe que pagaste por ella. Nada en estas condiciones excluye la responsabilidad que no pueda excluirse por ley (como la responsabilidad por dolo o negligencia grave), y nada en ellas limita tus derechos legales como consumidor.</p>',
+      s10h: 'Terminación',
+      s10b:
+        '<p>Puedes dejar de usar Sonara en cualquier momento. Podemos terminar tu licencia si incumples de forma sustancial estas condiciones (por ejemplo, abuso de la clave de licencia según la sección 3). Las secciones 9 y 11 permanecen en vigor tras la terminación.</p>',
+      s11h: 'Cambios en estas condiciones; ley aplicable',
+      s11b:
+        '<ul>' +
+        '<li>Podemos actualizar estas condiciones a medida que la aplicación evoluciona. La versión actual, con su fecha de entrada en vigor, se publica siempre en esta página; los cambios significativos se señalarán en el sitio web o en la aplicación.</li>' +
+        '<li>Estas condiciones se rigen por la ley de <strong>Bulgaria</strong>. Si eres consumidor en la UE, conservas además la protección de las normas imperativas de consumo de tu país de residencia y puedes llevar los litigios ante tus tribunales locales.</li>' +
+        '</ul>',
+      s12h: 'Idioma',
+      s12b:
+        '<p>Estas condiciones se ofrecen en varios idiomas para tu comodidad. Si hay alguna diferencia entre las traducciones, la <strong>versión en inglés</strong> es la que se aplica legalmente.</p>' +
+        '<p class="contact">¿Preguntas? <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Inicio',
+      footTerms: 'Condiciones de servicio',
+      footPrivacy: 'Política de privacidad'
+    },
+    fr: {
+      back: '&larr; Retour à l\'accueil',
+      title: 'Conditions d\'utilisation',
+      effLabel: 'Date d\'entrée en vigueur :',
+      effDate: '8 juillet 2026',
+      plainLabel: '&#9835; En bref',
+      plainList:
+        '<li>Sonara est un lecteur de musique pour Windows pour tes propres fichiers musicaux locaux. La version gratuite est gratuite.</li>' +
+        '<li>Premium est un achat unique de <span data-sonara-price="usd">$9.99</span> pour jusqu\'à 3 de tes ordinateurs. Il y a un essai gratuit de 7 jours et une garantie de remboursement de 14 jours.</li>' +
+        '<li>Les paiements sont traités par Polar, notre revendeur officiel (merchant of record). Il gère le paiement, les taxes et les factures ; nous ne voyons jamais les données de ta carte.</li>' +
+        '<li>Garde ta clé de licence pour toi et ne lis que de la musique sur laquelle tu as des droits.</li>' +
+        '<li>L\'application est fournie "en l\'état". Tes droits légaux de consommateur restent intacts.</li>',
+      plainNote: 'Ce résumé est là pour t\'aider ; les conditions réelles sont les sections ci-dessous.',
+      s1h: 'Qui nous sommes',
+      s1b:
+        '<p>Sonara est créé par <strong>Tihomir Nyagolov</strong> et est publié et vendu par son entreprise <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), enregistrée en Bulgarie sous le numéro d\'entreprise (UIC) 204535372. Contact : <span class="email-js" role="link" tabindex="0"></span>.</p>' +
+        '<p>Ces conditions couvrent l\'application de bureau Sonara et ce site web. En installant ou en utilisant Sonara, tu les acceptes.</p>',
+      s2h: 'Ta licence d\'utilisation de Sonara',
+      s2b:
+        '<ul>' +
+        '<li>La version gratuite de Sonara peut être utilisée gratuitement.</li>' +
+        '<li>Nous t\'accordons une licence personnelle, non exclusive et non transférable pour installer et utiliser Sonara. Le logiciel lui-même reste notre propriété : nous te le concédons sous licence, nous ne te le vendons pas.</li>' +
+        '<li>Sonara lit des fichiers audio stockés sur ton ordinateur. Il t\'appartient d\'avoir les droits nécessaires sur les fichiers que tu lis. Sonara ne fournit, n\'héberge ni ne diffuse aucun contenu musical.</li>' +
+        '</ul>',
+      s3h: 'Premium et clés de licence',
+      s3b:
+        '<ul>' +
+        '<li>Premium est un <strong>achat unique, pas un abonnement</strong>. Il débloque définitivement les fonctions Premium sur jusqu\'à <strong>3 ordinateurs</strong>.</li>' +
+        '<li>Après l\'achat, tu reçois une clé de licence par e-mail. L\'activation nécessite une brève connexion internet ; ensuite, Premium fonctionne entièrement hors ligne.</li>' +
+        '<li>Tu peux libérer un emplacement à tout moment en désactivant un ordinateur (dans l\'application ou via le portail client Polar), par exemple quand tu remplaces un PC.</li>' +
+        '<li>Ta clé de licence est pour toi. Ne la publie pas, ne la partage pas, ne la revends pas et ne la distribue pas. Nous pouvons bloquer les clés divulguées, revendues, remboursées ou obtenues frauduleusement. Si tu penses qu\'une clé a été bloquée par erreur, contacte le support et nous réglerons cela.</li>' +
+        '<li>Les fonctions incluses dans Premium au moment de ton achat restent incluses. Nous pouvons en ajouter de nouvelles au fil du temps.</li>' +
+        '</ul>',
+      s4h: 'Essai gratuit',
+      s4b:
+        '<p>Sonara propose un <strong>essai Premium optionnel de 7 jours</strong>, un par ordinateur. Il ne nécessite aucune donnée de paiement et ne commence que lorsque tu décides de le lancer. À la fin, l\'application revient simplement à la version gratuite. Rien n\'est jamais facturé.</p>',
+      s5h: 'Achats, prix et taxes',
+      s5b:
+        '<p>Les achats sont traités par <a href="https://polar.sh" rel="noopener">Polar</a>, agissant en tant que <strong>revendeur officiel (merchant of record)</strong>. Cela signifie que Polar est la partie qui te vend : il gère le paiement, débite ton moyen de paiement, applique et reverse la TVA ou la taxe de vente le cas échéant, et émet ta facture. Les propres conditions et la politique de confidentialité de Polar s\'appliquent au processus de paiement.</p>' +
+        '<p>Le prix affiché au paiement est le prix final, taxes comprises le cas échéant.</p>',
+      s6h: 'Remboursements : garantie de remboursement de 14 jours',
+      s6b:
+        '<p>Si tu n\'es pas satisfait de ton achat Premium, dis-le-nous dans les <strong>14 jours suivant l\'achat</strong> et tu recevras un remboursement intégral, sans questions. Écris simplement à <span class="email-js" role="link" tabindex="0"></span>, idéalement depuis l\'adresse utilisée lors du paiement afin que nous puissions retrouver ta commande ; nous effectuons alors le remboursement via Polar et l\'argent revient sur ton moyen de paiement d\'origine.</p>' +
+        '<p>Cette garantie volontaire te donne au moins la protection du droit de rétractation de 14 jours de l\'UE et ne limite aucun droit légal que tu pourrais avoir.</p>',
+      s7h: 'Mises à jour et modifications de l\'application',
+      s7b:
+        '<ul>' +
+        '<li>Sonara peut vérifier les mises à jour et t\'indique lorsqu\'une est disponible ; rien n\'est installé sans ton action.</li>' +
+        '<li>Sonara est en développement actif : des fonctions peuvent être ajoutées, modifiées ou supprimées au fil du temps. Nous ne retirerons pas les fonctions Premium que tu as payées sans fournir un équivalent raisonnable.</li>' +
+        '</ul>',
+      s8h: 'Utilisation correcte du logiciel',
+      s8b:
+        '<p>Tu ne dois pas :</p>' +
+        '<ul>' +
+        '<li>contourner ou tenter de contourner les vérifications de licence ou les restrictions Premium ;</li>' +
+        '<li>décompiler, désosser (rétro-ingénierie) ou modifier l\'application, sauf dans la mesure où la loi l\'autorise expressément ;</li>' +
+        '<li>redistribuer Sonara sous une forme modifiée, ni l\'associer à des logiciels malveillants ou indésirables ;</li>' +
+        '<li>utiliser Sonara à des fins illégales.</li>' +
+        '</ul>',
+      s9h: 'Garantie et responsabilité',
+      s9b:
+        '<p>Sonara est fourni <strong>"en l\'état"</strong>, sans garantie d\'aucune sorte ; nous ne promettons pas qu\'il sera exempt d\'erreurs ou sans interruption. Dans la mesure permise par la loi, notre responsabilité totale pour les réclamations liées à Sonara est limitée au montant que tu as payé pour lui. Rien dans ces conditions n\'exclut une responsabilité qui ne peut être exclue par la loi (comme la responsabilité pour faute intentionnelle ou négligence grave), et rien n\'y limite tes droits légaux de consommateur.</p>',
+      s10h: 'Résiliation',
+      s10b:
+        '<p>Tu peux cesser d\'utiliser Sonara à tout moment. Nous pouvons résilier ta licence si tu enfreins de manière substantielle ces conditions (par exemple, un usage abusif de la clé de licence selon la section 3). Les sections 9 et 11 survivent à la résiliation.</p>',
+      s11h: 'Modifications de ces conditions ; droit applicable',
+      s11b:
+        '<ul>' +
+        '<li>Nous pouvons mettre à jour ces conditions à mesure que l\'application évolue. La version actuelle, avec sa date d\'entrée en vigueur, est toujours publiée sur cette page ; les changements importants seront signalés sur le site web ou dans l\'application.</li>' +
+        '<li>Ces conditions sont régies par le droit de la <strong>Bulgarie</strong>. Si tu es un consommateur dans l\'UE, tu conserves en outre la protection des règles impératives de protection des consommateurs de ton pays de résidence et tu peux porter les litiges devant tes tribunaux locaux.</li>' +
+        '</ul>',
+      s12h: 'Langue',
+      s12b:
+        '<p>Ces conditions te sont proposées en plusieurs langues pour ta commodité. En cas de différence entre les traductions, c\'est la <strong>version anglaise</strong> qui fait foi juridiquement.</p>' +
+        '<p class="contact">Des questions ? <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Accueil',
+      footTerms: 'Conditions d\'utilisation',
+      footPrivacy: 'Politique de confidentialité'
+    },
+    ru: {
+      back: '&larr; На главную',
+      title: 'Условия использования',
+      effLabel: 'Дата вступления в силу:',
+      effDate: '8 июля 2026 г.',
+      plainLabel: '&#9835; Вкратце',
+      plainList:
+        '<li>Sonara - музыкальный плеер для Windows для твоих собственных локальных музыкальных файлов. Бесплатная версия бесплатна.</li>' +
+        '<li>Premium - это разовая покупка за <span data-sonara-price="usd">$9.99</span> для не более чем 3 твоих компьютеров. Есть 7-дневный бесплатный пробный период и 14-дневная гарантия возврата денег.</li>' +
+        '<li>Платежи обрабатывает Polar, наш продавец записи (merchant of record). Он занимается оплатой, налогами и счетами; мы никогда не видим данные твоей карты.</li>' +
+        '<li>Храни свой лицензионный ключ при себе и воспроизводи только ту музыку, на которую у тебя есть права.</li>' +
+        '<li>Приложение предоставляется "как есть". Твои законные потребительские права остаются в силе.</li>',
+      plainNote: 'Это краткое изложение для удобства; сами условия - в разделах ниже.',
+      s1h: 'Кто мы',
+      s1b:
+        '<p>Sonara создана <strong>Тихомиром Няголовым</strong> и издаётся и продаётся его компанией <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), зарегистрированной в Болгарии под номером (UIC) 204535372. Контакт: <span class="email-js" role="link" tabindex="0"></span>.</p>' +
+        '<p>Эти условия распространяются на настольное приложение Sonara и на этот сайт. Устанавливая или используя Sonara, ты соглашаешься с ними.</p>',
+      s2h: 'Твоя лицензия на использование Sonara',
+      s2b:
+        '<ul>' +
+        '<li>Бесплатную версию Sonara можно использовать бесплатно.</li>' +
+        '<li>Мы предоставляем тебе личную, неисключительную, непередаваемую лицензию на установку и использование Sonara. Само программное обеспечение остаётся нашей собственностью: мы лицензируем его тебе, а не продаём.</li>' +
+        '<li>Sonara воспроизводит аудиофайлы, хранящиеся на твоём компьютере. Ты несёшь ответственность за наличие необходимых прав на файлы, которые воспроизводишь. Sonara не предоставляет, не размещает и не транслирует музыкальный контент.</li>' +
+        '</ul>',
+      s3h: 'Premium и лицензионные ключи',
+      s3b:
+        '<ul>' +
+        '<li>Premium - это <strong>разовая покупка, а не подписка</strong>. Он навсегда открывает функции Premium не более чем на <strong>3 компьютерах</strong>.</li>' +
+        '<li>После покупки ты получаешь лицензионный ключ по электронной почте. Для активации нужно короткое интернет-соединение; после этого Premium работает полностью офлайн.</li>' +
+        '<li>Ты можешь освободить слот в любое время, деактивировав компьютер (в приложении или через клиентский портал Polar), например при замене ПК.</li>' +
+        '<li>Твой лицензионный ключ предназначен для тебя. Не публикуй, не передавай, не перепродавай и не распространяй его. Мы можем блокировать ключи, которые были раскрыты, перепроданы, возвращены или получены обманным путём. Если считаешь, что ключ заблокирован по ошибке, напиши в поддержку, и мы разберёмся.</li>' +
+        '<li>Функции, включённые в Premium на момент твоей покупки, остаются включёнными. Со временем мы можем добавлять новые.</li>' +
+        '</ul>',
+      s4h: 'Бесплатный пробный период',
+      s4b:
+        '<p>Sonara предлагает необязательный <strong>7-дневный пробный период Premium</strong>, по одному на компьютер. Он не требует платёжных данных и начинается только тогда, когда ты решишь его запустить. По окончании приложение просто возвращается к бесплатной версии. Никогда ничего не списывается.</p>',
+      s5h: 'Покупки, цены и налоги',
+      s5b:
+        '<p>Покупки обрабатывает <a href="https://polar.sh" rel="noopener">Polar</a>, выступая в роли <strong>продавца записи (merchant of record)</strong>. Это значит, что именно Polar продаёт тебе: он управляет оформлением заказа, списывает средства с твоего способа оплаты, начисляет и перечисляет НДС или налог с продаж, где применимо, и выставляет тебе счёт. К процессу оплаты применяются собственные условия и политика конфиденциальности Polar.</p>' +
+        '<p>Цена, показанная при оформлении заказа, является окончательной, включая налог, где применимо.</p>',
+      s6h: 'Возврат средств: 14-дневная гарантия возврата денег',
+      s6b:
+        '<p>Если ты недоволен покупкой Premium, сообщи нам в течение <strong>14 дней с момента покупки</strong>, и ты получишь полный возврат средств, без вопросов. Просто напиши на <span class="email-js" role="link" tabindex="0"></span>, желательно с адреса, который ты использовал при оформлении заказа, чтобы мы могли найти твой заказ; затем мы оформляем возврат через Polar, и деньги возвращаются на твой первоначальный способ оплаты.</p>' +
+        '<p>Эта добровольная гарантия даёт тебе как минимум защиту 14-дневного права на отказ, действующего в ЕС, и не ограничивает никаких законных прав, которые у тебя могут быть.</p>',
+      s7h: 'Обновления и изменения приложения',
+      s7b:
+        '<ul>' +
+        '<li>Sonara может проверять обновления и сообщает, когда доступно новое; ничего не устанавливается без твоего действия.</li>' +
+        '<li>Sonara активно развивается: со временем функции могут добавляться, изменяться или удаляться. Мы не будем отбирать оплаченные тобой функции Premium, не предоставив разумный эквивалент.</li>' +
+        '</ul>',
+      s8h: 'Добросовестное использование программы',
+      s8b:
+        '<p>Тебе запрещается:</p>' +
+        '<ul>' +
+        '<li>обходить или пытаться обойти проверки лицензии или ограничения Premium;</li>' +
+        '<li>декомпилировать, подвергать обратной разработке или изменять приложение, кроме случаев, прямо разрешённых законом;</li>' +
+        '<li>распространять Sonara в изменённом виде или в комплекте с вредоносным либо нежелательным ПО;</li>' +
+        '<li>использовать Sonara в любых незаконных целях.</li>' +
+        '</ul>',
+      s9h: 'Гарантия и ответственность',
+      s9b:
+        '<p>Sonara предоставляется <strong>"как есть"</strong>, без каких-либо гарантий; мы не обещаем, что она будет работать без ошибок или без перебоев. В пределах, разрешённых законом, наша общая ответственность по претензиям, связанным с Sonara, ограничена суммой, которую ты за неё заплатил. Ничто в этих условиях не исключает ответственности, которую нельзя исключить по закону (например, за умысел или грубую неосторожность), и ничто в них не ограничивает твои законные потребительские права.</p>',
+      s10h: 'Прекращение',
+      s10b:
+        '<p>Ты можешь прекратить использование Sonara в любое время. Мы можем прекратить твою лицензию при существенном нарушении этих условий (например, злоупотребление лицензионным ключом согласно разделу 3). Разделы 9 и 11 продолжают действовать после прекращения.</p>',
+      s11h: 'Изменения этих условий; применимое право',
+      s11b:
+        '<ul>' +
+        '<li>Мы можем обновлять эти условия по мере развития приложения. Актуальная версия с датой вступления в силу всегда публикуется на этой странице; о существенных изменениях будет сообщено на сайте или в приложении.</li>' +
+        '<li>Эти условия регулируются правом <strong>Болгарии</strong>. Если ты потребитель в ЕС, ты дополнительно сохраняешь защиту императивных норм о защите прав потребителей страны твоего проживания и можешь обращаться в местные суды.</li>' +
+        '</ul>',
+      s12h: 'Язык',
+      s12b:
+        '<p>Эти условия предоставляются на нескольких языках для твоего удобства. При наличии расхождений между переводами юридическую силу имеет <strong>английская версия</strong>.</p>' +
+        '<p class="contact">Вопросы? <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Главная',
+      footTerms: 'Условия использования',
+      footPrivacy: 'Политика конфиденциальности'
+    },
+    zh: {
+      back: '&larr; 返回首页',
+      title: '服务条款',
+      effLabel: '生效日期：',
+      effDate: '2026年7月8日',
+      plainLabel: '&#9835; 简要说明',
+      plainList:
+        '<li>Sonara 是一款适用于 Windows 的音乐播放器，用于播放你自己本地的音乐文件。免费版是免费的。</li>' +
+        '<li>Premium 是一次性购买 <span data-sonara-price="usd">$9.99</span>，可用于最多 3 台你的电脑。提供 7 天免费试用和 14 天退款保证。</li>' +
+        '<li>付款由我们的登记商户（merchant of record）Polar 处理。它负责结账、税费和发票；我们绝不会看到你的银行卡信息。</li>' +
+        '<li>请妥善保管你的许可证密钥，只播放你拥有权利的音乐。</li>' +
+        '<li>本应用按"现状"提供。你的法定消费者权利不受影响。</li>',
+      plainNote: '本摘要仅供参考；实际条款见下方各节。',
+      s1h: '我们是谁',
+      s1b:
+        '<p>Sonara 由 <strong>Tihomir Nyagolov</strong> 创作，并由其公司 <strong>ArtSolver Ltd.</strong>（АртСолвър ЕООД）发布和销售，该公司在保加利亚注册，公司编号（UIC）为 204535372。联系方式：<span class="email-js" role="link" tabindex="0"></span>。</p>' +
+        '<p>本条款适用于 Sonara 桌面应用程序和本网站。安装或使用 Sonara 即表示你接受这些条款。</p>',
+      s2h: '你使用 Sonara 的许可',
+      s2b:
+        '<ul>' +
+        '<li>Sonara 的免费版可免费使用。</li>' +
+        '<li>我们授予你个人的、非独占的、不可转让的许可来安装和使用 Sonara。软件本身仍归我们所有：我们将其许可给你，而非出售给你。</li>' +
+        '<li>Sonara 播放存储在你电脑上的音频文件。你有责任对所播放的文件拥有必要的权利。Sonara 不提供、托管或串流任何音乐内容。</li>' +
+        '</ul>',
+      s3h: 'Premium 与许可证密钥',
+      s3b:
+        '<ul>' +
+        '<li>Premium 是<strong>一次性购买，而非订阅</strong>。它可在最多 <strong>3 台电脑</strong>上永久解锁 Premium 功能。</li>' +
+        '<li>购买后你会通过电子邮件收到许可证密钥。激活需要短暂的网络连接；之后 Premium 可完全离线使用。</li>' +
+        '<li>你可以随时通过停用某台电脑来释放一个名额（在应用中或通过 Polar 客户门户），例如在更换电脑时。</li>' +
+        '<li>你的许可证密钥仅供你本人使用。请勿发布、分享、转售或以其他方式散布它。对于泄露、转售、已退款或以欺诈方式获得的密钥，我们可能会予以封禁。如果你认为某个密钥被误封，请联系支持，我们会为你处理。</li>' +
+        '<li>购买时 Premium 所包含的功能将继续包含在内。我们可能会随时间增加新功能。</li>' +
+        '</ul>',
+      s4h: '免费试用',
+      s4b:
+        '<p>Sonara 提供可选的 <strong>7 天 Premium 试用</strong>，每台电脑一次。它无需付款信息，只有在你选择开始时才会启动。试用结束后，应用会直接恢复为免费版。绝不会产生任何扣费。</p>',
+      s5h: '购买、价格与税费',
+      s5b:
+        '<p>购买由 <a href="https://polar.sh" rel="noopener">Polar</a> 作为<strong>登记商户（merchant of record）</strong>处理。这意味着 Polar 是向你销售的一方：它负责结账、从你的付款方式扣款、在适用情况下计收并缴纳增值税或销售税，并为你开具发票。结账过程适用 Polar 自己的条款和隐私政策。</p>' +
+        '<p>结账时显示的价格为最终价格，在适用情况下已含税。</p>',
+      s6h: '退款：14 天退款保证',
+      s6b:
+        '<p>如果你对 Premium 购买不满意，请在<strong>购买后 14 天内</strong>告知我们，你将获得全额退款，无需说明理由。只需发送邮件至 <span class="email-js" role="link" tabindex="0"></span>，最好使用你结账时所用的邮箱，以便我们找到你的订单；随后我们会通过 Polar 办理退款，款项将退回到你原来的付款方式。</p>' +
+        '<p>这项自愿保证至少为你提供欧盟 14 天撤销权的保护，并不限制你可能享有的任何法定权利。</p>',
+      s7h: '应用的更新与变更',
+      s7b:
+        '<ul>' +
+        '<li>Sonara 可以检查更新，并在有可用更新时通知你；未经你操作不会安装任何内容。</li>' +
+        '<li>Sonara 处于积极开发中：功能可能会随时间增加、更改或移除。我们不会在不提供合理替代的情况下取消你已付费的 Premium 功能。</li>' +
+        '</ul>',
+      s8h: '软件的合理使用',
+      s8b:
+        '<p>你不得：</p>' +
+        '<ul>' +
+        '<li>规避或试图规避许可证检查或 Premium 限制；</li>' +
+        '<li>反编译、逆向工程或修改本应用，法律明确允许的范围除外；</li>' +
+        '<li>以修改后的形式重新分发 Sonara，或将其与恶意软件或不受欢迎的软件捆绑；</li>' +
+        '<li>将 Sonara 用于任何非法用途。</li>' +
+        '</ul>',
+      s9h: '保证与责任',
+      s9b:
+        '<p>Sonara 按<strong>"现状"</strong>提供，不作任何形式的保证；我们不承诺它没有错误或不会中断。在法律允许的范围内，我们对与 Sonara 相关的索赔的全部责任以你为其支付的金额为限。本条款中的任何内容均不排除依法不能排除的责任（例如故意或重大过失的责任），也不限制你的法定消费者权利。</p>',
+      s10h: '终止',
+      s10b:
+        '<p>你可以随时停止使用 Sonara。如果你严重违反本条款（例如第 3 节所述的许可证密钥滥用），我们可以终止你的许可。第 9 节和第 11 节在终止后继续有效。</p>',
+      s11h: '本条款的变更；适用法律',
+      s11b:
+        '<ul>' +
+        '<li>我们可能会随着应用的发展更新本条款。当前版本及其生效日期始终发布在本页面；重大变更将在网站或应用中提示。</li>' +
+        '<li>本条款受<strong>保加利亚</strong>法律管辖。如果你是欧盟的消费者，你还保留你居住国强制性消费者保护规则的保护，并可以向你当地的法院提起诉讼。</li>' +
+        '</ul>',
+      s12h: '语言',
+      s12b:
+        '<p>为方便起见，本条款提供多种语言版本。如各译文之间存在任何差异，以<strong>英文版本</strong>为法律准据。</p>' +
+        '<p class="contact">有疑问？<span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: '首页',
+      footTerms: '服务条款',
+      footPrivacy: '隐私政策'
+    }
+  },
+  privacy: {
+    bg: {
+      back: '&larr; Обратно към началото',
+      title: 'Политика за поверителност',
+      effLabel: 'В сила от:',
+      effDate: '8 юли 2026',
+      plainLabel: '&#9835; С прости думи',
+      plainList:
+        '<li>Музиката ти си остава твоя. Sonara никога не качва и не сканира файловете, библиотеката, плейлистите или историята ти на слушане; всичко това живее само на твоя компютър.</li>' +
+        '<li>За Sonara не е нужен акаунт, дори за Premium.</li>' +
+        '<li>Приложението праща по един малък анонимен пинг на ден (версия на приложението, версия на Windows, език и подобни). Можеш да го изключиш от настройките по всяко време.</li>' +
+        '<li>Ако купиш Premium, плащането се обработва от Polar; ние никога не виждаме данните на картата ти.</li>' +
+        '<li>Без реклами, без тракери, без продаване на данни. Никога.</li>',
+      s1h: 'Кой отговаря',
+      s1b:
+        '<p>Администратор на данните за описаната тук обработка е <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), ЕИК 204535372, България - фирмата на създателя на Sonara, Тихомир Няголов. Контакт: <span class="email-js" role="link" tabindex="0"></span>.</p>',
+      s2h: 'Принципът: всичко е локално',
+      s2b:
+        '<p>Sonara е десктоп плеър за твоите собствени музикални файлове. Библиотеката, плейлистите, историята на слушане, оценките, текстовете на песните и настройките ти се съхраняват <strong>само на твоя компютър</strong> и никога не се изпращат на нас или на когото и да е.</p>',
+      s3h: 'Какво всъщност праща приложението и кога',
+      s3b:
+        '<h3><span class="num">3.1</span>Анонимна статистика за ползване (може да се изключи)</h3>' +
+        '<p>Веднъж дневно приложението праща един малък пинг, за да виждаме колко инсталации са активни и кои версии и езици имат значение. Той съдържа: версия на приложението, канал (release), архитектура на процесора, версия на Windows, тип инсталация (installer или portable), системен език, избрания в приложението език и един анонимен идентификатор.</p>' +
+        '<ul>' +
+        '<li>Идентификаторът се получава чрез еднопосочно хеширане от машинно ID. Не може да бъде обърнат, за да те идентифицира, и е нарочно направен така, че <strong>да не може да се свърже</strong> с лиценза или покупката ти.</li>' +
+        '<li>Пингът не съдържа имена, имена на файлове, музикални данни, история на слушане или локация, а IP адресът ти не се съхранява със статистиката.</li>' +
+        '<li>Данните се съхраняват на сървъри в <strong>ЕС</strong> (Supabase, EU регион).</li>' +
+        '<li><strong>Изключване:</strong> Preferences, "Share anonymous usage statistics". Изключването спира пинговете веднага.</li>' +
+        '<li>Правно основание: легитимният ни интерес да разбираме базовото ползване на приложението (чл. 6(1)(е) GDPR), с възможност за отказ по всяко време.</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Покупка на Premium (Polar)</h3>' +
+        '<p>Checkout-ът се оперира от <strong>Polar</strong> като merchant of record. Polar събира данните, нужни за продажбата (имейл, държава за данъчни цели, платежни данни), по <a href="https://polar.sh/legal/privacy" rel="noopener">собствената си политика за поверителност</a>. Ние никога не получаваме платежните ти данни; виждаме информация за поръчката (имейл и лицензен ключ), нужна за поддръжка и предотвратяване на злоупотреби.</p>' +
+        '<h3><span class="num">3.3</span>Активация на лиценз</h3>' +
+        '<p>Когато активираш Premium ключ, приложението изпраща на Polar: ключа, името на компютъра ти (за да можеш <em>ти</em> да разпознаеш кой от 3-те ти слота заема) и еднопосочно хеширан машинен отпечатък (за прилагане на лимита от 3 компютъра). Деактивирането на компютър освобождава слота и премахва тази активация. Отпечатъкът е хеш: не те идентифицира лично и не може да се свърже с анонимната статистика.</p>' +
+        '<h3><span class="num">3.4</span>Безплатен пробен период</h3>' +
+        '<p>7-дневният пробен период е изцяло локален. Нищо за него не се изпраща никъде.</p>' +
+        '<h3><span class="num">3.5</span>Проверки за ъпдейти</h3>' +
+        '<p>Приложението се свързва с <strong>GitHub</strong>, където се хостват версиите, за да проверява и сваля ъпдейти. Както при всяка интернет заявка, GitHub вижда IP адреса ти и стандартните метаданни на заявката (важи политиката за поверителност на GitHub). Приложението не праща никакви идентификатори с тези заявки.</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now playing"</h3>' +
+        '<p>Ако десктоп приложението Discord работи на компютъра ти, Sonara може да му подава заглавието и изпълнителя на текущата песен, за да показва Discord профилът ти какво слушаш. Можеш да изключиш това в Sonara по всяко време: Preferences, System, "Show activity on Discord". Освен това минава през твоя собствен Discord клиент, така че важат и твоите настройки за поверителност в Discord (Activity Privacy). Ако Discord не е пуснат, нищо не се споделя.</p>',
+      s4h: 'Уебсайтът',
+      s4b:
+        '<ul>' +
+        '<li>Сайтът се хоства на <strong>GitHub Pages</strong>; GitHub обработва стандартни сървърни логове (например IP адреси) като хостинг.</li>' +
+        '<li>Броим посещения с <strong>GoatCounter</strong> - щадящ поверителността брояч без бисквитки, който не съхранява лични идентификатори и ни показва само обобщени числа.</li>' +
+        '<li>Сайтът не поставя рекламни или проследяващи бисквитки.</li>' +
+        '</ul>',
+      s5h: 'Какво никога не правим',
+      s5b:
+        '<p>Не събираме файловете или историята ти на слушане, не те профилираме, не показваме реклами и не продаваме, нито споделяме данни с никого извън посочените по-горе обработващи (Polar, Supabase, GitHub).</p>',
+      s6h: 'Колко време пазим данните',
+      s6b:
+        '<ul>' +
+        '<li>Анонимните пингове: пазят се като статистика; не съдържат нищо, което те идентифицира.</li>' +
+        '<li>Данните за поръчки и фактури при Polar: колкото изискват данъчните и счетоводните закони.</li>' +
+        '<li>Записите за активация: докато не деактивираш компютъра или ключа.</li>' +
+        '</ul>',
+      s7h: 'Твоите права',
+      s7b:
+        '<p>По GDPR можеш да поискаш достъп, коригиране, изтриване, ограничаване или преносимост на данните си и да възразиш срещу обработка. Пиши на <span class="email-js" role="link" tabindex="0"></span>. Една честна уговорка: статистиката е анонимна, така че не можем да разберем кои пингове са "твоите"; няма какво да намерим или изтрием за конкретен човек. Можеш да подадеш жалба и до надзорен орган: в България това е Комисията за защита на личните данни (cpdp.bg), или органът на твоята държава.</p>',
+      s8h: 'Промени по тази политика',
+      s8b:
+        '<p>Ако бъдеща функция започне да изпраща или обработва нови данни (например незадължителни онлайн акаунти), първо ще актуализираме тази политика и ще сменим датата на влизане в сила по-горе. Съществените промени ще бъдат посочени на сайта или в приложението.</p>',
+      s9h: 'Език',
+      s9b:
+        '<p>Тази политика се предлага на няколко езика за твое удобство. Ако има разлика между преводите, меродавна е <strong>английската версия</strong>.</p>' +
+        '<p class="contact">Контакт: <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Начало',
+      footTerms: 'Общи условия',
+      footPrivacy: 'Политика за поверителност'
+    },
+    de: {
+      back: '&larr; Zurück zur Startseite',
+      title: 'Datenschutzerklärung',
+      effLabel: 'Gültig ab:',
+      effDate: '8. Juli 2026',
+      plainLabel: '&#9835; Kurz gesagt',
+      plainList:
+        '<li>Deine Musik bleibt deine. Sonara lädt oder scannt deine Dateien, Bibliothek, Playlists oder deinen Wiedergabeverlauf nie hoch; all das liegt nur auf deinem Computer.</li>' +
+        '<li>Für die Nutzung von Sonara ist kein Konto nötig, auch nicht für Premium.</li>' +
+        '<li>Die App sendet einmal täglich einen kleinen anonymen Nutzungs-Ping (App-Version, Windows-Version, Sprache und Ähnliches). Du kannst ihn jederzeit in den Einstellungen ausschalten.</li>' +
+        '<li>Wenn du Premium kaufst, wird die Zahlung von Polar abgewickelt; wir sehen deine Kartendaten nie.</li>' +
+        '<li>Keine Werbung, keine Tracker, kein Verkauf von Daten. Niemals.</li>',
+      s1h: 'Wer verantwortlich ist',
+      s1b:
+        '<p>Verantwortlicher für die hier beschriebene Verarbeitung ist <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), UIC 204535372, Bulgarien, das Unternehmen von Sonaras Schöpfer Tihomir Nyagolov. Kontakt: <span class="email-js" role="link" tabindex="0"></span>.</p>',
+      s2h: 'Das Prinzip: lokal zuerst',
+      s2b:
+        '<p>Sonara ist ein Desktop-Player für deine eigenen Musikdateien. Deine Bibliothek, Playlists, dein Wiedergabeverlauf, Bewertungen, Songtexte und Einstellungen werden <strong>nur auf deinem Computer</strong> gespeichert und niemals an uns oder an sonst jemanden übertragen.</p>',
+      s3h: 'Was die App sendet und wann',
+      s3b:
+        '<h3><span class="num">3.1</span>Anonyme Nutzungsstatistik (kann ausgeschaltet werden)</h3>' +
+        '<p>Einmal täglich sendet die App einen kleinen Ping, damit wir sehen können, wie viele Installationen aktiv sind und welche Versionen und Sprachen am wichtigsten sind. Er enthält: App-Version, Release-Kanal, Prozessorarchitektur, Windows-Version, Installationstyp (Installer oder portabel), Systemsprache, die von dir gewählte App-Sprache und eine anonyme Kennung.</p>' +
+        '<ul>' +
+        '<li>Die Kennung wird durch Einweg-Hashing aus einer Geräte-ID abgeleitet. Sie kann nicht zurückgerechnet werden, um dich oder deinen Computer zu identifizieren, und ist bewusst so gebaut, dass sie <strong>nicht mit deiner Lizenz oder deinem Kauf verknüpft</strong> werden kann.</li>' +
+        '<li>Der Ping enthält keine Namen, keine Dateinamen, keine Musikdaten, keinen Wiedergabeverlauf und keinen Standort, und deine IP-Adresse wird nicht mit der Statistik gespeichert.</li>' +
+        '<li>Die Daten werden auf Servern in der <strong>EU</strong> gespeichert (Supabase, EU-Region).</li>' +
+        '<li><strong>Ausschalten:</strong> Einstellungen, "Share anonymous usage statistics". Das Ausschalten stoppt die Pings sofort.</li>' +
+        '<li>Rechtsgrundlage: unser berechtigtes Interesse, die grundlegende Nutzung der App zu verstehen (Art. 6 Abs. 1 lit. f DSGVO), mit jederzeitiger Widerspruchsmöglichkeit.</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Premium-Kauf (Polar)</h3>' +
+        '<p>Der Checkout wird von <strong>Polar</strong> als Merchant of Record betrieben. Polar erhebt die für den Verkauf nötigen Daten (E-Mail, Land für Steuerzwecke, Zahlungsdaten) gemäß <a href="https://polar.sh/legal/privacy" rel="noopener">seiner eigenen Datenschutzerklärung</a>. Wir erhalten deine Zahlungsdaten nie; wir sehen Bestellinformationen (deine E-Mail und den Lizenzschlüssel), die für Support und Missbrauchsvermeidung nötig sind.</p>' +
+        '<h3><span class="num">3.3</span>Lizenzaktivierung</h3>' +
+        '<p>Wenn du einen Premium-Schlüssel aktivierst, sendet die App an Polar: den Schlüssel, den Namen deines Computers (damit <em>du</em> erkennst, welchen deiner 3 Plätze er belegt) und einen einweg-gehashten Geräte-Fingerabdruck (zur Durchsetzung des Limits von 3 Computern). Das Deaktivieren eines Computers gibt den Platz frei und entfernt diese Aktivierung. Der Fingerabdruck ist ein Hash: Er identifiziert dich nicht persönlich und kann nicht mit der anonymen Nutzungsstatistik verknüpft werden.</p>' +
+        '<h3><span class="num">3.4</span>Kostenlose Testphase</h3>' +
+        '<p>Die 7-tägige Testphase läuft vollständig lokal. Nichts davon wird irgendwohin gesendet.</p>' +
+        '<h3><span class="num">3.5</span>Update-Prüfungen</h3>' +
+        '<p>Die App kontaktiert <strong>GitHub</strong>, wo die Releases gehostet werden, um nach Updates zu suchen und sie herunterzuladen. Wie bei jeder Internetanfrage sieht GitHub deine IP-Adresse und übliche Anfrage-Metadaten (es gilt die Datenschutzerklärung von GitHub). Die App sendet mit diesen Anfragen keine Kennungen.</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now Playing"</h3>' +
+        '<p>Wenn die Discord-Desktop-App auf deinem Computer läuft, kann Sonara Titel und Interpret des aktuellen Songs an sie übergeben, damit dein Discord-Profil zeigt, was du hörst. Du kannst das in Sonara jederzeit ausschalten: Einstellungen, System, "Show activity on Discord". Es läuft außerdem über deinen eigenen Discord-Client, sodass auch deine Discord-Datenschutzeinstellungen (Aktivitätsprivatsphäre) gelten. Wenn Discord nicht läuft, wird nichts geteilt.</p>',
+      s4h: 'Die Website',
+      s4b:
+        '<ul>' +
+        '<li>Die Website wird auf <strong>GitHub Pages</strong> gehostet; GitHub verarbeitet als Hoster übliche Server-Logs (etwa IP-Adressen).</li>' +
+        '<li>Wir zählen Seitenaufrufe mit <strong>GoatCounter</strong>, einem datenschutzfreundlichen, cookielosen Zähler, der keine persönlichen Kennungen speichert und uns nur aggregierte Zahlen zeigt.</li>' +
+        '<li>Die Website setzt keine Werbe- oder Tracking-Cookies.</li>' +
+        '</ul>',
+      s5h: 'Was wir niemals tun',
+      s5b:
+        '<p>Wir erfassen weder deine Dateien noch deinen Wiedergabeverlauf, wir erstellen kein Profil von dir, wir zeigen keine Werbung und wir verkaufen oder teilen keine Daten mit irgendjemandem über die oben genannten Auftragsverarbeiter (Polar, Supabase, GitHub) hinaus.</p>',
+      s6h: 'Wie lange Daten aufbewahrt werden',
+      s6b:
+        '<ul>' +
+        '<li>Anonyme Nutzungs-Pings: als Statistik aufbewahrt; sie enthalten nichts, was dich identifiziert.</li>' +
+        '<li>Bestell- und Rechnungsdaten bei Polar: so lange, wie es Steuer- und Buchhaltungsrecht verlangt.</li>' +
+        '<li>Aktivierungsdatensätze: bis du den Computer oder den Schlüssel deaktivierst.</li>' +
+        '</ul>',
+      s7h: 'Deine Rechte',
+      s7b:
+        '<p>Nach der DSGVO kannst du Auskunft, Berichtigung, Löschung, Einschränkung oder Übertragbarkeit deiner Daten verlangen und der Verarbeitung widersprechen. Schreibe an <span class="email-js" role="link" tabindex="0"></span>. Eine ehrliche Anmerkung: Die Nutzungsstatistik ist anonym, wir können also nicht sagen, welche Pings "deine" sind; es gibt nichts, was wir für eine bestimmte Person nachschlagen oder löschen könnten. Du kannst dich auch bei einer Aufsichtsbehörde beschweren: in Bulgarien ist das die Kommission für den Schutz personenbezogener Daten (cpdp.bg) oder die Behörde deines eigenen Landes.</p>',
+      s8h: 'Änderungen dieser Erklärung',
+      s8b:
+        '<p>Wenn eine künftige Funktion beginnt, neue Daten zu senden oder zu verarbeiten (zum Beispiel optionale Online-Konten), aktualisieren wir zuerst diese Erklärung und ändern das Gültigkeitsdatum oben. Auf wesentliche Änderungen wird auf der Website oder in der App hingewiesen.</p>',
+      s9h: 'Sprache',
+      s9b:
+        '<p>Diese Erklärung wird dir zur Vereinfachung in mehreren Sprachen angeboten. Bei Abweichungen zwischen den Übersetzungen ist die <strong>englische Fassung</strong> rechtlich maßgeblich.</p>' +
+        '<p class="contact">Kontakt: <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Startseite',
+      footTerms: 'Nutzungsbedingungen',
+      footPrivacy: 'Datenschutzerklärung'
+    },
+    es: {
+      back: '&larr; Volver al inicio',
+      title: 'Política de privacidad',
+      effLabel: 'Fecha de entrada en vigor:',
+      effDate: '8 de julio de 2026',
+      plainLabel: '&#9835; En pocas palabras',
+      plainList:
+        '<li>Tu música es tuya. Sonara nunca sube ni escanea tus archivos, biblioteca, listas de reproducción o historial de escucha; todo eso vive solo en tu ordenador.</li>' +
+        '<li>No necesitas cuenta para usar Sonara, ni siquiera para Premium.</li>' +
+        '<li>La aplicación envía un pequeño ping anónimo de uso una vez al día (versión de la app, versión de Windows, idioma y similares). Puedes desactivarlo en los ajustes en cualquier momento.</li>' +
+        '<li>Si compras Premium, el pago lo gestiona Polar; nosotros nunca vemos los datos de tu tarjeta.</li>' +
+        '<li>Sin anuncios, sin rastreadores, sin venta de datos. Nunca.</li>',
+      s1h: 'Quién es responsable',
+      s1b:
+        '<p>El responsable del tratamiento aquí descrito es <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), UIC 204535372, Bulgaria, la empresa del creador de Sonara, Tihomir Nyagolov. Contacto: <span class="email-js" role="link" tabindex="0"></span>.</p>',
+      s2h: 'El principio: lo local primero',
+      s2b:
+        '<p>Sonara es un reproductor de escritorio para tus propios archivos de música. Tu biblioteca, listas de reproducción, historial de escucha, valoraciones, letras y ajustes se almacenan <strong>solo en tu ordenador</strong> y nunca se transmiten a nosotros ni a nadie.</p>',
+      s3h: 'Qué envía la aplicación, y cuándo',
+      s3b:
+        '<h3><span class="num">3.1</span>Estadísticas de uso anónimas (se pueden desactivar)</h3>' +
+        '<p>Una vez al día la aplicación envía un pequeño ping para que podamos ver cuántas instalaciones están activas y qué versiones e idiomas importan más. Contiene: versión de la app, canal de publicación, arquitectura del procesador, versión de Windows, tipo de instalación (instalador o portable), idioma del sistema, el idioma de la app que elegiste y un identificador anónimo.</p>' +
+        '<ul>' +
+        '<li>El identificador se deriva mediante un hash unidireccional de un ID de la máquina. No puede revertirse para identificarte a ti ni a tu ordenador, y está diseñado a propósito para que <strong>no pueda vincularse</strong> a tu licencia ni a tu compra.</li>' +
+        '<li>El ping no contiene nombres, ni nombres de archivos, ni datos de música, ni historial de escucha, ni ubicación, y tu dirección IP no se almacena con las estadísticas.</li>' +
+        '<li>Los datos se almacenan en servidores en la <strong>UE</strong> (Supabase, región de la UE).</li>' +
+        '<li><strong>Desactivarlo:</strong> Preferencias, "Share anonymous usage statistics". Desactivarlo detiene los pings de inmediato.</li>' +
+        '<li>Base jurídica: nuestro interés legítimo en entender el uso básico de la aplicación (art. 6(1)(f) del RGPD), con posibilidad de oponerte en cualquier momento.</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Compra de Premium (Polar)</h3>' +
+        '<p>El pago lo gestiona <strong>Polar</strong> como comerciante registrado. Polar recopila los datos necesarios para la venta (correo electrónico, país a efectos fiscales, datos de pago) conforme a <a href="https://polar.sh/legal/privacy" rel="noopener">su propia política de privacidad</a>. Nosotros nunca recibimos tus datos de pago; podemos ver información del pedido (tu correo y la clave de licencia) necesaria para el soporte y la prevención de abusos.</p>' +
+        '<h3><span class="num">3.3</span>Activación de la licencia</h3>' +
+        '<p>Cuando activas una clave Premium, la aplicación envía a Polar: la clave, el nombre de tu ordenador (para que <em>tú</em> reconozcas cuál de tus 3 plazas ocupa) y una huella de la máquina con hash unidireccional (para aplicar el límite de 3 ordenadores). Desactivar un ordenador libera la plaza y elimina esa activación. La huella es un hash: no te identifica personalmente y no puede vincularse a las estadísticas de uso anónimas.</p>' +
+        '<h3><span class="num">3.4</span>Prueba gratuita</h3>' +
+        '<p>La prueba de 7 días es totalmente local. Nada sobre ella se envía a ningún sitio.</p>' +
+        '<h3><span class="num">3.5</span>Comprobaciones de actualización</h3>' +
+        '<p>La aplicación se conecta a <strong>GitHub</strong>, donde se alojan las versiones, para buscar y descargar actualizaciones. Como en cualquier petición de internet, GitHub ve tu dirección IP y los metadatos habituales de la petición (se aplica la política de privacidad de GitHub). La aplicación no envía ningún identificador con estas peticiones.</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now playing"</h3>' +
+        '<p>Si la aplicación de escritorio de Discord se está ejecutando en tu ordenador, Sonara puede pasarle el título y el artista de la pista actual, para que tu perfil de Discord muestre lo que estás escuchando. Puedes desactivarlo en Sonara en cualquier momento: Preferencias, Sistema, "Show activity on Discord". Además pasa por tu propio cliente de Discord, así que también se aplican tus ajustes de privacidad de Discord (privacidad de actividad). Si Discord no se está ejecutando, no se comparte nada.</p>',
+      s4h: 'El sitio web',
+      s4b:
+        '<ul>' +
+        '<li>El sitio está alojado en <strong>GitHub Pages</strong>; GitHub procesa registros de servidor habituales (como direcciones IP) como alojamiento.</li>' +
+        '<li>Contamos las visitas con <strong>GoatCounter</strong>, un contador respetuoso con la privacidad y sin cookies, que no almacena identificadores personales y solo nos muestra cifras agregadas.</li>' +
+        '<li>El sitio no coloca cookies de publicidad ni de rastreo.</li>' +
+        '</ul>',
+      s5h: 'Lo que nunca hacemos',
+      s5b:
+        '<p>No recopilamos tus archivos ni tu historial de escucha, no te perfilamos, no mostramos anuncios y no vendemos ni compartimos datos con nadie más allá de los encargados nombrados arriba (Polar, Supabase, GitHub).</p>',
+      s6h: 'Cuánto tiempo se conservan los datos',
+      s6b:
+        '<ul>' +
+        '<li>Pings de uso anónimos: se conservan como estadística; no contienen nada que te identifique.</li>' +
+        '<li>Datos de pedidos y facturas en Polar: durante el tiempo que exijan las leyes fiscales y contables.</li>' +
+        '<li>Registros de activación: hasta que desactives el ordenador o la clave.</li>' +
+        '</ul>',
+      s7h: 'Tus derechos',
+      s7b:
+        '<p>Conforme al RGPD, puedes solicitar el acceso, la rectificación, la supresión, la limitación o la portabilidad de tus datos, y oponerte al tratamiento. Escribe a <span class="email-js" role="link" tabindex="0"></span>. Una nota honesta: las estadísticas de uso son anónimas, así que no podemos saber qué pings son "tuyos"; no hay nada que pudiéramos buscar o eliminar para una persona concreta. También puedes presentar una reclamación ante una autoridad de control: en Bulgaria es la Comisión para la Protección de Datos Personales (cpdp.bg), o la autoridad de tu propio país.</p>',
+      s8h: 'Cambios en esta política',
+      s8b:
+        '<p>Si una función futura empieza a enviar o tratar nuevos datos (por ejemplo, cuentas en línea opcionales), primero actualizaremos esta política y cambiaremos la fecha de entrada en vigor de arriba. Los cambios significativos se señalarán en el sitio web o en la aplicación.</p>',
+      s9h: 'Idioma',
+      s9b:
+        '<p>Esta política se ofrece en varios idiomas para tu comodidad. Si hay alguna diferencia entre las traducciones, la <strong>versión en inglés</strong> es la que se aplica legalmente.</p>' +
+        '<p class="contact">Contacto: <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Inicio',
+      footTerms: 'Condiciones de servicio',
+      footPrivacy: 'Política de privacidad'
+    },
+    fr: {
+      back: '&larr; Retour à l\'accueil',
+      title: 'Politique de confidentialité',
+      effLabel: 'Date d\'entrée en vigueur :',
+      effDate: '8 juillet 2026',
+      plainLabel: '&#9835; En bref',
+      plainList:
+        '<li>Ta musique reste la tienne. Sonara ne téléverse ni n\'analyse jamais tes fichiers, ta bibliothèque, tes playlists ou ton historique d\'écoute ; tout cela ne vit que sur ton ordinateur.</li>' +
+        '<li>Aucun compte n\'est nécessaire pour utiliser Sonara, pas même pour Premium.</li>' +
+        '<li>L\'application envoie un petit ping d\'utilisation anonyme une fois par jour (version de l\'app, version de Windows, langue et éléments similaires). Tu peux le désactiver à tout moment dans les réglages.</li>' +
+        '<li>Si tu achètes Premium, le paiement est géré par Polar ; nous ne voyons jamais les données de ta carte.</li>' +
+        '<li>Pas de publicité, pas de traqueurs, pas de vente de données. Jamais.</li>',
+      s1h: 'Qui est responsable',
+      s1b:
+        '<p>Le responsable du traitement décrit ici est <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), UIC 204535372, Bulgarie, l\'entreprise du créateur de Sonara, Tihomir Nyagolov. Contact : <span class="email-js" role="link" tabindex="0"></span>.</p>',
+      s2h: 'Le principe : le local d\'abord',
+      s2b:
+        '<p>Sonara est un lecteur de bureau pour tes propres fichiers musicaux. Ta bibliothèque, tes playlists, ton historique de lecture, tes notes, les paroles et tes réglages sont stockés <strong>uniquement sur ton ordinateur</strong> et ne sont jamais transmis à nous ni à qui que ce soit.</p>',
+      s3h: 'Ce que l\'application envoie, et quand',
+      s3b:
+        '<h3><span class="num">3.1</span>Statistiques d\'utilisation anonymes (peuvent être désactivées)</h3>' +
+        '<p>Une fois par jour, l\'application envoie un petit ping pour que nous puissions voir combien d\'installations sont actives et quelles versions et langues comptent le plus. Il contient : version de l\'app, canal de publication, architecture du processeur, version de Windows, type d\'installation (installateur ou portable), langue du système, la langue de l\'app que tu as choisie et un identifiant anonyme.</p>' +
+        '<ul>' +
+        '<li>L\'identifiant est dérivé par hachage à sens unique d\'un ID de la machine. Il ne peut pas être inversé pour t\'identifier, toi ou ton ordinateur, et il est délibérément conçu pour <strong>ne pas pouvoir être relié</strong> à ta licence ou à ton achat.</li>' +
+        '<li>Le ping ne contient aucun nom, aucun nom de fichier, aucune donnée musicale, aucun historique d\'écoute ni localisation, et ton adresse IP n\'est pas stockée avec les statistiques.</li>' +
+        '<li>Les données sont stockées sur des serveurs dans l\'<strong>UE</strong> (Supabase, région UE).</li>' +
+        '<li><strong>Le désactiver :</strong> Préférences, "Share anonymous usage statistics". Le désactiver arrête les pings immédiatement.</li>' +
+        '<li>Base légale : notre intérêt légitime à comprendre l\'utilisation de base de l\'application (art. 6(1)(f) du RGPD), avec possibilité de t\'y opposer à tout moment.</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Achat Premium (Polar)</h3>' +
+        '<p>Le paiement est géré par <strong>Polar</strong> en tant que revendeur officiel. Polar collecte les données nécessaires à la vente (e-mail, pays à des fins fiscales, données de paiement) conformément à <a href="https://polar.sh/legal/privacy" rel="noopener">sa propre politique de confidentialité</a>. Nous ne recevons jamais tes données de paiement ; nous pouvons voir les informations de commande (ton e-mail et la clé de licence) nécessaires au support et à la prévention des abus.</p>' +
+        '<h3><span class="num">3.3</span>Activation de la licence</h3>' +
+        '<p>Quand tu actives une clé Premium, l\'application envoie à Polar : la clé, le nom de ton ordinateur (pour que <em>toi</em> reconnaisses lequel de tes 3 emplacements il occupe) et une empreinte de la machine hachée à sens unique (pour appliquer la limite de 3 ordinateurs). Désactiver un ordinateur libère l\'emplacement et supprime cette activation. L\'empreinte est un hachage : elle ne t\'identifie pas personnellement et ne peut pas être reliée aux statistiques d\'utilisation anonymes.</p>' +
+        '<h3><span class="num">3.4</span>Essai gratuit</h3>' +
+        '<p>L\'essai de 7 jours est entièrement local. Rien à son sujet n\'est envoyé où que ce soit.</p>' +
+        '<h3><span class="num">3.5</span>Vérifications des mises à jour</h3>' +
+        '<p>L\'application contacte <strong>GitHub</strong>, où sont hébergées les versions, pour vérifier et télécharger les mises à jour. Comme pour toute requête internet, GitHub voit ton adresse IP et les métadonnées habituelles de la requête (la politique de confidentialité de GitHub s\'applique). L\'application n\'envoie aucun identifiant avec ces requêtes.</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now playing"</h3>' +
+        '<p>Si l\'application de bureau Discord est en cours d\'exécution sur ton ordinateur, Sonara peut lui transmettre le titre et l\'artiste de la piste en cours, afin que ton profil Discord montre ce que tu écoutes. Tu peux le désactiver dans Sonara à tout moment : Préférences, Système, "Show activity on Discord". Cela passe aussi par ton propre client Discord, donc tes réglages de confidentialité Discord (confidentialité de l\'activité) s\'appliquent également. Si Discord n\'est pas lancé, rien n\'est partagé.</p>',
+      s4h: 'Le site web',
+      s4b:
+        '<ul>' +
+        '<li>Le site est hébergé sur <strong>GitHub Pages</strong> ; GitHub traite en tant qu\'hébergeur des journaux serveur habituels (comme les adresses IP).</li>' +
+        '<li>Nous comptons les pages vues avec <strong>GoatCounter</strong>, un compteur respectueux de la vie privée et sans cookies, qui ne stocke aucun identifiant personnel et ne nous montre que des chiffres agrégés.</li>' +
+        '<li>Le site ne place aucun cookie publicitaire ni de suivi.</li>' +
+        '</ul>',
+      s5h: 'Ce que nous ne faisons jamais',
+      s5b:
+        '<p>Nous ne collectons ni tes fichiers ni ton historique d\'écoute, nous ne te profilons pas, nous n\'affichons pas de publicité et nous ne vendons ni ne partageons de données avec quiconque au-delà des sous-traitants nommés ci-dessus (Polar, Supabase, GitHub).</p>',
+      s6h: 'Combien de temps les données sont conservées',
+      s6b:
+        '<ul>' +
+        '<li>Pings d\'utilisation anonymes : conservés comme statistiques ; ils ne contiennent rien qui t\'identifie.</li>' +
+        '<li>Données de commande et de facturation chez Polar : aussi longtemps que l\'exigent les lois fiscales et comptables.</li>' +
+        '<li>Enregistrements d\'activation : jusqu\'à ce que tu désactives l\'ordinateur ou la clé.</li>' +
+        '</ul>',
+      s7h: 'Tes droits',
+      s7b:
+        '<p>En vertu du RGPD, tu peux demander l\'accès, la rectification, l\'effacement, la limitation ou la portabilité de tes données, et t\'opposer au traitement. Écris à <span class="email-js" role="link" tabindex="0"></span>. Une note honnête : les statistiques d\'utilisation sont anonymes, nous ne pouvons donc pas dire quels pings sont "les tiens" ; il n\'y a rien que nous pourrions rechercher ou supprimer pour une personne précise. Tu peux aussi déposer une réclamation auprès d\'une autorité de contrôle : en Bulgarie, c\'est la Commission pour la protection des données personnelles (cpdp.bg), ou l\'autorité de ton propre pays.</p>',
+      s8h: 'Modifications de cette politique',
+      s8b:
+        '<p>Si une future fonction commence à envoyer ou traiter de nouvelles données (par exemple des comptes en ligne optionnels), nous mettrons d\'abord à jour cette politique et changerons la date d\'entrée en vigueur ci-dessus. Les changements importants seront signalés sur le site web ou dans l\'application.</p>',
+      s9h: 'Langue',
+      s9b:
+        '<p>Cette politique t\'est proposée en plusieurs langues pour ta commodité. En cas de différence entre les traductions, c\'est la <strong>version anglaise</strong> qui fait foi juridiquement.</p>' +
+        '<p class="contact">Contact : <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Accueil',
+      footTerms: 'Conditions d\'utilisation',
+      footPrivacy: 'Politique de confidentialité'
+    },
+    ru: {
+      back: '&larr; На главную',
+      title: 'Политика конфиденциальности',
+      effLabel: 'Дата вступления в силу:',
+      effDate: '8 июля 2026 г.',
+      plainLabel: '&#9835; Вкратце',
+      plainList:
+        '<li>Твоя музыка остаётся твоей. Sonara никогда не загружает и не сканирует твои файлы, библиотеку, плейлисты или историю прослушивания; всё это находится только на твоём компьютере.</li>' +
+        '<li>Для использования Sonara не нужен аккаунт, даже для Premium.</li>' +
+        '<li>Приложение отправляет один небольшой анонимный пинг об использовании раз в день (версия приложения, версия Windows, язык и подобное). Ты можешь отключить его в настройках в любой момент.</li>' +
+        '<li>Если ты покупаешь Premium, оплату обрабатывает Polar; мы никогда не видим данные твоей карты.</li>' +
+        '<li>Без рекламы, без трекеров, без продажи данных. Никогда.</li>',
+      s1h: 'Кто отвечает',
+      s1b:
+        '<p>Контролёром данных для описанной здесь обработки является <strong>ArtSolver Ltd.</strong> (АртСолвър ЕООД), UIC 204535372, Болгария - компания создателя Sonara Тихомира Няголова. Контакт: <span class="email-js" role="link" tabindex="0"></span>.</p>',
+      s2h: 'Принцип: сначала локально',
+      s2b:
+        '<p>Sonara - это настольный плеер для твоих собственных музыкальных файлов. Твоя библиотека, плейлисты, история воспроизведения, оценки, тексты песен и настройки хранятся <strong>только на твоём компьютере</strong> и никогда не передаются нам или кому-либо ещё.</p>',
+      s3h: 'Что приложение отправляет и когда',
+      s3b:
+        '<h3><span class="num">3.1</span>Анонимная статистика использования (можно отключить)</h3>' +
+        '<p>Раз в день приложение отправляет один небольшой пинг, чтобы мы видели, сколько установок активно и какие версии и языки важнее всего. Он содержит: версию приложения, канал выпуска, архитектуру процессора, версию Windows, тип установки (установщик или портативная), системный язык, выбранный тобой язык приложения и анонимный идентификатор.</p>' +
+        '<ul>' +
+        '<li>Идентификатор получается односторонним хешированием из ID машины. Его нельзя обратить, чтобы идентифицировать тебя или твой компьютер, и он намеренно устроен так, что <strong>не может быть связан</strong> с твоей лицензией или покупкой.</li>' +
+        '<li>Пинг не содержит имён, имён файлов, музыкальных данных, истории прослушивания или местоположения, а твой IP-адрес не хранится вместе со статистикой.</li>' +
+        '<li>Данные хранятся на серверах в <strong>ЕС</strong> (Supabase, регион ЕС).</li>' +
+        '<li><strong>Отключение:</strong> Настройки, "Share anonymous usage statistics". Отключение сразу останавливает пинги.</li>' +
+        '<li>Правовое основание: наш законный интерес в понимании базового использования приложения (ст. 6(1)(f) GDPR), с возможностью возразить в любое время.</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Покупка Premium (Polar)</h3>' +
+        '<p>Оформление заказа осуществляет <strong>Polar</strong> как продавец записи. Polar собирает данные, необходимые для продажи (электронная почта, страна для налоговых целей, платёжные данные), в соответствии со <a href="https://polar.sh/legal/privacy" rel="noopener">своей политикой конфиденциальности</a>. Мы никогда не получаем твои платёжные данные; мы видим сведения о заказе (твою почту и лицензионный ключ), необходимые для поддержки и предотвращения злоупотреблений.</p>' +
+        '<h3><span class="num">3.3</span>Активация лицензии</h3>' +
+        '<p>Когда ты активируешь ключ Premium, приложение отправляет в Polar: ключ, имя твоего компьютера (чтобы <em>ты</em> мог узнать, какой из 3 слотов он занимает) и односторонне хешированный отпечаток машины (для соблюдения лимита в 3 компьютера). Деактивация компьютера освобождает слот и удаляет эту активацию. Отпечаток - это хеш: он не идентифицирует тебя лично и не может быть связан с анонимной статистикой использования.</p>' +
+        '<h3><span class="num">3.4</span>Бесплатный пробный период</h3>' +
+        '<p>7-дневный пробный период полностью локален. Ничего о нём никуда не отправляется.</p>' +
+        '<h3><span class="num">3.5</span>Проверки обновлений</h3>' +
+        '<p>Приложение обращается к <strong>GitHub</strong>, где размещены выпуски, чтобы проверять и загружать обновления. Как и при любом интернет-запросе, GitHub видит твой IP-адрес и обычные метаданные запроса (применяется политика конфиденциальности GitHub). Приложение не отправляет никаких идентификаторов с этими запросами.</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now playing"</h3>' +
+        '<p>Если настольное приложение Discord запущено на твоём компьютере, Sonara может передавать ему название и исполнителя текущего трека, чтобы твой профиль Discord показывал, что ты слушаешь. Ты можешь отключить это в Sonara в любое время: Настройки, Система, "Show activity on Discord". Это также проходит через твой собственный клиент Discord, поэтому применяются и твои настройки конфиденциальности Discord (конфиденциальность активности). Если Discord не запущен, ничего не передаётся.</p>',
+      s4h: 'Веб-сайт',
+      s4b:
+        '<ul>' +
+        '<li>Сайт размещён на <strong>GitHub Pages</strong>; GitHub как хостинг обрабатывает обычные серверные журналы (например, IP-адреса).</li>' +
+        '<li>Мы считаем просмотры страниц с помощью <strong>GoatCounter</strong> - счётчика, уважающего конфиденциальность и не использующего файлы cookie, который не хранит личных идентификаторов и показывает нам только сводные цифры.</li>' +
+        '<li>Сайт не устанавливает рекламных или отслеживающих файлов cookie.</li>' +
+        '</ul>',
+      s5h: 'Что мы никогда не делаем',
+      s5b:
+        '<p>Мы не собираем твои файлы или историю прослушивания, не составляем твой профиль, не показываем рекламу и не продаём и не передаём данные никому за пределами названных выше обработчиков (Polar, Supabase, GitHub).</p>',
+      s6h: 'Сколько хранятся данные',
+      s6b:
+        '<ul>' +
+        '<li>Анонимные пинги использования: хранятся как статистика; они не содержат ничего, что тебя идентифицирует.</li>' +
+        '<li>Данные о заказах и счетах в Polar: столько, сколько требуют налоговое и бухгалтерское законодательство.</li>' +
+        '<li>Записи об активации: пока ты не деактивируешь компьютер или ключ.</li>' +
+        '</ul>',
+      s7h: 'Твои права',
+      s7b:
+        '<p>Согласно GDPR ты можешь запросить доступ, исправление, удаление, ограничение или переносимость своих данных и возразить против обработки. Пиши на <span class="email-js" role="link" tabindex="0"></span>. Честное замечание: статистика использования анонимна, поэтому мы не можем определить, какие пинги "твои"; нет ничего, что мы могли бы найти или удалить для конкретного человека. Ты также можешь подать жалобу в надзорный орган: в Болгарии это Комиссия по защите персональных данных (cpdp.bg) или орган твоей собственной страны.</p>',
+      s8h: 'Изменения этой политики',
+      s8b:
+        '<p>Если будущая функция начнёт отправлять или обрабатывать новые данные (например, необязательные онлайн-аккаунты), мы сначала обновим эту политику и изменим дату вступления в силу выше. О существенных изменениях будет сообщено на сайте или в приложении.</p>',
+      s9h: 'Язык',
+      s9b:
+        '<p>Эта политика предоставляется на нескольких языках для твоего удобства. При наличии расхождений между переводами юридическую силу имеет <strong>английская версия</strong>.</p>' +
+        '<p class="contact">Контакт: <span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: 'Главная',
+      footTerms: 'Условия использования',
+      footPrivacy: 'Политика конфиденциальности'
+    },
+    zh: {
+      back: '&larr; 返回首页',
+      title: '隐私政策',
+      effLabel: '生效日期：',
+      effDate: '2026年7月8日',
+      plainLabel: '&#9835; 简要说明',
+      plainList:
+        '<li>你的音乐属于你。Sonara 绝不会上传或扫描你的文件、音乐库、播放列表或收听记录；这些都只保存在你的电脑上。</li>' +
+        '<li>使用 Sonara 无需账户，即使是 Premium 也不需要。</li>' +
+        '<li>应用每天发送一个小型匿名使用 ping（应用版本、Windows 版本、语言等）。你可以随时在设置中将其关闭。</li>' +
+        '<li>如果你购买 Premium，付款由 Polar 处理；我们绝不会看到你的银行卡信息。</li>' +
+        '<li>没有广告，没有跟踪器，绝不出售数据。永远不会。</li>',
+      s1h: '谁负责',
+      s1b:
+        '<p>此处所述处理的数据控制者是 <strong>ArtSolver Ltd.</strong>（АртСолвър ЕООД），UIC 204535372，保加利亚，即 Sonara 创作者 Tihomir Nyagolov 的公司。联系方式：<span class="email-js" role="link" tabindex="0"></span>。</p>',
+      s2h: '原则：本地优先',
+      s2b:
+        '<p>Sonara 是用于播放你自己音乐文件的桌面播放器。你的音乐库、播放列表、播放记录、评分、歌词和设置<strong>只保存在你的电脑上</strong>，绝不会传输给我们或任何其他人。</p>',
+      s3h: '应用会发送什么，以及何时发送',
+      s3b:
+        '<h3><span class="num">3.1</span>匿名使用统计（可关闭）</h3>' +
+        '<p>应用每天发送一个小型 ping，以便我们了解有多少安装处于活跃状态以及哪些版本和语言最重要。它包含：应用版本、发布渠道、处理器架构、Windows 版本、安装类型（安装程序或便携版）、系统语言、你所选择的应用语言以及一个匿名标识符。</p>' +
+        '<ul>' +
+        '<li>该标识符是通过对机器 ID 进行单向哈希得出的。它无法被还原以识别你或你的电脑，并且被特意设计为<strong>无法与</strong>你的许可证或购买<strong>关联</strong>。</li>' +
+        '<li>该 ping 不包含姓名、文件名、音乐数据、收听记录或位置，你的 IP 地址也不会与统计数据一起存储。</li>' +
+        '<li>数据存储在<strong>欧盟</strong>的服务器上（Supabase，欧盟区域）。</li>' +
+        '<li><strong>关闭方法：</strong>偏好设置，"Share anonymous usage statistics"。关闭后会立即停止发送 ping。</li>' +
+        '<li>法律依据：我们了解应用基本使用情况的合法利益（GDPR 第 6(1)(f) 条），你可以随时反对。</li>' +
+        '</ul>' +
+        '<h3><span class="num">3.2</span>Premium 购买（Polar）</h3>' +
+        '<p>结账由 <strong>Polar</strong> 作为登记商户运营。Polar 会根据<a href="https://polar.sh/legal/privacy" rel="noopener">其自身的隐私政策</a>收集销售所需的数据（电子邮件、用于税务的国家/地区、付款信息）。我们绝不会收到你的付款信息；我们可以看到用于支持和防止滥用所需的订单信息（你的电子邮件和许可证密钥）。</p>' +
+        '<h3><span class="num">3.3</span>许可证激活</h3>' +
+        '<p>当你激活 Premium 密钥时，应用会向 Polar 发送：密钥、你电脑的名称（以便<em>你</em>能识别它占用了你 3 个名额中的哪一个）以及经过单向哈希的机器指纹（用于执行 3 台电脑的限制）。停用某台电脑会释放该名额并移除该次激活。该指纹是一个哈希值：它不会识别你的个人身份，也无法与匿名使用统计关联。</p>' +
+        '<h3><span class="num">3.4</span>免费试用</h3>' +
+        '<p>7 天试用完全在本地进行。有关它的任何信息都不会发送到任何地方。</p>' +
+        '<h3><span class="num">3.5</span>更新检查</h3>' +
+        '<p>应用会联系托管版本的 <strong>GitHub</strong> 以检查并下载更新。与任何网络请求一样，GitHub 会看到你的 IP 地址和标准的请求元数据（适用 GitHub 的隐私政策）。应用不会随这些请求发送任何标识符。</p>' +
+        '<h3><span class="num">3.6</span>Discord "Now playing"</h3>' +
+        '<p>如果 Discord 桌面应用正在你的电脑上运行，Sonara 可以将当前曲目的标题和艺术家传递给它，以便你的 Discord 个人资料显示你正在收听的内容。你可以随时在 Sonara 中将其关闭：偏好设置、系统、"Show activity on Discord"。它还会经过你自己的 Discord 客户端，因此你的 Discord 隐私设置（活动隐私）同样适用。如果 Discord 未运行，则不会共享任何内容。</p>',
+      s4h: '本网站',
+      s4b:
+        '<ul>' +
+        '<li>本网站托管在 <strong>GitHub Pages</strong> 上；作为托管方，GitHub 会处理标准的服务器日志（如 IP 地址）。</li>' +
+        '<li>我们使用 <strong>GoatCounter</strong> 统计页面浏览量，这是一个尊重隐私、无 cookie 的计数器，不存储任何个人标识符，只向我们显示汇总数字。</li>' +
+        '<li>本网站不设置任何广告或跟踪 cookie。</li>' +
+        '</ul>',
+      s5h: '我们绝不会做的事',
+      s5b:
+        '<p>我们不会收集你的文件或收听记录，不会对你进行画像，不会展示广告，也不会向上述受托处理方（Polar、Supabase、GitHub）以外的任何人出售或共享数据。</p>',
+      s6h: '数据保留多久',
+      s6b:
+        '<ul>' +
+        '<li>匿名使用 ping：作为统计数据保留；不包含任何可识别你身份的内容。</li>' +
+        '<li>Polar 处的订单和发票数据：按照税务和会计法律的要求保留相应时长。</li>' +
+        '<li>激活记录：直到你停用该电脑或该密钥为止。</li>' +
+        '</ul>',
+      s7h: '你的权利',
+      s7b:
+        '<p>根据 GDPR，你可以请求访问、更正、删除、限制或转移你的数据，并反对处理。请写信至 <span class="email-js" role="link" tabindex="0"></span>。一个诚实的说明：使用统计是匿名的，因此我们无法分辨哪些 ping 是"你的"；没有任何内容是我们能够针对特定个人查找或删除的。你也可以向监管机构投诉：在保加利亚是个人数据保护委员会（cpdp.bg），或你自己国家/地区的机构。</p>',
+      s8h: '本政策的变更',
+      s8b:
+        '<p>如果未来的功能开始发送或处理新的数据（例如可选的在线账户），我们会先更新本政策并更改上方的生效日期。重大变更将在网站或应用中提示。</p>',
+      s9h: '语言',
+      s9b:
+        '<p>为方便起见，本政策提供多种语言版本。如各译文之间存在任何差异，以<strong>英文版本</strong>为法律准据。</p>' +
+        '<p class="contact">联系方式：<span class="email-js" role="link" tabindex="0"></span></p>',
+      footHome: '首页',
+      footTerms: '服务条款',
+      footPrivacy: '隐私政策'
+    }
+  }
+};
