@@ -1,7 +1,21 @@
-# update.json + revocations.json are machine-written (scripts/release.mjs and
-# scripts/generate-revocation-list.mjs) with LF endings; declare that canonical
-# so git on Windows (autocrlf) neither converts them nor warns "LF will be
-# replaced by CRLF". This file declares itself LF too, for the same reason.
-/.gitattributes text eol=lf
-/update.json text eol=lf
-/revocations.json text eol=lf
+# Canonical line endings for the whole site, declared once.
+#
+# Everything here is either machine-written (update.json by scripts/release.mjs,
+# revocations.json by scripts/generate-revocation-list.mjs, both LF) or edited by
+# hand on Windows, and all of it is served over HTTP where line endings mean
+# nothing. Naming only those two files left every other file to core.autocrlf's
+# per-file guess, so the working copy drifted apart - index.html ended up CRLF
+# while invite.html and the site-*.js files stayed LF - and any commit touching
+# an LF file warned "LF will be replaced by CRLF".
+#
+# Declaring LF for everything removes the guess: repo and working copy agree on
+# every machine, and that warning cannot come back. Nothing stored changes -
+# autocrlf already normalised the blobs to LF on the way in; this only fixes
+# what git writes back out on checkout.
+* text=auto eol=lf
+
+# Screenshots are binary. Keep the text filters away from them entirely.
+*.png binary
+*.webp binary
+*.jpg binary
+*.ico binary
