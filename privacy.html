@@ -16,6 +16,10 @@
   <script src="site-config.js"></script>
   <script src="site-lang.js"></script>
   <script src="legal-i18n.js"></script>
+  <!-- Shared single-source chrome: the brand lockup + the full home-style
+       nav and footer (site-chrome.js renders both into #site-nav / #site-footer). -->
+  <script src="site-brand.js"></script>
+  <script src="site-chrome.js"></script>
   <style>
     :root {
       --bg: #08091a;
@@ -101,15 +105,12 @@
 <body>
   <div class="site-background" aria-hidden="true"></div>
 
-  <div class="wrap">
-    <nav>
-      <a class="wordmark d" href="./">Sonara</a>
-      <a class="back" href="./" data-legal="back">&larr; Back to home</a>
-    </nav>
+  <div id="site-nav"></div>
 
+  <div class="wrap">
     <header class="page">
       <h1 class="d" data-legal="title">Privacy Policy</h1>
-      <p class="meta"><span data-legal="effLabel">Effective date:</span> <b data-legal="effDate">July 10, 2026</b> &middot; ArtSolver Ltd.</p>
+      <p class="meta"><span data-legal="effLabel">Effective date:</span> <b data-legal="effDate">July 22, 2026</b> &middot; ArtSolver Ltd.</p>
     </header>
 
     <div class="plain">
@@ -161,6 +162,8 @@
         <p>If the Discord desktop app is running on your computer, Sonara can pass the current track's title and artist to it, so your Discord profile shows what you are listening to. You can turn this off in Sonara at any time: Preferences, System, "Show activity on Discord". It also goes through your own Discord client, so your Discord privacy settings (Activity Privacy) apply as well. If Discord is not running, nothing is shared.</p>
         <h3><span class="num">3.7</span>Sonara account (optional)</h3>
         <p>You can use Sonara without an account. If you buy Premium or sign in, an account is created for your email address. For an account we store: your email, your entitlements (what your account owns, e.g. Premium), and - so you can see and manage the computers using your Premium (up to 3) - a one-way hashed device fingerprint and each computer's name as set in Windows (e.g. "DESKTOP-ABC"). Computer names are visible only to you, in the app. Removing a computer in the app frees its slot; deleting your account (email us) deletes all of the above. Account data and sign-in codes are handled on <strong>EU servers</strong> (Supabase, EU region) wherever in the world you use Sonara - outside the EU your data still gets the same EU-grade protection.</p>
+        <h3><span class="num">3.8</span>Invite a friend (optional)</h3>
+        <p>If you share your invite link, or redeem someone's invite code, we store the connection between the two accounts (who invited whom), your invite code, and each side's progress toward the reward. Your account nickname is shown to the person who invited you (and theirs to you). To keep the program fair, when a code is redeemed we check the same one-way hashed device fingerprint the account system already uses, to confirm the computer is new to Sonara; and until the listening goal is reached, the app reports the invited user's total listening minutes - a single number, never which tracks or files were played. Rewards (extra trial days, Notes or cosmetics) are stored with your account. All of this lives on the same <strong>EU servers</strong> as the account itself and is deleted together with your account.</p>
       </div>
     </section>
 
@@ -216,25 +219,9 @@
     </section>
   </div>
 
-  <footer>
-    <div class="lang-pick">
-      <select id="lang-select-legal" aria-label="Language">
-        <option value="en">English</option>
-        <option value="bg">&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Espa&#241;ol</option>
-        <option value="fr">Fran&#231;ais</option>
-        <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
-        <option value="zh">&#20013;&#25991;</option>
-      </select>
-    </div>
-    <div class="links">
-      <a href="./" data-legal="footHome">Home</a>
-      <a href="terms.html" data-legal="footTerms">Terms of Service</a>
-      <a href="privacy.html" data-legal="footPrivacy">Privacy Policy</a>
-    </div>
-    &copy; <span id="year"></span> ArtSolver Ltd. &middot; Sonara is created by Tihomir Nyagolov
-  </footer>
+  <!-- Global footer (single source): language picker + Home + Terms/Privacy +
+       ©/fine-print, shared with the invite page and future pages. -->
+  <div id="site-footer"></div>
 
   <script>
     // Legal-page painter - see terms.html for the full explanation. English is
@@ -267,7 +254,7 @@
         if (y) y.textContent = new Date().getFullYear();
       }
 
-      function applyLang(lang, persist) {
+      function applyLang(lang) {
         var t = (lang === 'en') ? EN : (dict[lang] || null);
         nodes.forEach(function (el) {
           var k = el.getAttribute('data-legal');
@@ -276,16 +263,15 @@
         });
         fillDynamic();
         document.documentElement.setAttribute('lang', lang);
-        var sel = document.getElementById('lang-select-legal');
-        if (sel) sel.value = lang;
-        if (persist) SonaraLang.save(lang);
       }
 
-      var sel = document.getElementById('lang-select-legal');
-      if (sel) sel.addEventListener('change', function () { applyLang(sel.value, true); });
+      // The shared chrome (site-chrome.js) owns the language PICKER + the
+      // global persistence; it fires `sonara:lang` when the visitor switches -
+      // repaint the legal content to match.
+      window.addEventListener('sonara:lang', function (e) { applyLang(e.detail); });
 
-      applyLang(SonaraLang.detect(), false);
-      SonaraLang.detectAsyncIp(function (byIp) { applyLang(byIp, false); });
+      applyLang(SonaraLang.detect());
+      SonaraLang.detectAsyncIp(function (byIp) { applyLang(byIp); });
     })();
   </script>
   <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->

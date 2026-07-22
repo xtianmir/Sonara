@@ -16,6 +16,10 @@
   <script src="site-config.js"></script>
   <script src="site-lang.js"></script>
   <script src="legal-i18n.js"></script>
+  <!-- Shared single-source chrome: the brand lockup + the full home-style
+       nav and footer (site-chrome.js renders both into #site-nav / #site-footer). -->
+  <script src="site-brand.js"></script>
+  <script src="site-chrome.js"></script>
   <style>
     :root {
       --bg: #08091a;
@@ -100,15 +104,12 @@
 <body>
   <div class="site-background" aria-hidden="true"></div>
 
-  <div class="wrap">
-    <nav>
-      <a class="wordmark d" href="./">Sonara</a>
-      <a class="back" href="./" data-legal="back">&larr; Back to home</a>
-    </nav>
+  <div id="site-nav"></div>
 
+  <div class="wrap">
     <header class="page">
       <h1 class="d" data-legal="title">Terms of Service</h1>
-      <p class="meta"><span data-legal="effLabel">Effective date:</span> <b data-legal="effDate">July 10, 2026</b> &middot; ArtSolver Ltd.</p>
+      <p class="meta"><span data-legal="effLabel">Effective date:</span> <b data-legal="effDate">July 22, 2026</b> &middot; ArtSolver Ltd.</p>
     </header>
 
     <div class="plain">
@@ -160,6 +161,7 @@
       <h2><span class="num">4.</span><span data-legal="s4h">Free trial</span></h2>
       <div data-legal="s4b">
         <p>Sonara offers an optional <strong>7-day Premium trial</strong>, one per computer. It requires no payment details and starts only when you choose to start it. When it ends, the app simply returns to the free version. Nothing is ever charged.</p>
+        <p>From time to time Sonara may run an <strong>invite-a-friend program</strong>: you share a personal invite link, and when an invited friend installs Sonara on a new computer, signs in and reaches a listening goal, both sides receive a reward (for example extra trial days, Notes or a cosmetic item). Rewards are a thank-you, not a currency: they have no cash value and cannot be transferred or sold, and one person and one computer can be counted as invited only once. We may pause, change or end the program (and its rewards) for future invites at any time, and we may withhold rewards obtained through fake accounts, virtual machines or other manipulation. Rewards already granted stay yours.</p>
       </div>
     </section>
 
@@ -235,25 +237,9 @@
     </section>
   </div>
 
-  <footer>
-    <div class="lang-pick">
-      <select id="lang-select-legal" aria-label="Language">
-        <option value="en">English</option>
-        <option value="bg">&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Espa&#241;ol</option>
-        <option value="fr">Fran&#231;ais</option>
-        <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
-        <option value="zh">&#20013;&#25991;</option>
-      </select>
-    </div>
-    <div class="links">
-      <a href="./" data-legal="footHome">Home</a>
-      <a href="terms.html" data-legal="footTerms">Terms of Service</a>
-      <a href="privacy.html" data-legal="footPrivacy">Privacy Policy</a>
-    </div>
-    &copy; <span id="year"></span> ArtSolver Ltd. &middot; Sonara is created by Tihomir Nyagolov
-  </footer>
+  <!-- Global footer (single source): language picker + Home + Terms/Privacy +
+       ©/fine-print, shared with the invite page and future pages. -->
+  <div id="site-footer"></div>
 
   <script>
     // Legal-page painter. English is the DOM default (authoritative, no-JS
@@ -287,7 +273,7 @@
         if (y) y.textContent = new Date().getFullYear();
       }
 
-      function applyLang(lang, persist) {
+      function applyLang(lang) {
         var t = (lang === 'en') ? EN : (dict[lang] || null);
         nodes.forEach(function (el) {
           var k = el.getAttribute('data-legal');
@@ -296,16 +282,15 @@
         });
         fillDynamic();
         document.documentElement.setAttribute('lang', lang);
-        var sel = document.getElementById('lang-select-legal');
-        if (sel) sel.value = lang;
-        if (persist) SonaraLang.save(lang);
       }
 
-      var sel = document.getElementById('lang-select-legal');
-      if (sel) sel.addEventListener('change', function () { applyLang(sel.value, true); });
+      // The shared chrome (site-chrome.js) owns the language PICKER + the
+      // global persistence; it fires `sonara:lang` when the visitor switches -
+      // repaint the legal content to match.
+      window.addEventListener('sonara:lang', function (e) { applyLang(e.detail); });
 
-      applyLang(SonaraLang.detect(), false);
-      SonaraLang.detectAsyncIp(function (byIp) { applyLang(byIp, false); });
+      applyLang(SonaraLang.detect());
+      SonaraLang.detectAsyncIp(function (byIp) { applyLang(byIp); });
     })();
   </script>
   <!-- GoatCounter: privacy-friendly, cookieless page analytics (no cookie banner needed). -->

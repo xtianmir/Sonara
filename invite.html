@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonara - you're invited</title>
+  <meta name="description" content="A friend invited you to Sonara - a fast, beautiful, local-first music player for Windows. Install, sign in, redeem the code." />
+  <meta name="robots" content="noindex" />
+  <!-- "Invite a friend" landing page (phase4b, 2026-07-21). The player's
+       referral panel links here with the personal code as ?c=CODE. It reuses
+       the site's shared, single-source chrome: site-brand.js (the ONE brand
+       lockup), site-downloads.js (the download links, always the latest
+       release), the shared site-chrome.js (nav + footer), plus site-config /
+       site-lang. Do
+       NOT hardcode a brand markup or a download URL here - use the data-*
+       hooks. See SITE-SETUP.md. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet" />
+  <script src="site-config.js"></script>
+  <script src="site-lang.js"></script>
+  <script src="site-brand.js"></script>
+  <script src="site-downloads.js"></script>
+  <script src="site-glow.js"></script>
+  <style>
+    :root {
+      --bg: #08091a;
+      --bg-card: #141737;
+      --bg-elevated: #1d2044;
+      --glass: rgba(24, 27, 60, 0.45);
+      --glass-strong: rgba(20, 23, 55, 0.72);
+      --glass-border: rgba(133, 145, 235, 0.16);
+      --blur-glass: blur(18px) saturate(1.15);
+      --border: #2b2f5c;
+      --chip-border: #383d6e;
+      --text: #c3c6e2;
+      --text-strong: #ffffff;
+      --text-secondary: #aab0dd;
+      --text-muted: #8489b8;
+      --text-faint: #666c9e;
+      --accent: #22D3A1;
+      --accent-violet: #8f66ff;
+      --on-accent: #04160b;
+      --glow-1: rgba(34, 211, 161, 0.17);
+      --glow-2: rgba(143, 102, 255, 0.15);
+      --font-sans: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+      --font-display: "Archivo Black", "Arial Black", sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font-sans);
+      line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    .site-background {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(circle at 50% -20%, var(--glow-1), transparent 40%),
+        radial-gradient(circle at 22% 24%, var(--glow-1), transparent 52%),
+        radial-gradient(circle at 80% 12%, var(--glow-2), transparent 46%),
+        radial-gradient(circle at 24% 86%, var(--glow-2), transparent 46%),
+        linear-gradient(180deg, #0b0d26 0%, #08091a 46%, #060714 100%);
+    }
+    .wrap { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    nav { display: flex; align-items: center; justify-content: center; padding: 26px 0 6px; }
+
+    /* ── Hero ── */
+    header { position: relative; z-index: 1; text-align: center; padding: 30px 0 8px; }
+    h1 { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; color: var(--text-strong); line-height: 1.08; font-size: clamp(30px, 5vw, 46px); }
+    .gift {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+      padding: 9px 18px; border-radius: 999px;
+      background: rgba(34, 211, 161, 0.12); border: 1px solid rgba(34, 211, 161, 0.35);
+      color: var(--accent); font-weight: 800; font-size: 14px;
+    }
+    .gift svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.9; }
+    .gift-wrap { margin-top: 26px; }
+    .sub { max-width: 480px; margin: 18px auto 0; color: var(--text-secondary); font-size: clamp(15px, 1.5vw, 17px); }
+
+    /* ── Download block ── */
+    .dl-block { text-align: center; margin-top: 28px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      border-radius: 999px; padding: 15px 30px; font-weight: 800; font-size: 15.5px; cursor: pointer;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { text-decoration: none; transform: translateY(-2px); filter: brightness(1.06); }
+    .btn-primary { background: var(--accent); color: var(--on-accent); }
+    .btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* The Download button's glossy glow (double gleam + hover contour glow +
+       cursor highlight) is the SHARED effect from site-glow.js, applied to
+       any [data-glow] button - so it looks identical everywhere on the site. */
+
+    .dl-more { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+    .dl-mini {
+      display: inline-block; padding: 6px 14px; border-radius: 999px;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      backdrop-filter: var(--blur-glass); -webkit-backdrop-filter: var(--blur-glass);
+      color: var(--text); font-size: 12.5px; font-weight: 800;
+      transition: transform 0.12s ease, filter 0.15s ease;
+    }
+    .dl-mini:hover { text-decoration: none; transform: translateY(-1px); filter: brightness(1.3); color: var(--text-strong); }
+    .cta-note { margin: 15px auto 0; color: var(--text-secondary); font-size: 13.5px; max-width: 440px; }
+    .cta-note b { color: var(--text-strong); font-weight: 800; }
+
+    /* ── Panels ── */
+    .card {
+      position: relative; z-index: 1; margin-top: 22px; padding: 24px;
+      background: var(--glass-strong); border: 1px solid var(--glass-border);
+      border-radius: 20px; backdrop-filter: var(--blur-glass); -webkit-backdrop-filter: var(--blur-glass);
+    }
+    .code-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .code-block { flex: 1; min-width: 180px; }
+    .code-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .code { font-family: var(--font-display); font-size: clamp(28px, 6vw, 38px); letter-spacing: 0.2em; color: var(--text-strong); }
+    .code--placeholder { color: var(--text-faint); letter-spacing: 0.28em; }
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 11px 18px; border-radius: 999px; border: 1px solid var(--glass-border);
+      background: rgba(133, 145, 235, 0.14); color: var(--text-strong);
+      font-family: var(--font-sans); font-size: 13.5px; font-weight: 800; transition: background 0.15s ease;
+    }
+    .copy-btn:hover { background: rgba(133, 145, 235, 0.24); }
+    .copy-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+
+    .cover {
+      margin: 4px 0 22px; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--bg-card);
+      box-shadow: 0 24px 70px -34px rgba(0,0,0,0.85), 0 0 70px -30px var(--glow-1);
+    }
+    .steps { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .steps li { display: flex; gap: 14px; align-items: flex-start; text-align: left; }
+    .step-num {
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(34, 211, 161, 0.14); border: 1px solid rgba(34, 211, 161, 0.4);
+      color: var(--accent); font-weight: 800; font-size: 14px;
+    }
+    .step-text strong { display: block; color: var(--text-strong); font-size: 15px; }
+    .step-text span { font-size: 13.5px; color: var(--text-secondary); }
+
+    /* ── Confetti (fires once the page is loaded + visible) ── */
+    .confetti-layer { position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden; }
+    .confetti-piece { position: fixed; top: 0; left: 0; width: 9px; height: 14px; will-change: transform, opacity; }
+
+    @media (max-width: 520px) { header { padding-top: 18px; } .card { padding: 20px; } }
+    @media (prefers-reduced-motion: reduce) { .glow-shine, .glow-bloom { animation: none; } }
+  </style>
+</head>
+<body>
+  <div class="site-background" aria-hidden="true"></div>
+
+  <!-- Shared full nav (home-style), rendered by site-chrome.js -->
+  <div id="site-nav"></div>
+
+  <div class="wrap">
+    <header>
+      <h1 data-inv="title">You're invited</h1>
+      <p class="sub" data-inv="sub">A friend invited you to Sonara - a fast, beautiful music player for Windows. Your own files, no ads.</p>
+
+      <div class="dl-block">
+        <a id="dl" class="btn btn-primary" data-glow data-dl="x64" href="#" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg>
+          <span data-inv="download">Download for Windows</span>
+        </a>
+        <div class="dl-more">
+          <a class="dl-mini" data-dl="arm64" href="#" rel="noopener" data-inv="arm64">ARM64 installer</a>
+          <a class="dl-mini" data-dl="portable-x64" href="#" rel="noopener" data-inv="portableX64">Portable x64</a>
+          <a class="dl-mini" data-dl="portable-arm64" href="#" rel="noopener" data-inv="portableArm64">Portable ARM64</a>
+        </div>
+        <p class="cta-note" data-inv="note"><b>Sonara is free</b> to download and keep. Want more? Unlock the advanced Premium features anytime - one payment, no subscription.</p>
+      </div>
+
+      <!-- The gift banner sits under the free/premium note (owner order
+           2026-07-21); the load celebration bursts from here. -->
+      <div class="gift-wrap">
+        <span class="gift" id="gift">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          <span data-inv="giftText">Your gift: a 14-day Premium trial</span>
+        </span>
+      </div>
+    </header>
+
+    <div class="card" id="code-card">
+      <div class="code-row">
+        <div class="code-block">
+          <div class="code-label" data-inv="codeLabel">Invite code</div>
+          <div class="code" id="code-value"></div>
+        </div>
+        <button type="button" class="copy-btn" id="copy-code">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="12" height="12" rx="2"/><path d="M15 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+          <span data-inv="copy">Copy code</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cover"><img src="Img - Cover.png" alt="Sonara player" width="1672" height="941" /></div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><div class="step-text"><strong data-inv="s1">Install Sonara</strong><span data-inv="s1d">Download above, run it and open the player.</span></div></li>
+        <li><span class="step-num">2</span><div class="step-text"><strong data-inv="s2">Sign in with your email</strong><span data-inv="s2d">In Preferences, continue with your email - a 6-digit code signs you in.</span></div></li>
+        <li><span class="step-num">3</span><div class="step-text"><strong data-inv="s3">Enter the invite code</strong><span data-inv="s3d">Your 14-day Premium trial starts right away. Listen for 30 minutes and your friend gets a gift too.</span></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="site-footer"></div>
+  <script src="site-chrome.js"></script>
+
+  <script>
+    // Mirrors the ACTIVE referral campaign (Supabase referral_campaigns
+    // wave-1). A future wave that changes the numbers edits this ONE object.
+    var INVITE = { friendDays: 14, minutes: 30 };
+
+    // ── Invite-page i18n (same 7 locales as the player + site) ─────────────
+    var I18N = {
+      en: {
+        title: "You're invited", giftText: 'Your gift: a {d}-day Premium trial',
+        sub: 'A friend invited you to Sonara - a fast, beautiful music player for Windows. Your own files, no ads.',
+        download: 'Download for Windows', arm64: 'ARM64 installer', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara is free</b> to download and keep. Want more? Unlock the advanced Premium features anytime - one payment, no subscription.',
+        codeLabel: 'Invite code', copy: 'Copy code', copied: 'Copied!',
+        s1: 'Install Sonara', s1d: 'Download above, run it and open the player.',
+        s2: 'Sign in with your email', s2d: 'In Preferences, continue with your email - a 6-digit code signs you in.',
+        s3: 'Enter the invite code', s3d: 'Your {d}-day Premium trial starts right away. Listen for {m} minutes and your friend gets a gift too.'
+      },
+      bg: {
+        title: 'Поканен си', giftText: 'Твоят подарък: {d}-дневен Premium пробен период',
+        sub: 'Приятел те покани в Sonara - бърз и красив музикален плеър за Windows. Твоите файлове, без реклами.',
+        download: 'Изтегли за Windows', arm64: 'ARM64 инсталатор', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara е безплатен</b> за сваляне и ползване. Искаш повече? Отключи разширените Premium функции когато решиш - еднократно плащане, без абонамент.',
+        codeLabel: 'Код за покана', copy: 'Копирай кода', copied: 'Копирано!',
+        s1: 'Инсталирай Sonara', s1d: 'Изтегли отгоре, стартирай и отвори плеъра.',
+        s2: 'Влез с имейла си', s2d: 'В Preferences продължи с имейл - 6-цифрен код те вписва.',
+        s3: 'Въведи кода за покана', s3d: 'Твоят {d}-дневен Premium пробен период започва веднага. Послушай {m} минути и приятелят ти също получава подарък.'
+      },
+      de: {
+        title: 'Du bist eingeladen', giftText: 'Dein Geschenk: eine {d}-tägige Premium-Testzeit',
+        sub: 'Ein Freund hat dich zu Sonara eingeladen - einem schnellen, schönen Musikplayer für Windows. Deine Dateien, keine Werbung.',
+        download: 'Für Windows herunterladen', arm64: 'ARM64-Installer', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara ist kostenlos</b> zum Herunterladen und Behalten. Mehr gefällig? Schalte die erweiterten Premium-Funktionen jederzeit frei - einmalige Zahlung, kein Abo.',
+        codeLabel: 'Einladungscode', copy: 'Code kopieren', copied: 'Kopiert!',
+        s1: 'Sonara installieren', s1d: 'Oben herunterladen, starten und den Player öffnen.',
+        s2: 'Mit deiner E-Mail anmelden', s2d: 'In den Einstellungen mit E-Mail fortfahren - ein 6-stelliger Code meldet dich an.',
+        s3: 'Einladungscode eingeben', s3d: 'Deine {d}-tägige Premium-Testzeit startet sofort. Höre {m} Minuten und dein Freund bekommt auch ein Geschenk.'
+      },
+      es: {
+        title: 'Estás invitado', giftText: 'Tu regalo: una prueba Premium de {d} días',
+        sub: 'Un amigo te invitó a Sonara - un reproductor de música rápido y bonito para Windows. Tus archivos, sin anuncios.',
+        download: 'Descargar para Windows', arm64: 'Instalador ARM64', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara es gratis</b> para descargar y quedártelo. ¿Quieres más? Desbloquea las funciones Premium avanzadas cuando quieras - un solo pago, sin suscripción.',
+        codeLabel: 'Código de invitación', copy: 'Copiar código', copied: '¡Copiado!',
+        s1: 'Instala Sonara', s1d: 'Descarga arriba, ejecútalo y abre el reproductor.',
+        s2: 'Inicia sesión con tu correo', s2d: 'En Preferencias, continúa con tu correo - un código de 6 dígitos te da acceso.',
+        s3: 'Introduce el código de invitación', s3d: 'Tu prueba Premium de {d} días empieza al momento. Escucha {m} minutos y tu amigo también recibe un regalo.'
+      },
+      fr: {
+        title: 'Vous êtes invité', giftText: 'Votre cadeau : un essai Premium de {d} jours',
+        sub: 'Un ami vous a invité sur Sonara - un lecteur de musique rapide et élégant pour Windows. Vos fichiers, sans publicité.',
+        download: 'Télécharger pour Windows', arm64: 'Installateur ARM64', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara est gratuit</b> à télécharger et à garder. Envie de plus ? Débloquez les fonctions Premium avancées quand vous voulez - un seul paiement, sans abonnement.',
+        codeLabel: "Code d'invitation", copy: 'Copier le code', copied: 'Copié !',
+        s1: 'Installez Sonara', s1d: 'Téléchargez ci-dessus, lancez-le et ouvrez le lecteur.',
+        s2: 'Connectez-vous avec votre e-mail', s2d: 'Dans les Préférences, continuez avec votre e-mail - un code à 6 chiffres vous connecte.',
+        s3: "Saisissez le code d'invitation", s3d: 'Votre essai Premium de {d} jours démarre aussitôt. Écoutez {m} minutes et votre ami reçoit aussi un cadeau.'
+      },
+      ru: {
+        title: 'Вас пригласили', giftText: 'Ваш подарок: пробный Premium на {d} дней',
+        sub: 'Друг пригласил вас в Sonara - быстрый и красивый музыкальный плеер для Windows. Ваши файлы, без рекламы.',
+        download: 'Скачать для Windows', arm64: 'Установщик ARM64', portableX64: 'Portable x64', portableArm64: 'Portable ARM64',
+        note: '<b>Sonara бесплатен</b> - скачивайте и пользуйтесь. Хотите больше? Откройте расширенные Premium-функции когда угодно - разовая оплата, без подписки.',
+        codeLabel: 'Код приглашения', copy: 'Скопировать код', copied: 'Скопировано!',
+        s1: 'Установите Sonara', s1d: 'Скачайте выше, запустите и откройте плеер.',
+        s2: 'Войдите по электронной почте', s2d: 'В настройках продолжите с почтой - 6-значный код выполнит вход.',
+        s3: 'Введите код приглашения', s3d: 'Ваш пробный Premium на {d} дней начнётся сразу. Послушайте {m} минут - и ваш друг тоже получит подарок.'
+      },
+      zh: {
+        title: '你被邀请了', giftText: '你的礼物：{d} 天 Premium 试用',
+        sub: '好友邀请你加入 Sonara - 一款快速、精美的 Windows 音乐播放器。播放你自己的文件，没有广告。',
+        download: '下载 Windows 版', arm64: 'ARM64 安装程序', portableX64: '便携版 x64', portableArm64: '便携版 ARM64',
+        note: '<b>Sonara 免费</b>下载、永久使用。想要更多？随时解锁进阶 Premium 功能 - 一次付费，无需订阅。',
+        codeLabel: '邀请码', copy: '复制邀请码', copied: '已复制！',
+        s1: '安装 Sonara', s1d: '在上方下载、运行并打开播放器。',
+        s2: '用邮箱登录', s2d: '在偏好设置中用邮箱继续 - 输入 6 位验证码即可登录。',
+        s3: '输入邀请码', s3d: '你的 {d} 天 Premium 试用立即开始。收听 {m} 分钟，你的好友也会收到礼物。'
+      }
+    };
+
+    function fmt(s) { return String(s).replace('{d}', INVITE.friendDays).replace('{m}', INVITE.minutes); }
+    var current = (window.SonaraLang && SonaraLang.detect()) || 'en';
+
+    function applyLang(lang) {
+      current = I18N[lang] ? lang : 'en';
+      var d = I18N[current];
+      document.documentElement.lang = current;
+      document.querySelectorAll('[data-inv]').forEach(function (el) {
+        var k = el.getAttribute('data-inv');
+        if (d[k] == null) return;
+        // The note carries <b>; everything else is plain text.
+        if (k === 'note') el.innerHTML = fmt(d[k]); else el.textContent = fmt(d[k]);
+      });
+    }
+    applyLang(current);
+    if (window.SonaraLang) SonaraLang.detectAsyncIp(function (l) { if (I18N[l]) applyLang(l); });
+    // Follow the global language when the shared footer's picker changes it.
+    window.addEventListener('sonara:lang', function (e) { applyLang(e.detail); });
+    window.addEventListener('storage', function (e) {
+      if (e.key === (window.SonaraLang && SonaraLang.STORAGE_KEY) && e.newValue) applyLang(e.newValue);
+    });
+
+    // ── The invite code from the URL ───────────────────────────────────────
+    // The card is ALWAYS shown so the page never looks like it is missing a
+    // section: a real ?c= code fills it in with a working Copy button; opening
+    // the page directly (no code) shows a muted placeholder instead.
+    var code = (location.search.match(/[?&]c=([A-Za-z0-9]{4,10})/) || [])[1] || '';
+    var codeValueEl = document.getElementById('code-value');
+    var cbtn = document.getElementById('copy-code');
+    if (code) {
+      code = code.toUpperCase();
+      codeValueEl.textContent = code;
+      cbtn.addEventListener('click', function () {
+        var label = cbtn.querySelector('[data-inv="copy"]');
+        var done = function () {
+          label.textContent = I18N[current].copied;
+          setTimeout(function () { label.textContent = fmt(I18N[current].copy); }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () {});
+      });
+    } else {
+      codeValueEl.textContent = '••••••';
+      codeValueEl.classList.add('code--placeholder');
+      cbtn.hidden = true;
+    }
+
+    // ── Confetti celebration: natural, physics-based paper that bursts up
+    //    from the gift banner and flutters down (gravity + drag + sway +
+    //    tumble). It fires ONCE, and only when the banner sits in the
+    //    comfortable middle "safe zone" of the viewport AND the page is loaded
+    //    + the tab is visible - so the visitor actually sees it wherever they
+    //    have scrolled, never half-off an edge. ───────────────────────────
+    function fireConfetti(origin) {
+      var colors = ['#22D3A1', '#8f66ff', '#f7c14b', '#ff8fa3', '#6ec1ff', '#ffffff'];
+      var r = origin.getBoundingClientRect();
+      var ox = r.left + r.width / 2, oy = r.top + r.height / 2;
+      var layer = document.createElement('div');
+      layer.className = 'confetti-layer';
+      document.body.appendChild(layer);
+      var N = 130, pieces = [];
+      for (var i = 0; i < N; i++) {
+        var el = document.createElement('span');
+        el.className = 'confetti-piece';
+        var round = i % 4 === 0;
+        var w = 6 + Math.random() * 6, h = round ? w : 9 + Math.random() * 8;
+        el.style.width = w + 'px'; el.style.height = h + 'px';
+        el.style.background = colors[i % colors.length];
+        if (round) el.style.borderRadius = '50%';
+        layer.appendChild(el);
+        var ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.15; // fan upward
+        var speed = 5 + Math.random() * 9;
+        pieces.push({
+          el: el, x: ox, y: oy,
+          vx: Math.cos(ang) * speed + (Math.random() - 0.5) * 2,
+          vy: Math.sin(ang) * speed - Math.random() * 4,
+          rot: Math.random() * 360, vrot: (Math.random() - 0.5) * 22,
+          sway: Math.random() * Math.PI * 2, swayAmp: 0.4 + Math.random() * 0.9
+        });
+      }
+      var G = 0.28, DRAG = 0.992, start = performance.now(), last = start, LIFE = 3600;
+      function frame(now) {
+        var dt = Math.min(32, now - last) / 16.67; last = now;
+        var t = now - start, fade = t > LIFE - 900 ? Math.max(0, (LIFE - t) / 900) : 1, alive = 0;
+        for (var j = 0; j < pieces.length; j++) {
+          var p = pieces[j];
+          p.vy += G * dt; p.vx *= Math.pow(DRAG, dt); p.vy *= Math.pow(DRAG, dt);
+          p.sway += 0.1 * dt;
+          p.x += (p.vx + Math.sin(p.sway) * p.swayAmp) * dt;
+          p.y += p.vy * dt;
+          p.rot += p.vrot * dt;
+          p.el.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px) rotate(' + p.rot + 'deg)';
+          p.el.style.opacity = fade;
+          if (p.y < window.innerHeight + 60 && fade > 0) alive++;
+        }
+        if (t < LIFE && alive > 0) requestAnimationFrame(frame);
+        else layer.remove();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    (function () {
+      var gift = document.getElementById('gift');
+      if (!gift) return;
+      var fired = false;
+      function tryFire() {
+        if (fired || document.visibilityState !== 'visible') return;
+        fired = true;
+        setTimeout(function () { fireConfetti(gift); }, 160);
+      }
+      function arm() {
+        if (fired) return;
+        // Fire only when the gift is comfortably inside the middle band of the
+        // viewport (root shrunk 18% top / 22% bottom = the safe zone).
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            for (var k = 0; k < entries.length; k++) {
+              if (entries[k].isIntersecting) { io.disconnect(); tryFire(); break; }
+            }
+          }, { threshold: 0.9, rootMargin: '-18% 0px -22% 0px' });
+          io.observe(gift);
+        } else { tryFire(); }
+      }
+      function whenVisible(fn) {
+        if (document.visibilityState === 'visible') fn();
+        else document.addEventListener('visibilitychange', function h() {
+          if (document.visibilityState === 'visible') { document.removeEventListener('visibilitychange', h); fn(); }
+        });
+      }
+      // Wait for FULL load (all images painted), then arm the safe-zone trigger.
+      if (document.readyState === 'complete') whenVisible(arm);
+      else window.addEventListener('load', function () { whenVisible(arm); });
+    })();
+  </script>
+</body>
+</html>

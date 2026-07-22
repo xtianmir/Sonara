@@ -21,6 +21,12 @@
   <!-- Shared cross-page config + language engine (single sources of truth). -->
   <script src="site-config.js"></script>
   <script src="site-lang.js"></script>
+  <!-- Shared single-source chrome: the brand lockup (site-brand.js) and the
+       download links, always the latest release (site-downloads.js). Same
+       files every page uses, so a change lands in ONE place. -->
+  <script src="site-brand.js"></script>
+  <script src="site-downloads.js"></script>
+  <script src="site-glow.js"></script>
   <style>
     :root {
       --bg: #08091a;
@@ -481,10 +487,9 @@
 
   <div class="wrap">
     <nav>
-      <a class="brand" href="./" aria-label="Sonara home">
-        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="brand-name">Sonara</span>
-      </a>
+      <!-- Brand lockup rendered by site-brand.js (the ONE canonical mark +
+           wordmark, aligned in one place). -->
+      <a data-brand href="./" aria-label="Sonara home"></a>
       <span class="links">
         <a href="#features">Features</a>
         <a href="#pricing">Free &amp; Premium</a>
@@ -533,16 +538,16 @@
       </div>
       <div class="hero-actions">
         <div class="cta-row">
-          <a id="dl-x64" class="btn btn-primary" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+          <a id="dl-x64" class="btn btn-primary" data-glow data-dl="x64" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
           <a class="btn btn-ghost" href="#pricing">See Free &amp; Premium</a>
         </div>
         <div class="dl-more">
-          <a id="dl-arm64" class="dl-mini" href="#" rel="noopener" title="Installer for Snapdragon / ARM laptops.">ARM64 installer</a>
-          <a id="dl-portable-x64" class="dl-mini" href="#" rel="noopener" title="Unzip and play, no install.">Portable x64</a>
-          <a id="dl-portable-arm64" class="dl-mini" href="#" rel="noopener" title="Portable zip for ARM laptops.">Portable ARM64</a>
+          <a id="dl-arm64" class="dl-mini" data-dl="arm64" href="#" rel="noopener" title="Installer for Snapdragon / ARM laptops.">ARM64 installer</a>
+          <a id="dl-portable-x64" class="dl-mini" data-dl="portable-x64" href="#" rel="noopener" title="Unzip and play, no install.">Portable x64</a>
+          <a id="dl-portable-arm64" class="dl-mini" data-dl="portable-arm64" href="#" rel="noopener" title="Portable zip for ARM laptops.">Portable ARM64</a>
         </div>
         <div class="dl-notes">
-          <a id="dl-all" class="dl-all-link" href="#" rel="noopener">All versions and release notes on GitHub</a>
+          <a id="dl-all" class="dl-all-link" data-dl="releases" href="#" rel="noopener">All versions and release notes on GitHub</a>
           <p class="cta-note">Free forever. Premium features unlock with a one-time license.</p>
         </div>
       </div>
@@ -670,7 +675,7 @@
             <li><span class="tick">✓</span>Media keys, hotkeys, Discord presence and touch-friendly controls</li>
             <li><span class="tick">✓</span>Likes, playlists, queue basics and quick copy from the playlist</li>
           </ul>
-          <a class="btn btn-ghost" id="dl-free" href="#" rel="noopener">Download free</a>
+          <a class="btn btn-ghost" id="dl-free" data-dl="x64" href="#" rel="noopener">Download free</a>
         </div>
         <!-- #premium lives on the CARD, not the section: the player's
              "Get Premium" links open ...#premium and should land on the
@@ -786,7 +791,7 @@
   <section class="endcta">
     <div class="wrap">
       <h2 class="d">You can't scroll forever. Better go listen.</h2>
-      <a id="dl-cta" class="btn btn-primary" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+      <a id="dl-cta" class="btn btn-primary" data-glow data-dl="x64" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
     </div>
   </section>
 
@@ -843,7 +848,7 @@
         </div>
       </div>
       <div class="legal">
-        <p>© <span id="year"></span> Tihomir Nyagolov</p>
+        <p>© <span id="year"></span> ArtSolver Ltd. &middot; <span class="credit">Sonara is created by Tihomir Nyagolov</span></p>
         <!-- Legal pages (added 2026-07-07). Labels stay English for now; i18n
              keys pending wording approval - see .work/Legal/LEGAL-PLAN.md. -->
         <p class="legal-links"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></p>
@@ -854,7 +859,11 @@
 
   <script>
     // ── Single place to point the site at the repo ──────────────────────
-    var GH = 'xtianmir/Sonara';
+    // The DOWNLOAD links are globalized in site-downloads.js (it owns the repo
+    // + the artifact matching and fills every [data-dl] element with the
+    // latest release). Read the repo from there so there is ONE source; fall
+    // back only if that script somehow didn't load.
+    var GH = (window.SonaraDownloads && window.SonaraDownloads.GH) || 'xtianmir/Sonara';
     var PREMIUM_URL = 'https://buy.polar.sh/polar_cl_lkgmJowx2np3ZeKbyIBISpUMdNiSJIH39BFbb0Riuy6';
     var SUPPORT_URL = 'https://buy.polar.sh/polar_cl_2RegxENvkIFmYygTu5Ymg6BEGmprzqg53GWEw0E5IDY';
 
@@ -872,7 +881,11 @@
     var repoPage = 'https://github.com/' + GH;
     var releasesAll = repoPage + '/releases';
     var discussionsPage = repoPage + '/discussions';
-    ['dl-x64', 'dl-arm64', 'dl-portable-x64', 'dl-portable-arm64', 'dl-all', 'dl-free', 'foot-releases', 'dl-cta', 'foot-download'].forEach(function (id) {
+    // Download links (dl-x64/dl-arm64/dl-portable-*/dl-all/dl-free/dl-cta) are
+    // handled by site-downloads.js via their data-dl attributes - it sets a
+    // releases-page fallback and upgrades to the direct asset URL. Only the
+    // plain "Download"/"Releases" footer/nav links (no data-dl) are wired here.
+    ['foot-releases', 'foot-download'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.href = releasesPage;
     });
@@ -1018,51 +1031,19 @@
       document.fonts.ready.then(function () { requestAnimationFrame(realignAnchor); });
     }
 
-    // Resolve direct download links from the latest release so the primary
-    // button downloads immediately (falls back to the releases page if the
-    // API is unreachable or the repo isn't public yet).
-    if (GH !== 'OWNER/REPO') {
-      fetch('https://api.github.com/repos/' + GH + '/releases/latest')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (rel) {
-          if (!rel || !rel.assets) return;
-          function assetUrl(re) {
-            var a = rel.assets.find(function (x) { return re.test(x.name); });
-            return a ? a.browser_download_url : null;
-          }
-          var x64 = assetUrl(/Setup.*x64\.exe$/i);
-          if (x64) {
-            var btn = document.getElementById('dl-x64');
-            btn.href = x64;
-            var free = document.getElementById('dl-free');
-            if (free) free.href = x64;
-            var cta = document.getElementById('dl-cta');
-            if (cta) cta.href = x64;
-          }
-          // Hero "More downloads" row: direct links for the other three
-          // artifacts. Anything not found keeps its releases-page fallback.
-          // (Artifact names per package.json build config:
-          //  Sonara-Setup-<v>-<arch>.exe / Sonara-<v>-win-<arch>-portable.zip)
-          [['dl-arm64', /Setup.*arm64\.exe$/i],
-           ['dl-portable-x64', /win-x64-portable\.zip$/i],
-           ['dl-portable-arm64', /win-arm64-portable\.zip$/i]].forEach(function (pair) {
-            var url = assetUrl(pair[1]);
-            var el = document.getElementById(pair[0]);
-            if (el && url) el.href = url;
-          });
-          // The version lives in the pill above the title, NOT on the button
-          // (keep buttons simple - user decision 2026-07-03). Tag v0.86.1-beta
-          // renders as "Public beta v0.86.1".
-          if (rel.tag_name) {
-            window.__relTag = rel.tag_name.replace(/-beta$/, '');
-            if (window.__renderPill) window.__renderPill();
-            // The longer pill text can rewrap on narrow windows and shift
-            // layout - re-align the anchor once it settles.
-            requestAnimationFrame(realignAnchor);
-          }
-        })
-        .catch(function () {});
-    }
+    // The download links are resolved by site-downloads.js (single source).
+    // It broadcasts the resolved release; we only use it here to render the
+    // version pill above the hero title (buttons stay simple - user decision
+    // 2026-07-03). Tag v0.86.1-beta renders as "Public beta v0.86.1".
+    window.addEventListener('sonara:release', function (e) {
+      var tag = e && e.detail && e.detail.tag;
+      if (!tag) return;
+      window.__relTag = tag.replace(/-beta$/, '');
+      if (window.__renderPill) window.__renderPill();
+      // The longer pill text can rewrap on narrow windows and shift layout -
+      // re-align the anchor once it settles.
+      requestAnimationFrame(realignAnchor);
+    });
   </script>
   <script>
     // ── Site i18n: the player's 7 locales (en/bg/de/es/fr/ru/zh).
@@ -1178,6 +1159,7 @@
       'fo.dl': 'Download',
       'legal.terms': 'Terms of Service',
       'legal.privacy': 'Privacy Policy',
+      'legal.credit': 'Sonara is created by Tihomir Nyagolov',
       'legal.fine': 'Sonara is provided as-is, without warranty. The free version is free to use; Premium features need a valid license. Anonymous usage statistics are on by default and can be turned off in Preferences. Your music library and listening history are never sent anywhere - they stay strictly local on your computer.'
     };
     I18N.bg = {
@@ -1288,6 +1270,7 @@
       'fo.dl': 'Изтегли',
       'legal.terms': 'Общи условия',
       'legal.privacy': 'Политика за поверителност',
+      'legal.credit': 'Sonara е създадена от Tihomir Nyagolov',
       'legal.fine': 'Sonara се предоставя както си е, без гаранция. Безплатната версия е свободна за ползване; Premium функциите изискват валиден лиценз. Анонимните статистики за ползване са включени по подразбиране и могат да се изключат от предпочитанията. Музикалната ти библиотека и историята на слушане никога не се изпращат никъде - остават строго локални на твоя компютър.'
     };
     I18N.de = {
@@ -1398,6 +1381,7 @@
       'fo.dl': 'Download',
       'legal.terms': 'Nutzungsbedingungen',
       'legal.privacy': 'Datenschutzerklärung',
+      'legal.credit': 'Sonara wurde erstellt von Tihomir Nyagolov',
       'legal.fine': 'Sonara wird bereitgestellt wie es ist, ohne Gewähr. Die kostenlose Version ist frei nutzbar; Premium-Funktionen brauchen eine gültige Lizenz. Anonyme Nutzungsstatistiken sind standardmäßig aktiv und lassen sich in den Einstellungen abschalten. Deine Musikbibliothek und dein Hörverlauf werden nirgendwohin gesendet - sie bleiben strikt lokal auf deinem Computer.'
     };
     I18N.es = {
@@ -1508,6 +1492,7 @@
       'fo.dl': 'Descargar',
       'legal.terms': 'Condiciones de servicio',
       'legal.privacy': 'Política de privacidad',
+      'legal.credit': 'Sonara está creado por Tihomir Nyagolov',
       'legal.fine': 'Sonara se ofrece tal cual, sin garantía. La versión gratuita es de uso libre; las funciones Premium requieren una licencia válida. Las estadísticas anónimas de uso están activadas por defecto y pueden desactivarse en Preferencias. Tu biblioteca musical y tu historial de escucha nunca se envían a ningún sitio - permanecen estrictamente locales en tu equipo.'
     };
     I18N.fr = {
@@ -1618,6 +1603,7 @@
       'fo.dl': 'Télécharger',
       'legal.terms': "Conditions d'utilisation",
       'legal.privacy': 'Politique de confidentialité',
+      'legal.credit': 'Sonara est créé par Tihomir Nyagolov',
       'legal.fine': "Sonara est fourni tel quel, sans garantie. La version gratuite est libre d'utilisation ; les fonctions Premium nécessitent une licence valide. Les statistiques anonymes d'utilisation sont activées par défaut et peuvent être désactivées dans les Préférences. Votre bibliothèque musicale et votre historique d'écoute ne sont jamais envoyés nulle part - ils restent strictement locaux sur votre ordinateur."
     };
     I18N.ru = {
@@ -1728,6 +1714,7 @@
       'fo.dl': 'Скачать',
       'legal.terms': 'Условия использования',
       'legal.privacy': 'Политика конфиденциальности',
+      'legal.credit': 'Sonara создан Tihomir Nyagolov',
       'legal.fine': 'Sonara предоставляется как есть, без гарантий. Бесплатная версия свободна для использования; Premium-функции требуют действующей лицензии. Анонимная статистика включена по умолчанию и отключается в настройках. Ваша библиотека и история прослушивания никуда не отправляются - они остаются строго локально на вашем компьютере.'
     };
     I18N.zh = {
@@ -1838,6 +1825,7 @@
       'fo.dl': '下载',
       'legal.terms': '服务条款',
       'legal.privacy': '隐私政策',
+      'legal.credit': 'Sonara 由 Tihomir Nyagolov 创作',
       'legal.fine': 'Sonara 按现状提供，不含任何保证。免费版可自由使用；Premium 功能需要有效许可证。匿名使用统计默认开启，可在偏好设置中关闭。你的音乐库与收听记录绝不会被发送到任何地方 - 它们严格保留在你的电脑本地。'
     };
 
@@ -1956,6 +1944,7 @@
         setAll('footer .tagline', 'fo.tag');
         setAll('.legal-links a[href="terms.html"]', 'legal.terms');
         setAll('.legal-links a[href="privacy.html"]', 'legal.privacy');
+        setAll('.legal .credit', 'legal.credit');
         setAll('.legal .fine', 'legal.fine');
         renderPill();
         var label = document.getElementById('lang-current');
