@@ -189,6 +189,9 @@
       transition: opacity 900ms ease, transform 1600ms ease;
     }
     .clean-spotlight img.spotlight-cover-art { object-position: 68% center; }
+    /* 16:9 shots lose 7.3% per side to the 1477/972 frame; this one carries its
+       album art and title hard against the left edge, so shift the crop window. */
+    .clean-spotlight img.spotlight-art-lyric { object-position: 12% center; }
     .clean-spotlight img.is-active { opacity: 1; transform: scale(1); }
 
     .hero-actions { text-align: center; margin-top: 46px; }
@@ -529,10 +532,13 @@
         </div>
         <div class="product-showcase" aria-label="Sonara screenshots">
           <div class="clean-spotlight" data-clean-spotlight>
-            <img class="is-active" src="Img Player Screenshot.png" width="1450" height="963" alt="Sonara library view" />
-            <img class="spotlight-cover-art" src="Img - Cover.png" width="1672" height="941" alt="Sonara cover artwork" />
-            <img src="Img Mini Lyrics.png" width="1487" height="965" alt="Sonara mini lyrics view" />
-            <img src="Img Jump To track.png" width="1450" height="963" alt="Sonara jump to track" />
+            <img class="is-active" src="Img Player Screenshot.webp" width="1450" height="963" alt="Sonara library view" />
+            <img class="spotlight-cover-art" src="Img - Cover.webp" width="1672" height="941" alt="Sonara cover artwork" />
+            <img src="Img Jump To track.webp" width="1450" height="963" alt="Sonara jump to track" />
+            <img src="Img Player - Vinyl Puls - Visualisation.webp" width="1920" height="1080" alt="Sonara vinyl pulse visualiser" />
+            <img class="spotlight-art-lyric" src="Img Player - Album Art Lyric - Visualisation.webp" width="1920" height="1080" alt="Sonara album art visualiser with lyrics" />
+            <img src="Img Player - Vinyl Puls Lyric- Visualisation.webp" width="1920" height="1080" alt="Sonara vinyl pulse visualiser with lyrics" />
+            <img src="Img Player - Album Art - Visualisation.webp" width="1920" height="1080" alt="Sonara album art visualiser" />
           </div>
         </div>
       </div>
