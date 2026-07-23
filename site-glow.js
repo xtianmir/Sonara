@@ -1,16 +1,34 @@
 // Shared "glow download button" enhancement - the SINGLE SOURCE for the
 // glossy Download button so it looks + behaves the SAME wherever it appears on
 // the site (owner request 2026-07-21). Any button marked data-glow gets:
-//   • an animation-style DOUBLE GLEAM that sweeps across slowly (a wide sharp
-//     band + a thin one - crisp, not a soft thin line);
+//   • a SHEEN: one clean band of light that crosses the button quickly. It
+//     fires when the pointer arrives, and on its own every IDLE_MS so the
+//     button still catches the eye of someone who never hovers it;
 //   • a contour GLOW on hover that FADES IN smoothly (own layer, never
 //     animated, so the transition is clean - no abrupt pop);
 //   • a cursor-following highlight on the surface.
+// The sheen replaced a slow DOUBLE GLEAM that ran on an endless 7 s loop
+// (owner 2026-07-23): he picked this shape for the player's About buttons and
+// asked for the same one here, so the site and the app now move alike. One
+// band beats two - two read as a shop-window animation, one reads as light.
+// The old loop also animated forever whether or not anyone was looking.
 // GPU-only (transform/opacity), decorative layers are pointer-events:none and
 // scoped so they never touch a page's own button CSS beyond the opt-in class.
 //
 // Usage: add `data-glow` to the primary download button and load this script.
 (function () {
+  var SWEEP_MS = 620;   // how long one crossing takes
+  var IDLE_MS = 7000;   // how often an untouched button sweeps by itself
+  // Where the band waits and where it ends up - both fully outside the button,
+  // so it is invisible except while crossing. Percentages are of the BAND's own
+  // width (28% of the button), which is why the numbers look large. These are
+  // the EXACT numbers from the preview the owner approved; his first look at
+  // the shipped version read "narrower and faster than what I picked", which
+  // was the band's fault, not the travel's - see the gradient below.
+  var REST = 'translateX(-260%) skewX(-18deg)';
+  var PAST = 'translateX(520%) skewX(-18deg)';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function injectCss() {
     if (document.getElementById('site-glow-css')) return;
     var css = ''
@@ -27,22 +45,49 @@
       + 'transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.5),transparent 60%);'
       + 'opacity:0;transition:opacity 0.2s ease;}'
       + '.glow-btn:hover .glow-clip::after{opacity:1;}'
-      // Animation-style double gleam: a wide band with a bright core + a thin
-      // trailing band. Sharp edges (tight stops), bright, sweeps slowly.
-      + '.glow-shine{position:absolute;top:-30%;bottom:-30%;left:0;width:62%;'
-      + 'background:linear-gradient(105deg,'
-      + 'transparent 31%,rgba(255,255,255,0.5) 36%,rgba(255,255,255,1) 41%,rgba(255,255,255,0.5) 46%,transparent 50%,'
-      + 'transparent 55%,rgba(255,255,255,0.9) 59%,rgba(255,255,255,0.9) 61%,transparent 65%);'
-      + 'transform:skewX(-20deg) translateX(-210%);'
-      + 'animation:glow-shine-sweep 7s cubic-bezier(0.45,0,0.55,1) infinite;}'
-      + '@keyframes glow-shine-sweep{0%,55%{transform:skewX(-20deg) translateX(-210%);}85%,100%{transform:skewX(-20deg) translateX(250%);}}'
+      // The sheen: a single band parked off the left edge. It has no animation
+      // of its own - sweep() drives it - so nothing moves at rest.
+      // The gradient has a PLATEAU (flat from 22% to 78%, soft only at the two
+      // ends). A plain transparent->white->transparent ramp peaks at a single
+      // line, so the eye tracks that line and the band reads far thinner and
+      // quicker than the 28% it actually occupies - exactly what the owner saw
+      // versus the preview he approved, where the band was a flat fill.
+      + '.glow-shine{position:absolute;top:-30%;bottom:-30%;left:-40%;width:28%;'
+      + 'background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5) 22%,'
+      + 'rgba(255,255,255,0.5) 78%,transparent);'
+      + 'transform:' + REST + ';}'
       // Keep the button content above the effects.
-      + '.glow-btn>svg,.glow-btn>span:not(.glow-clip){position:relative;z-index:2;}'
-      + '@media(prefers-reduced-motion:reduce){.glow-shine{animation:none;}}';
+      + '.glow-btn>svg,.glow-btn>span:not(.glow-clip){position:relative;z-index:2;}';
     var s = document.createElement('style');
     s.id = 'site-glow-css';
     s.textContent = css;
     document.head.appendChild(s);
+  }
+
+  // One sweep, and never two at once.
+  //
+  // Driven with element.animate() rather than a CSS class, deliberately: a CSS
+  // animation does NOT restart when its class is re-added, so class-driven
+  // sweeps need a remove + forced-reflow + re-add dance AND an animationend
+  // listener to take the class off again - and that listener is exactly what
+  // never arrives in a HIDDEN tab, where the browser creates the animation but
+  // never advances its clock. The button would then be stuck "mid-sweep"
+  // forever. Each call here creates its own animation instead; it does not
+  // fill, so it drops out of getAnimations() the moment it finishes and there
+  // is no state left to clean up. The busy check reads the animation itself,
+  // so a sweep genuinely in flight is never cut in half.
+  function sweep(btn) {
+    if (reduceMotion) return;
+    var shine = btn.querySelector('.glow-shine');
+    if (!shine || !shine.animate) return;
+    var busy = shine.getAnimations && shine.getAnimations().some(function (a) {
+      return a.playState === 'running' || a.playState === 'paused';
+    });
+    if (busy) return;
+    shine.animate(
+      [{ transform: REST }, { transform: PAST }],
+      { duration: SWEEP_MS, easing: 'ease-out' }
+    );
   }
 
   function enhance(btn) {
@@ -55,6 +100,7 @@
     shine.className = 'glow-shine';
     clip.appendChild(shine);
     btn.insertBefore(clip, btn.firstChild);
+    btn.addEventListener('pointerenter', function () { sweep(btn); });
     btn.addEventListener('pointermove', function (e) {
       var r = btn.getBoundingClientRect();
       btn.style.setProperty('--gx', (e.clientX - r.left) + 'px');
@@ -66,9 +112,22 @@
     });
   }
 
+  // The idle sweep. ONE timer for the whole page (the buttons sit in different
+  // sections, so nobody ever sees two of them fire together), and it stands
+  // down while the tab is hidden - a background tab must not keep painting.
+  var idleTimer = null;
+  function startIdle() {
+    if (idleTimer || reduceMotion) return;
+    idleTimer = setInterval(function () {
+      if (document.hidden) return;
+      document.querySelectorAll('[data-glow]').forEach(sweep);
+    }, IDLE_MS);
+  }
+
   function run() {
     injectCss();
     document.querySelectorAll('[data-glow]').forEach(enhance);
+    startIdle();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
