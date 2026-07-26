@@ -4,13 +4,21 @@
 // place (owner request 2026-07-21: globalize the download links so home and
 // the invite page can never drift).
 //
-// ZIP-ONLY (owner decision 2026-07-24): releases ship ONLY the portable zips.
-// The unsigned Setup exes tripped Edge/SmartScreen's "isn't commonly
-// downloaded" wall, and the owner refuses tutorial workarounds on the site;
-// installers return via the Windows Store channel once the final name lands.
+// EVERYTHING SHIPS INSIDE A .ZIP (owner decision 2026-07-24, CLARIFIED
+// 2026-07-26): all FOUR download options stay - what changed is only the
+// CONTAINER of the two installers. An unsigned Setup .exe trips
+// Edge/SmartScreen's "isn't commonly downloaded" wall (Edge defaults to
+// Delete) and the owner refuses tutorial workarounds on the site; a .zip
+// carrying that same Setup .exe downloads without the interstitial. The
+// wrapper is a TEMPORARY measure until the code-signing certificate (and the
+// Windows Store channel) removes the warning at the source. A build in
+// between (2026-07-24 -> 2026-07-26) mistakenly published the portable zips
+// ALONE - the installers were never meant to disappear.
 //
 // Usage: mark any link with data-dl and load this script:
-//   data-dl="portable-x64"  -> win-x64-portable.zip    (the primary button)
+//   data-dl="x64"           -> Setup ...x64.zip        (the primary button)
+//   data-dl="arm64"         -> Setup ...arm64.zip
+//   data-dl="portable-x64"  -> win-x64-portable.zip
 //   data-dl="portable-arm64"-> win-arm64-portable.zip
 //   data-dl="releases"      -> the GitHub releases page (all versions)
 // Every marked link starts with a safe fallback href in the HTML (the
@@ -28,7 +36,11 @@
   var RELEASES_PAGE = 'https://github.com/' + GH + '/releases';
   var LATEST_PAGE = RELEASES_PAGE + '/latest';
 
+  // The installer matchers look for the ZIPPED Setup (…-Setup-<ver>-x64.zip);
+  // "arm64" never matches the x64 pattern, so the two stay distinct.
   var MATCHERS = {
+    'x64': /Setup.*x64\.zip$/i,
+    'arm64': /Setup.*arm64\.zip$/i,
     'portable-x64': /win-x64-portable\.zip$/i,
     'portable-arm64': /win-arm64-portable\.zip$/i
   };

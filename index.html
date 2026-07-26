@@ -544,10 +544,12 @@
       </div>
       <div class="hero-actions">
         <div class="cta-row">
-          <a id="dl-x64" class="btn btn-primary" data-glow data-dl="portable-x64" href="#" rel="noopener" title="Unzip and play, no install."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+          <a id="dl-x64" class="btn btn-primary" data-glow data-dl="x64" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
           <a class="btn btn-ghost" href="#pricing">See Free &amp; Premium</a>
         </div>
         <div class="dl-more">
+          <a id="dl-arm64" class="dl-mini" data-dl="arm64" href="#" rel="noopener" title="Installer for Snapdragon / ARM laptops.">ARM64 installer</a>
+          <a id="dl-portable-x64" class="dl-mini" data-dl="portable-x64" href="#" rel="noopener" title="Unzip and play, no install.">Portable x64</a>
           <a id="dl-portable-arm64" class="dl-mini" data-dl="portable-arm64" href="#" rel="noopener" title="Portable zip for ARM laptops.">Portable ARM64</a>
         </div>
         <div class="dl-notes">
@@ -679,7 +681,7 @@
             <li><span class="tick">✓</span>Media keys, hotkeys, Discord presence and touch-friendly controls</li>
             <li><span class="tick">✓</span>Likes, playlists, queue basics and quick copy from the playlist</li>
           </ul>
-          <a class="btn btn-ghost" id="dl-free" data-dl="portable-x64" href="#" rel="noopener">Download free</a>
+          <a class="btn btn-ghost" id="dl-free" data-dl="x64" href="#" rel="noopener">Download free</a>
         </div>
         <!-- #premium lives on the CARD, not the section: the player's
              "Get Premium" links open ...#premium and should land on the
@@ -795,7 +797,7 @@
   <section class="endcta">
     <div class="wrap">
       <h2 class="d">You can't scroll forever. Better go listen.</h2>
-      <a id="dl-cta" class="btn btn-primary" data-glow data-dl="portable-x64" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
+      <a id="dl-cta" class="btn btn-primary" data-glow data-dl="x64" href="#" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10 4.6V11H3V5.5ZM3 12.9H10V19.3L3 18.4V12.9ZM11.2 4.4 21 3V11H11.2V4.4ZM11.2 12.9H21V21L11.2 19.5V12.9Z"/></svg><span>Download for Windows</span></a>
     </div>
   </section>
 
@@ -1078,6 +1080,9 @@
       'hero.sub': 'A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library, played the way you want.',
       'cta.dl': 'Download for Windows',
       'cta.pricing': 'See Free &amp; Premium',
+      'dl.arm64': "ARM64 installer",
+      'dl.arm64.t': "Installer for Snapdragon / ARM laptops.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Unzip and play, no install.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Portable zip for ARM laptops.',
@@ -1186,6 +1191,9 @@
       'hero.sub': 'Бърз, красив, локален музикален плеър за Windows. Без облак, без акаунт, без реклами. Само твоята библиотека, пусната както ти искаш.',
       'cta.dl': 'Изтегли за Windows',
       'cta.pricing': 'Виж Безплатен и Premium',
+      'dl.arm64': "ARM64 инсталатор",
+      'dl.arm64.t': "Инсталатор за Snapdragon / ARM лаптопи.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Разархивирай и слушай, без инсталация.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Portable zip за ARM лаптопи.',
@@ -1294,6 +1302,9 @@
       'hero.sub': 'Ein schneller, schöner Local-First-Musikplayer für Windows. Keine Cloud, kein Konto, keine Werbung. Nur deine Bibliothek, abgespielt wie du willst.',
       'cta.dl': 'Für Windows herunterladen',
       'cta.pricing': 'Free &amp; Premium ansehen',
+      'dl.arm64': "ARM64-Installer",
+      'dl.arm64.t': "Installer für Snapdragon-/ARM-Laptops.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Entpacken und abspielen, keine Installation.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Portable-Zip für ARM-Laptops.',
@@ -1402,6 +1413,9 @@
       'hero.sub': 'Un reproductor de música local para Windows, rápido y bonito. Sin nube, sin cuenta, sin anuncios. Solo tu biblioteca, reproducida como tú quieras.',
       'cta.dl': 'Descargar para Windows',
       'cta.pricing': 'Ver Free y Premium',
+      'dl.arm64': "Instalador ARM64",
+      'dl.arm64.t': "Instalador para portátiles Snapdragon / ARM.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Descomprime y reproduce, sin instalación.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Zip portable para portátiles ARM.',
@@ -1510,6 +1524,9 @@
       'hero.sub': 'Un lecteur de musique local pour Windows, rapide et élégant. Pas de cloud, pas de compte, pas de pub. Juste votre bibliothèque, jouée comme vous voulez.',
       'cta.dl': 'Télécharger pour Windows',
       'cta.pricing': 'Voir Free et Premium',
+      'dl.arm64': "Installateur ARM64",
+      'dl.arm64.t': "Installateur pour portables Snapdragon / ARM.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Décompressez et écoutez, sans installation.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Zip portable pour portables ARM.',
@@ -1618,6 +1635,9 @@
       'hero.sub': 'Быстрый, красивый, локальный музыкальный плеер для Windows. Без облака, без аккаунта, без рекламы. Только ваша библиотека, звучащая так, как хотите вы.',
       'cta.dl': 'Скачать для Windows',
       'cta.pricing': 'Смотреть Free и Premium',
+      'dl.arm64': "Установщик ARM64",
+      'dl.arm64.t': "Установщик для ноутбуков Snapdragon / ARM.",
+      'dl.px64': "Portable x64",
       'dl.px64.t': 'Распакуйте и слушайте, без установки.',
       'dl.parm': 'Portable ARM64',
       'dl.parm.t': 'Portable-zip для ARM-ноутбуков.',
@@ -1726,6 +1746,9 @@
       'hero.sub': '快速、精美的 Windows 本地优先音乐播放器。无云端、无账户、无广告。只有你的音乐库，按你想要的方式播放。',
       'cta.dl': '下载 Windows 版',
       'cta.pricing': '查看免费与 Premium',
+      'dl.arm64': "ARM64 安装包",
+      'dl.arm64.t': "适用于骁龙 / ARM 笔记本的安装包。",
+      'dl.px64': "便携版 x64",
       'dl.px64.t': '解压即用，无需安装。',
       'dl.parm': '便携版 ARM64',
       'dl.parm.t': '适用于 ARM 笔记本的便携 zip。',
@@ -1866,9 +1889,11 @@
         // matched it too and printed the label a SECOND time on top of itself
         // (owner catch 2026-07-26). Decoration is aria-hidden by convention,
         // so this guard covers any future injected span as well.
-        setAll('#dl-x64 > span:not([aria-hidden])', 'cta.dl'); setTitleAttr('dl-x64', 'dl.px64.t');
+        setAll('#dl-x64 > span:not([aria-hidden])', 'cta.dl');
         setAll('#dl-cta > span:not([aria-hidden])', 'cta.dl');
         setAll('.cta-row .btn-ghost', 'cta.pricing');
+        setAll('#dl-arm64', 'dl.arm64'); setTitleAttr('dl-arm64', 'dl.arm64.t');
+        setAll('#dl-portable-x64', 'dl.px64'); setTitleAttr('dl-portable-x64', 'dl.px64.t');
         setAll('#dl-portable-arm64', 'dl.parm'); setTitleAttr('dl-portable-arm64', 'dl.parm.t');
         setAll('#dl-all', 'dl.all');
         setAll('.cta-note', 'cta.note');
