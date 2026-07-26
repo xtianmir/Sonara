@@ -1,13 +1,16 @@
 // Shared download-link resolver for the Sonara site - the SINGLE SOURCE OF
-// TRUTH for the four Windows artifacts, so the buttons always point at the
+// TRUTH for the Windows artifacts, so the buttons always point at the
 // LATEST published player and a change (repo, asset naming) happens in ONE
 // place (owner request 2026-07-21: globalize the download links so home and
 // the invite page can never drift).
 //
+// ZIP-ONLY (owner decision 2026-07-24): releases ship ONLY the portable zips.
+// The unsigned Setup exes tripped Edge/SmartScreen's "isn't commonly
+// downloaded" wall, and the owner refuses tutorial workarounds on the site;
+// installers return via the Windows Store channel once the final name lands.
+//
 // Usage: mark any link with data-dl and load this script:
-//   data-dl="x64"           -> Setup ...x64.exe        (the primary button)
-//   data-dl="arm64"         -> Setup ...arm64.exe
-//   data-dl="portable-x64"  -> win-x64-portable.zip
+//   data-dl="portable-x64"  -> win-x64-portable.zip    (the primary button)
 //   data-dl="portable-arm64"-> win-arm64-portable.zip
 //   data-dl="releases"      -> the GitHub releases page (all versions)
 // Every marked link starts with a safe fallback href in the HTML (the
@@ -26,8 +29,6 @@
   var LATEST_PAGE = RELEASES_PAGE + '/latest';
 
   var MATCHERS = {
-    'x64': /Setup.*x64\.exe$/i,
-    'arm64': /Setup.*arm64\.exe$/i,
     'portable-x64': /win-x64-portable\.zip$/i,
     'portable-arm64': /win-arm64-portable\.zip$/i
   };
