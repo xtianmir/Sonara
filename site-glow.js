@@ -98,6 +98,11 @@
     clip.setAttribute('aria-hidden', 'true');
     var shine = document.createElement('span');
     shine.className = 'glow-shine';
+    // Decoration is aria-hidden - screen readers skip it, AND the page's i18n
+    // pass skips it (it translates only "span:not([aria-hidden])"). Without
+    // this the language switcher wrote the button label into the sheen and it
+    // printed twice, on top of itself (owner catch 2026-07-26).
+    shine.setAttribute('aria-hidden', 'true');
     clip.appendChild(shine);
     btn.insertBefore(clip, btn.firstChild);
     btn.addEventListener('pointerenter', function () { sweep(btn); });

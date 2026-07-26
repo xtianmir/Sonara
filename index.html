@@ -1860,8 +1860,14 @@
         setAll('#nav-gh-discussions', 'nav.gh.disc');
         setAll('header h1', 'hero.title');
         setAll('header .sub', 'hero.sub');
-        setAll('#dl-x64 span', 'cta.dl'); setTitleAttr('dl-x64', 'dl.px64.t');
-        setAll('#dl-cta span', 'cta.dl');
+        // :not([aria-hidden]) = translate only REAL labels, never decoration.
+        // site-glow.js injects an aria-hidden <span class="glow-clip"> sheen
+        // overlay into every [data-glow] button; a bare "#id span" selector
+        // matched it too and printed the label a SECOND time on top of itself
+        // (owner catch 2026-07-26). Decoration is aria-hidden by convention,
+        // so this guard covers any future injected span as well.
+        setAll('#dl-x64 > span:not([aria-hidden])', 'cta.dl'); setTitleAttr('dl-x64', 'dl.px64.t');
+        setAll('#dl-cta > span:not([aria-hidden])', 'cta.dl');
         setAll('.cta-row .btn-ghost', 'cta.pricing');
         setAll('#dl-portable-arm64', 'dl.parm'); setTitleAttr('dl-portable-arm64', 'dl.parm.t');
         setAll('#dl-all', 'dl.all');
