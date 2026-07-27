@@ -241,9 +241,11 @@
       box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
     }
     .fmedia--eq img { width: 100%; }
-    .fmedia--sleep { display: grid; justify-items: center; align-items: start; }
-    .fmedia--sleep img { width: min(100%, 340px); border-radius: 18px; }
+    .fmedia--effects,
+    .fmedia--sleep,
     .fmedia--compact { display: grid; justify-items: center; align-items: start; }
+    .fmedia--effects img,
+    .fmedia--sleep img { width: 100%; }
     .fmedia--compact img { width: 100%; border-radius: 12px; }
     .fmedia--shrunk { display: grid; justify-items: center; align-items: start; }
     .fmedia--shrunk img { width: auto; max-height: 440px; border-radius: 18px; }
@@ -565,7 +567,7 @@
       <div class="panel panel--mint">
         <article class="frow">
           <div class="fmedia fmedia--eq">
-            <img src="Img Equalizer.webp" width="774" height="447" alt="Sonara equalizer settings" />
+            <img src="Img Equalizer.webp" width="758" height="371" alt="Sonara equalizer settings" />
           </div>
           <div>
             <h2 class="d">Tune the sound</h2>
@@ -580,8 +582,24 @@
     <div class="wrap">
       <div class="panel panel--violet">
         <article class="frow rev">
+          <div class="fmedia fmedia--effects">
+            <img src="Img Effects.webp" width="769" height="148" alt="Sonara spatial audio, stereo width and balance effects" />
+          </div>
+          <div>
+            <h2 class="d">Shape the space</h2>
+            <p>Add spatial depth and stereo width, then balance the sound around you.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="panel panel--rose">
+        <article class="frow">
           <div class="fmedia fmedia--sleep">
-            <img src="Img Sleep Time.webp" width="302" height="149" alt="Sonara sleep timer" />
+            <img src="Img Sleep Timer.webp" width="758" height="239" alt="Sonara sleep timer" />
           </div>
           <div>
             <h2 class="d">Sleep timer</h2>
@@ -594,10 +612,10 @@
 
   <div class="sec">
     <div class="wrap">
-      <div class="panel panel--rose">
-        <article class="frow">
+      <div class="panel panel--mint">
+        <article class="frow rev">
           <div class="fmedia fmedia--compact">
-            <img src="Img Compact Player.webp" width="627" height="57" alt="Sonara compact player" />
+            <img src="Img Compact Player.webp" width="628" height="56" alt="Sonara compact player" />
           </div>
           <div>
             <h2 class="d">Small when your work needs the screen</h2>
@@ -610,8 +628,8 @@
 
   <div class="sec">
     <div class="wrap">
-      <div class="panel panel--mint" style="--px: 14%; --py: 16%;">
-        <article class="frow rev">
+      <div class="panel panel--violet" style="--px: 14%; --py: 16%;">
+        <article class="frow">
           <div class="fmedia fmedia--shrunk">
             <img src="Img Super Shrunk Player.webp" width="475" height="963" alt="Sonara super shrunk player" />
           </div>
@@ -1090,6 +1108,8 @@
       'cta.note': 'Free forever. Premium features unlock with a one-time license.',
       'f.eq.h': 'Tune the sound',
       'f.eq.p': 'Shape playback with the equalizer and keep the sound exactly where you want it.',
+      'f.fx.h': 'Shape the space',
+      'f.fx.p': 'Add spatial depth and stereo width, then balance the sound around you.',
       'f.sl.h': 'Sleep timer',
       'f.sl.p': 'Let Sonara stop on its own when the night winds down.',
       'f.cp.h': 'Small when your work needs the screen',
@@ -1201,6 +1221,8 @@
       'cta.note': 'Безплатен завинаги. Premium функциите се отключват с еднократен лиценз.',
       'f.eq.h': 'Настрой звука',
       'f.eq.p': 'Оформи звученето с еквалайзера и дръж звука точно там, където го искаш.',
+      'f.fx.h': 'Оформи пространството',
+      'f.fx.p': 'Добави пространствена дълбочина и стерео ширина, после балансирай звука около себе си.',
       'f.sl.h': 'Таймер за заспиване',
       'f.sl.p': 'Остави Sonara да спре сама, когато нощта се уталожи.',
       'f.cp.h': 'Малък, когато работата иска екрана',
@@ -1312,6 +1334,8 @@
       'cta.note': 'Für immer kostenlos. Premium-Funktionen schaltet eine einmalige Lizenz frei.',
       'f.eq.h': 'Stimm den Klang ab',
       'f.eq.p': 'Forme die Wiedergabe mit dem Equalizer und halte den Klang genau dort, wo du ihn willst.',
+      'f.fx.h': 'Forme den Raum',
+      'f.fx.p': 'Füge räumliche Tiefe und Stereobreite hinzu und balanciere den Klang um dich herum.',
       'f.sl.h': 'Sleep-Timer',
       'f.sl.p': 'Lass Sonara von selbst stoppen, wenn die Nacht zur Ruhe kommt.',
       'f.cp.h': 'Klein, wenn die Arbeit den Bildschirm braucht',
@@ -1423,6 +1447,8 @@
       'cta.note': 'Gratis para siempre. Las funciones Premium se desbloquean con una licencia de pago único.',
       'f.eq.h': 'Ajusta el sonido',
       'f.eq.p': 'Da forma a la reproducción con el ecualizador y mantén el sonido exactamente donde lo quieres.',
+      'f.fx.h': 'Da forma al espacio',
+      'f.fx.p': 'Añade profundidad espacial y amplitud estéreo, y equilibra el sonido a tu alrededor.',
       'f.sl.h': 'Temporizador',
       'f.sl.p': 'Deja que Sonara se detenga sola cuando la noche se apaga.',
       'f.cp.h': 'Pequeño cuando el trabajo necesita la pantalla',
@@ -1534,6 +1560,8 @@
       'cta.note': 'Gratuit pour toujours. Les fonctions Premium se débloquent avec une licence à paiement unique.',
       'f.eq.h': 'Réglez le son',
       'f.eq.p': "Façonnez la lecture avec l'égaliseur et gardez le son exactement là où vous le voulez.",
+      'f.fx.h': "Façonnez l'espace",
+      'f.fx.p': 'Ajoutez de la profondeur spatiale et de la largeur stéréo, puis équilibrez le son autour de vous.',
       'f.sl.h': 'Minuteur de veille',
       'f.sl.p': "Laissez Sonara s'arrêter d'elle-même quand la nuit s'apaise.",
       'f.cp.h': "Petit quand le travail a besoin de l'écran",
@@ -1645,6 +1673,8 @@
       'cta.note': 'Бесплатно навсегда. Premium-функции открываются разовой лицензией.',
       'f.eq.h': 'Настройте звук',
       'f.eq.p': 'Формируйте звучание эквалайзером и держите звук именно там, где хотите.',
+      'f.fx.h': 'Настройте пространство',
+      'f.fx.p': 'Добавьте пространственную глубину и ширину стерео, затем сбалансируйте звук вокруг себя.',
       'f.sl.h': 'Таймер сна',
       'f.sl.p': 'Пусть Sonara остановится сама, когда ночь затихает.',
       'f.cp.h': 'Маленький, когда работе нужен экран',
@@ -1756,6 +1786,8 @@
       'cta.note': '永久免费。Premium 功能通过一次性许可证解锁。',
       'f.eq.h': '调校声音',
       'f.eq.p': '用均衡器塑造播放效果，让声音始终停在你想要的位置。',
+      'f.fx.h': '塑造空间感',
+      'f.fx.p': '添加空间深度和立体声宽度，再平衡环绕你的声音。',
       'f.sl.h': '睡眠定时器',
       'f.sl.p': '夜深了，让 Sonara 自己停下来。',
       'f.cp.h': '工作需要屏幕时，它很小',
@@ -1898,7 +1930,7 @@
         setAll('#dl-all', 'dl.all');
         setAll('.cta-note', 'cta.note');
         var rows = document.querySelectorAll('.panel .frow');
-        [['f.eq.h', 'f.eq.p'], ['f.sl.h', 'f.sl.p'], ['f.cp.h', 'f.cp.p'], ['f.sh.h', 'f.sh.p']].forEach(function (pair, i) {
+        [['f.eq.h', 'f.eq.p'], ['f.fx.h', 'f.fx.p'], ['f.sl.h', 'f.sl.p'], ['f.cp.h', 'f.cp.p'], ['f.sh.h', 'f.sh.p']].forEach(function (pair, i) {
           if (!rows[i]) return;
           rows[i].querySelector('h2').innerHTML = t(pair[0]);
           rows[i].querySelector('p').innerHTML = t(pair[1]);
