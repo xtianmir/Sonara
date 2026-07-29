@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonara - local-first music player for Windows</title>
   <meta name="description" content="A fast, beautiful, local-first music player for Windows. No cloud, no account, no ads. Just your library." />
-  <!-- Discord-inspired redesign (approved 2026-07-07): Sonara Mint accent,
-       Archivo Black display font, glass panels, i18n via the inline I18N
-       dictionary (en/bg/de/es/fr/ru/zh - same locales as the player).
-       2026-07-18: the parallax icon/star background was replaced by the
-       legal pages' static gradient, and every glass surface now reads the
-       single --blur-glass token. -->
+  <!-- Deep AIR redesign (approved 2026-07-29): Sonara Mint accent, Archivo
+       Black display font, real glass panels and the shared event-driven Wave
+       background from site-wave.js. Final palette and material tokens live in
+       site-deep-air.css and are shared by all four public pages. i18n stays in
+       the inline dictionary (en/bg/de/es/fr/ru/zh, same locales as the player). -->
   <!-- TODO before the broad public release:
        1. Replace showcase screenshots when the final UI is ready.
        2. Name/logo are prototype - find-replace "Sonara" on final naming.
@@ -90,10 +89,8 @@
       line-height: 1.06;
     }
 
-    /* ── Static background (owner decision 2026-07-18) ──
-       Same treatment as the legal pages: one fixed gradient wash, no icon
-       layers, no stars, no parallax. Sections/panels stay translucent and
-       sit on top of it. */
+    /* Legacy no-script background. The final Deep AIR palette and the
+       interactive Wave canvas are shared by site-deep-air.css/site-wave.js. */
     .site-background {
       position: fixed; inset: 0; z-index: 0;
       pointer-events: none;
@@ -486,6 +483,8 @@
     }
 
   </style>
+  <link rel="stylesheet" href="site-deep-air.css" />
+  <script src="site-wave.js" defer></script>
 </head>
 <body>
   <div class="site-background" aria-hidden="true"></div>

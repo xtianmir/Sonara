@@ -1,0 +1,194 @@
+:root {
+  color-scheme: dark;
+  --bg: #101214;
+  --bg-card: #171a1c;
+  --bg-elevated: #242a2d;
+  --glass: rgba(23, 26, 28, 0.68);
+  --glass-strong: rgba(16, 18, 20, 0.86);
+  --glass-border: rgba(131, 146, 155, 0.36);
+  --blur-glass: blur(14px) saturate(1.08);
+  --border: #525f66;
+  --border-soft: rgba(82, 95, 102, 0.34);
+  --chip-border: rgba(131, 146, 155, 0.3);
+  --text: #83929b;
+  --text-strong: #d5dadd;
+  --text-secondary: #83929b;
+  --text-muted: #68767e;
+  --text-faint: #525f66;
+  --accent: #22d3a1;
+  --accent-violet: #22d3a1;
+  --on-accent: #04160b;
+  --glow-1: rgba(34, 211, 161, 0.12);
+  --glow-2: rgba(34, 211, 161, 0.07);
+  --font-sans: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Archivo Black", "Arial Black", sans-serif;
+}
+
+html {
+  scrollbar-color: #525f66 #101214;
+}
+
+body {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-track {
+  background: #101214;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #525f66;
+  border-color: #101214;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #83929b;
+}
+
+.lang-menu {
+  scrollbar-color: rgba(131, 146, 155, 0.48) transparent;
+}
+
+.lang-menu::-webkit-scrollbar-thumb {
+  background: rgba(131, 146, 155, 0.42);
+}
+
+.lang-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(131, 146, 155, 0.62);
+}
+
+.site-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(34, 211, 161, 0.075), transparent 44%),
+    radial-gradient(circle at 78% 76%, rgba(34, 211, 161, 0.045), transparent 48%),
+    linear-gradient(180deg, #101214 0%, #121416 46%, #101214 100%);
+}
+
+.site-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(16, 18, 20, 0.16), transparent 24%, transparent 76%, rgba(16, 18, 20, 0.16)),
+    linear-gradient(180deg, rgba(16, 18, 20, 0.03), transparent 48%, rgba(16, 18, 20, 0.26));
+}
+
+.site-background canvas[data-site-wave] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.96;
+  contain: strict;
+}
+
+.panel--mint,
+.panel--violet,
+.panel--rose {
+  --ptint: rgba(34, 211, 161, 0.11);
+}
+
+:is(
+  .panel,
+  .card,
+  .tier,
+  .support-block,
+  .faq-item,
+  .menu,
+  .lang-menu,
+  .dl-mini,
+  .language-list button,
+  .contact,
+  .lang-pick select
+) {
+  border-color: var(--glass-border);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  box-shadow: 0 24px 58px -42px rgba(0, 0, 0, 0.92);
+}
+
+:is(.panel, .card, .tier, .support-block, .faq-item, .dl-mini, .language-list button) {
+  background: var(--glass);
+}
+
+:is(.menu, .lang-menu, .contact, .lang-pick select) {
+  background-color: var(--glass-strong);
+}
+
+.plain {
+  background:
+    linear-gradient(160deg, rgba(34, 211, 161, 0.11), rgba(34, 211, 161, 0.025)),
+    var(--glass);
+  border-color: rgba(34, 211, 161, 0.28);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  box-shadow: 0 24px 58px -42px rgba(0, 0, 0, 0.92);
+}
+
+.copy-btn {
+  background: color-mix(in srgb, var(--bg-elevated) 76%, transparent);
+  border-color: var(--glass-border);
+}
+
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--bg-elevated) 92%, var(--accent) 8%);
+}
+
+:is(nav .links > a, .nav-item > a):hover {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+}
+
+:is(.lang-btn, .fgrid .social a) {
+  background: var(--glass);
+  border-color: var(--glass-border);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+}
+
+footer,
+.sc-foot {
+  background:
+    linear-gradient(180deg, rgba(23, 26, 28, 0.72) 0%, rgba(18, 20, 22, 0.92) 46%, #101214 100%);
+  border-top-color: var(--border-soft);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  box-shadow: 0 220px 0 0 #101214;
+}
+
+.legal,
+.sc-legal {
+  border-top-color: var(--border-soft);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :is(
+    .panel,
+    .card,
+    .tier,
+    .faq-item,
+    .support-block,
+    .menu,
+    .lang-menu,
+    .dl-mini,
+    .language-list button,
+    .plain,
+    .contact,
+    .lang-pick select
+  ) {
+    background: #171a1c;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-background canvas[data-site-wave] {
+    opacity: 0.72;
+  }
+}
